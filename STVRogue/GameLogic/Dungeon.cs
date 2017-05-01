@@ -20,9 +20,6 @@ namespace STVRogue.GameLogic
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
 
-        private Random rnd = new Random();
-        private int connectivity = 4;
-
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
         {
@@ -31,31 +28,31 @@ namespace STVRogue.GameLogic
             M = nodeCapacityMultiplier;
 
             List<Zone> zones = new List<Zone>();
+            zones.Add(new Zone());          //de eerste zone
 
-            for (int zone = 0; zone < level + 1; zone++)
+            for (int zone = 1; zone < level + 1; zone++)  //de opeenvolgende zones  
             {
-                //string naam = zone.ToString();
-                int amountOfNodes = rnd.Next(0, 10);
-                zones.Add(new Zone());
-                for (int node = 1; node < amountOfNodes; node++) //start overslaan (dus bij 1 beginnen) want die connect niet met eerdere nodes
+                zones.Add(new Zone()); 
+
+                Bridge newBridge = new Bridge();
+                Node exitNode = zones[zone - 1].nodes.Last();       //de laatste node van de vorige zone
+                Node startNode = zones[zone].nodes.First();         //de eerste node van de nieuwe zone
+
+                foreach (Node neighbor in exitNode.neighbors)       //voor elke neighbor van de  laatste node
                 {
-                    int amountOfConnections = rnd.Next(1, connectivity);
-                    for (int connection = 0; connection < amountOfConnections; connection++)
-                    {
-
-                    }
-
+                    newBridge.connectToNodeOfSameZone(neighbor);
                 }
+
+                foreach (Node neighbor in startNode.neighbors)     //voor elke neighbor van de eerste node
+                {
+                    newBridge.connectToNodeOfNextZone(neighbor);
+                }
+
+                zones[zone - 1].nodes[zones[zone - 1].nodes.Count()] = newBridge;   //replace exitNode van de vorige zone voor de bridge
+                zones[zone].nodes[0] = newBridge;                                   //replace startNode van de nieuwe zone voor de bridge
             }
-
-            throw new NotImplementedException();
         }
 
-        public class Zone
-        {
-            List<Node> nodes = new List<Node>();
-        }
-        
         /* Return a shortest path between node u and node v */
         public List<Node> shortestpath(Node u, Node v)
         {
@@ -70,7 +67,33 @@ namespace STVRogue.GameLogic
 
         /* To calculate the level of the given node. */
         public uint level(Node d) { throw new NotImplementedException(); }
-    } 
+    }
+    public class Zone
+    {
+        public List<Node> nodes = new List<Node>();
+        Random rnd = new Random();
+
+        public Zone()
+        {
+            nodes.Add(new Node());                                  //de startnode
+
+            int amountOfNodes = rnd.Next(1, 9);                     //1 tot 9 nieuwe nodes toevoegen
+            for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
+            {
+                nodes.Add(new Node());
+
+                int amountOfConnections = rnd.Next(1, 4);                               //connect hem met 1 tot 4 van de vorige nodes
+                for (int connection = 0; connection < amountOfConnections; connection++)
+                {
+                    int randomPreviousNode = rnd.Next(nodes.Count - 1);                 //kies random een van de vorige nodes
+                    if (!nodes[node].neighbors.Contains(nodes[randomPreviousNode]))     //controleer of hij deze al als neighbor heeft
+                    {
+                        nodes[node].connect(nodes[randomPreviousNode]);                 //zo niet: connect hiermee
+                    }
+                }
+            }
+        }
+    }
 
     public class Node
     {
@@ -110,6 +133,8 @@ namespace STVRogue.GameLogic
     {
         List<Node> fromNodes = new List<Node>();
         List<Node> toNodes = new List<Node>();
+
+        public Bridge() { }
         public Bridge(String id) : base(id) {  }
         
         /* Use this to connect the bridge to a node from the same zone. */
