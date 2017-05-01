@@ -38,7 +38,7 @@ namespace STVRogue.GameLogic
 
             for (int zone = 1; zone < level + 1; zone++)  //de opeenvolgende zones  
             {
-                zones.Add(new Zone()); 
+                zones.Add(new Zone());
 
                 Bridge newBridge = new Bridge();
                 Node exitNode = zones[zone - 1].nodes.Last();       //de laatste node van de vorige zone
@@ -60,15 +60,18 @@ namespace STVRogue.GameLogic
         }
 
         /* Return a shortest path between node u and node v */
-        public List<Node> shortestpath(Node u, Node v)
+        public List<Node> shortestPath(Node u,Node v)
         {
-            public List<Node> nodes = new List<Node>();
+            throw new NotImplementedException();
         }
-        
-       
-        
+
+
+
+
+
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
-        public void disconnect(Bridge b) {
+        public void disconnect(Bridge b)
+        {
             Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
             throw new NotImplementedException();
         }
@@ -76,6 +79,7 @@ namespace STVRogue.GameLogic
         /* To calculate the level of the given node. */
         public uint level(Node d) { throw new NotImplementedException(); }
     }
+
     public class Zone
     {
         public List<Node> nodes = new List<Node>();
@@ -112,13 +116,13 @@ namespace STVRogue.GameLogic
 
         public Node() { }
         public Node(String id) { this.id = id; }
-        
+
         /* To connect this node to another node. */
         public void connect(Node nd)
         {
             neighbors.Add(nd); nd.neighbors.Add(this);
         }
-        
+
         /* To disconnect this node from the given node. */
         public void disconnect(Node nd)
         {
@@ -143,10 +147,10 @@ namespace STVRogue.GameLogic
         List<Node> toNodes = new List<Node>();
 
         public Bridge() { }
-        public Bridge(String id) : base(id) {  }
-        
+        public Bridge(String id) : base(id) { }
+
         /* Use this to connect the bridge to a node from the same zone. */
-        public void connectToNodeOfSameZone(Node nd) 
+        public void connectToNodeOfSameZone(Node nd)
         {
             base.connect(nd);
             fromNodes.Add(nd);
@@ -160,5 +164,6 @@ namespace STVRogue.GameLogic
         }
 
     }
-
 }
+
+
