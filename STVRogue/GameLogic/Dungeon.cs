@@ -43,7 +43,7 @@ namespace STVRogue.GameLogic
                     newBridge.connectToNodeOfSameZone(neighbor);
                 }
 
-                foreach (Node neighbor in startNode.neighbors)     //voor elke neighbor van de eerste node
+                foreach (Node neighbor in startNode.neighbors)      //voor elke neighbor van de eerste node
                 {
                     newBridge.connectToNodeOfNextZone(neighbor);
                 }
