@@ -12,84 +12,84 @@ namespace STVRogue.Utils
     {
         public List<Node> shortestPath(Node u, Node v, List<Zone> zones)
         {
-            var distances = new Dictionary<Node , int>();
+            var distances = new Dictionary<Node, int>();
             var path = new List<Node>();
             Node currentNode = u;
-            Zone currentZone = null;
-            var unvisitedNodes = new List<Node>();
-            //var unvisitedZones = new List<Zone>();
+            Zone currentZone = zones.Where(x=>x.nodes.Contains(u)).FirstOrDefault();
 
-            foreach(Zone zone in zones)
+
+            while (path.Last() != v)
             {
-                if (zone.nodes.Contains(u))
-                {
-                    //unvisitedZones = zones;
-                    //unvisitedZones.Remove(zone);
-                    currentZone = zone;
 
-                    //unvisitedNodes = zone.nodes;
-                    //foreach (Node node in zone.nodes)
-                    //    distances.Add(node, 999);
+                if (currentZone.nodes.Contains(currentNode))
+                {
+                    if (currentZone.nodes.Contains(v))
+                        path.AddRange(shortestPathInZone(u, v, currentZone));
+                    else
+                    {
+                        var partialPath = shortestPathToBridge(u, currentZone);
+                        currentNode = partialPath.Last();
+                    }
                 }
+
 
             }
 
-            while (true)
-            {
-                if (currentZone.nodes.Contains(v))
-                {
-                    path.AddRange(shortestPathInZone(u, v, currentZone));
-                }
+            return path;
+        }
 
+        private List<Node> shortestPathInZone(Node u, Node v, Zone zone)
+        {
+            var path = new List<Node>();
+            var distances = new Dictionary<Node, Tuple<int, Node>>();
+            var unvisitedNodes = zone.nodes;
+            var currentNode = u;
+
+            foreach (Node node in zone.nodes)
+            {
+                if (node == u)
+                    distances.Add(node, new Tuple<int, Node>(0, u));
                 else
-                {
-                    path.AddRange(shortestPathToBridge(u, currentZone));
-                }
+                    distances.Add(node, new Tuple<int, Node>(999, null));
+
+            }
+
+            while (unvisitedNodes.Contains(v) && distances.OrderBy(x => x.Value.Item1).First().Value.Item1 == 999)
+            {
+                currentNode = distances.OrderBy(x => x.Value.Item1).First().Key;
 
                 foreach (Node node in currentNode.neighbors)
                 {
-                    distances[node] = 1;
-                    unvisitedNodes.Remove(node);
+                    var currentDistance = distances[node].Item1;
+                    var potentialDistance = distances[currentNode].Item1;
+
+                    if (potentialDistance < currentDistance)
+                        distances[node] = new Tuple<int, Node>(potentialDistance, currentNode);
                 }
 
                 unvisitedNodes.Remove(currentNode);
 
             }
-            
 
-
-
-            if(u.neighbors.Contains(v))
+            var endNode = v;
+            while (distances.ContainsKey(u))
             {
-                path.Add(u);
-                return path;
+                var temp = endNode;
+                path.Add(endNode);
+                endNode = distances[temp].Item2;
+                distances.Remove(endNode);
             }
 
-            else
-            {
-                foreach (Node node in u.neighbors)
-                {
 
-                }
-            }
+            path.Reverse();
+            return path;
 
-            
 
-            throw new NotImplementedException();
-        }
-
-        private List<Node> shortestPathInZone(Node u, Node v, Zone zone)
-        {
-            //unvisitedNodes = zone.nodes;
-            //foreach (Node node in zone.nodes)
-            //    distances.Add(node, 999);
-
-            throw new NotImplementedException();
         }
 
         private List<Node> shortestPathToBridge(Node u, Zone zone)
         {
-            throw new NotImplementedException();
+            return shortestPathInZone(u, zone.nodes.Last(), zone);
         }
     }
 
@@ -104,10 +104,14 @@ namespace STVRogue.Utils
 
     public class RandomGenerator
     {
-        static private Random rnd_ = null ; 
-        static public Random rnd { 
-            get { if (rnd_==null) rnd_ = new Random();
-                  return rnd_ ; }
+        static private Random rnd_ = null;
+        static public Random rnd
+        {
+            get
+            {
+                if (rnd_ == null) rnd_ = new Random();
+                return rnd_;
+            }
         }
 
 
@@ -116,7 +120,7 @@ namespace STVRogue.Utils
             rnd_ = new Random(seed);
         }
 
-          
+
     }
 
 }
