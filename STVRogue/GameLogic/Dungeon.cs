@@ -12,6 +12,8 @@ namespace STVRogue.GameLogic
 
     public class Dungeon
     {
+        UtilsClass utils = new UtilsClass();
+
         public Node startNode;
         public Node exitNode;
         public uint difficultyLevel;
@@ -28,7 +30,10 @@ namespace STVRogue.GameLogic
         }
         
         /* Return a shortest path between node u and node v */
-        public List<Node> shortestpath(Node u, Node v) { throw new NotImplementedException(); }
+        public List<Node> shortestpath(Node u, Node v)
+        {
+            return utils.shortestPath(u,v);
+        }
         
         
         /* To disconnect a bridge from the rest of the zone the bridge is in. */

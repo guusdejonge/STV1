@@ -1,4 +1,5 @@
-﻿using System;
+﻿using STVRogue.GameLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace STVRogue.Utils
 {
-    class Utils
+    public class UtilsClass
     {
+        public List<Node> shortestPath(Node u, Node v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Logger
