@@ -23,6 +23,9 @@ namespace STVRogue.GameLogic
         private Random rnd = new Random();
         private int connectivity = 4;
 
+        List<Zone> zones = new List<Zone>();
+
+
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
         {
@@ -30,7 +33,6 @@ namespace STVRogue.GameLogic
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
 
-            List<Zone> zones = new List<Zone>();
 
             for (int zone = 0; zone < level + 1; zone++)
             {
@@ -51,16 +53,18 @@ namespace STVRogue.GameLogic
             throw new NotImplementedException();
         }
 
-        public class Zone
-        {
-            List<Node> nodes = new List<Node>();
-        }
-        
         /* Return a shortest path between node u and node v */
         public List<Node> shortestpath(Node u, Node v)
         {
-            return utils.shortestPath(u,v);
+            return utils.shortestPath(u, v, zones);
         }
+
+        public class Zone
+        {
+            public List<Node> nodes = new List<Node>();
+        }
+        
+       
         
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b) {
