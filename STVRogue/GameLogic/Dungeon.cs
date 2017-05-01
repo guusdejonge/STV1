@@ -8,7 +8,7 @@ using STVRogue.Utils;
 namespace STVRogue.GameLogic
 {
 
-    
+
 
     public class Dungeon
     {
@@ -16,20 +16,46 @@ namespace STVRogue.GameLogic
         public Node exitNode;
         public uint difficultyLevel;
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
-        public uint M ; 
-        
+        public uint M;
+
+        private Random rnd = new Random();
+        private int connectivity = 4;
+
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
         {
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             difficultyLevel = level;
-            M = nodeCapacityMultiplier ;
+            M = nodeCapacityMultiplier;
+
+            List<Zone> zones = new List<Zone>();
+
+            for (int zone = 0; zone < level + 1; zone++)
+            {
+                //string naam = zone.ToString();
+                int amountOfNodes = rnd.Next(0, 10);
+                zones.Add(new Zone());
+                for (int node = 1; node < amountOfNodes; node++) //start overslaan (dus bij 1 beginnen) want die connect niet met eerdere nodes
+                {
+                    int amountOfConnections = rnd.Next(1, connectivity);
+                    for (int connection = 0; connection < amountOfConnections; connection++)
+                    {
+
+                    }
+
+                }
+            }
+
             throw new NotImplementedException();
+        }
+
+        public class Zone
+        {
+            List<Node> nodes = new List<Node>();
         }
         
         /* Return a shortest path between node u and node v */
         public List<Node> shortestpath(Node u, Node v) { throw new NotImplementedException(); }
-        
         
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b) {
