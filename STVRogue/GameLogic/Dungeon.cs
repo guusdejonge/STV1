@@ -76,7 +76,16 @@ namespace STVRogue.GameLogic
         }
 
         /* To calculate the level of the given node. */
-        public uint level(Node d) { throw new NotImplementedException(); }
+        public uint level(Node d)
+        {
+            if (d is Bridge)
+            {
+                var b = (Bridge)d;
+                return (uint)b.level;
+            }
+            else
+                return 0; 
+        }
     }
 
     public class Zone
