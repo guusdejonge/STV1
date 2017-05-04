@@ -48,7 +48,7 @@ namespace STVRogue.GameLogic
         
         /* Move the pack one node further along a shortest path to u. */
         public void moveTowards(Node u) {
-            List<Node> path = dungeon.shortestpath(location,u) ;
+            List<Node> path = dungeon.shortestPath(location,u) ;
             move(path[0]) ;
         }
     }

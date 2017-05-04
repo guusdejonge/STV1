@@ -21,6 +21,15 @@ namespace STVRogue.GameLogic
             String killMsg = foe.HP == 0 ? ", KILLING it" : "";
             Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
+        virtual public void moveTo(Node node)
+        {
+            this.location = node;
+            if(this is Player && node.packs.Count > 0)
+            {
+                node.contested = true;
+                node.fight(this as Player, null);
+            }
+        }
     }
 
 

@@ -60,11 +60,11 @@ namespace STVRogue.GameLogic
         }
 
         /* Return a shortest path between node u and node v */
-        public List<Node> shortestPath(Node u,Node v)
+        public List<Node> shortestPath(Node u, Node v)
         {
             return utils.shortestPath(u, v, zones);
         }
-        
+
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b)
         {
@@ -84,7 +84,7 @@ namespace STVRogue.GameLogic
                 return (uint)b.level;
             }
             else
-                return 0; 
+                return 0;
         }
     }
 
@@ -109,7 +109,7 @@ namespace STVRogue.GameLogic
                     amountOfConnections -= 1;                                           //verlaag aantal nieuwe nodes als deze boven de drie uitkomt
                 }
                 totalConnections += amountOfConnections;
-    
+
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
                     int randomPreviousNode = rnd.Next(nodes.Count - 1);                 //kies random een van de vorige nodes
@@ -128,6 +128,7 @@ namespace STVRogue.GameLogic
         public List<Node> neighbors = new List<Node>();
         public List<Pack> packs = new List<Pack>();
         public List<Item> items = new List<Item>();
+        public bool contested;
 
         public Node() { }
         public Node(String id) { this.id = id; }
@@ -150,9 +151,42 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player)
+        public void fight(Player player, List<Command> commands)
         {
-            throw new NotImplementedException();
+            while (contested)
+            {
+                var pack = packs.First();
+                var command = commands.First().text.ToLower().Split(' ');
+                switch (command[0])
+                {
+                    case "flee":
+                        player.moveTo(commands.First().previousNode);
+                        contested = false;
+                        break;
+                    case "attack":
+                        player.Attack(pack.members.First());
+                        
+                        break;
+                    case "item":
+                        if (command[1] == "potion")
+                        {
+                            var item = player.bag.Where(q => q.GetType() == typeof(HealingPotion)).First();
+                            player.use(item);
+                        }
+                        else if(command[1] == "crystal")
+                        {
+                            var item = player.bag.Where(q => q.GetType() == typeof(Crystal)).First();
+                            player.use(item);
+                        }
+                        else
+                        {
+                            Logger.log("Item does not exist");
+                        }
+                            
+                        break;
+
+                }
+            }
         }
     }
 
