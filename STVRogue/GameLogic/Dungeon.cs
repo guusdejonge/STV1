@@ -76,6 +76,7 @@ namespace STVRogue.GameLogic
             var fromNodes = b.fromNodes;
             foreach (var node in fromNodes)
                 b.disconnect(node);
+            startNode = b;
         }
 
         /* To calculate the level of the given node. */

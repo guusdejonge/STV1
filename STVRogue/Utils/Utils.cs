@@ -23,10 +23,10 @@ namespace STVRogue.Utils
 
                 
                     if (currentZone.nodes.Contains(v))
-                        path.AddRange(shortestPathInZone(u, v, currentZone));
+                        path.AddRange(shortestPathInZone(currentNode, v, currentZone));
                     else
                     {
-                        var partialPath = shortestPathToBridge(u, currentZone);
+                        var partialPath = shortestPathToBridge(currentNode, currentZone);
                         currentNode = partialPath.Last();
                         path.AddRange(partialPath);
                     }
