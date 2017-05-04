@@ -14,23 +14,23 @@ namespace STVRogue.Utils
         {
             var distances = new Dictionary<Node, int>();
             var path = new List<Node>();
-            Node currentNode = u;
-            Zone currentZone = zones.Where(x=>x.nodes.Contains(u)).FirstOrDefault();
+            var currentNode = u;
 
 
             while (path.Last() != v)
             {
+                var currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
 
-                if (currentZone.nodes.Contains(currentNode))
-                {
+                
                     if (currentZone.nodes.Contains(v))
                         path.AddRange(shortestPathInZone(u, v, currentZone));
                     else
                     {
                         var partialPath = shortestPathToBridge(u, currentZone);
                         currentNode = partialPath.Last();
+                        path.AddRange(partialPath);
                     }
-                }
+                
 
 
             }
