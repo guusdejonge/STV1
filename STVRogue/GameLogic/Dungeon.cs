@@ -62,7 +62,7 @@ namespace STVRogue.GameLogic
         /* Return a shortest path between node u and node v */
         public List<Node> shortestPath(Node u,Node v)
         {
-            throw new NotImplementedException();
+            return utils.shortestPath(u, v, zones);
         }
 
 
