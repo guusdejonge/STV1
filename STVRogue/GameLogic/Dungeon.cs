@@ -19,6 +19,7 @@ namespace STVRogue.GameLogic
         public uint difficultyLevel;
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
+        public uint N;
 
         private Random rnd = new Random();
         private int connectivity = 4;
@@ -39,11 +40,11 @@ namespace STVRogue.GameLogic
             for (int zone = 1; zone < level + 1; zone++)  //de opeenvolgende zones  
             {
                 zones.Add(new Zone());
-                createBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
+                CreateBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
             }
         }
 
-        public void createBridge(Zone zoneFrom, Zone zoneTo)
+        public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
             Bridge newBridge = new Bridge(zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
 
@@ -63,6 +64,11 @@ namespace STVRogue.GameLogic
 
             exitNode = newBridge;                               //replace exitNode van de vorige zone voor de bridge
             zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
+        }
+
+        public void GeneratePacks(int N)    //N = numberOfMonsters van Game
+        {
+
         }
 
         /* Return a shortest path between node u and node v */
