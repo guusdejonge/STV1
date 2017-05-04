@@ -39,24 +39,30 @@ namespace STVRogue.GameLogic
             for (int zone = 1; zone < level + 1; zone++)  //de opeenvolgende zones  
             {
                 zones.Add(new Zone());
-
-                Bridge newBridge = new Bridge(zone);                //geef de zone mee als het level van de bridge
-                Node exitNode = zones[zone - 1].nodes.Last();       //de laatste node van de vorige zone
-                Node startNode = zones[zone].nodes.First();         //de eerste node van de nieuwe zone
-
-                foreach (Node neighbor in exitNode.neighbors)       //voor elke neighbor van de  laatste node
-                {
-                    newBridge.connectToNodeOfSameZone(neighbor);
-                }
-
-                foreach (Node neighbor in startNode.neighbors)      //voor elke neighbor van de eerste node
-                {
-                    newBridge.connectToNodeOfNextZone(neighbor);
-                }
-
-                zones[zone - 1].nodes[zones[zone - 1].nodes.Count()] = newBridge;   //replace exitNode van de vorige zone voor de bridge
-                zones[zone].nodes[0] = newBridge;                                   //replace startNode van de nieuwe zone voor de bridge
+                createBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
             }
+        }
+
+        public void createBridge(Zone zoneFrom, Zone zoneTo)
+        {
+            Bridge newBridge = new Bridge(zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
+
+            Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
+            Node startNode = zoneTo.nodes.First();                  //de eerste node van de nieuwe zone
+
+            foreach (Node neighbor in exitNode.neighbors)           //voor elke neighbor van de laatste node van de vorige zone
+            {
+                newBridge.connectToNodeOfSameZone(neighbor);
+            }
+
+            foreach (Node neighbor in startNode.neighbors)          //voor elke neighbor van de eerste node van de nieuwe zone
+            {
+                newBridge.connectToNodeOfNextZone(neighbor);
+                startNode.disconnect(neighbor);                     //disconnect de eerste node met de neighbors (wordt straks verwijderd)
+            }
+
+            exitNode = newBridge;                               //replace exitNode van de vorige zone voor de bridge
+            zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
         }
 
         /* Return a shortest path between node u and node v */
@@ -96,17 +102,17 @@ namespace STVRogue.GameLogic
         public Zone()
         {
             nodes.Add(new Node());                                  //de startnode
-            int totalConnections = 0;                               //het totaal aantal connecties tot nu toe
+            int totalConnections = 0;                               //het totaal aantal connecties in de zone
 
-            int amountOfNodes = rnd.Next(1, 9);                     //1 tot 9 nieuwe nodes toevoegen
+            int amountOfNodes = rnd.Next(2, 10);                     //2 tot 10 nieuwe nodes toevoegen
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
                 nodes.Add(new Node());
 
                 int amountOfConnections = rnd.Next(1, 4);                               //connect hem met 1 tot 4 van de vorige nodes
-                while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //bereken average connectivity
+                while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
-                    amountOfConnections -= 1;                                           //verlaag aantal nieuwe nodes als deze boven de drie uitkomt
+                    amountOfConnections -= 1;                                           
                 }
                 totalConnections += amountOfConnections;
     
