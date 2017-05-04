@@ -40,7 +40,7 @@ namespace STVRogue.GameLogic
             {
                 zones.Add(new Zone());
 
-                Bridge newBridge = new Bridge();
+                Bridge newBridge = new Bridge(zone);                //geef de zone mee als het level van de bridge
                 Node exitNode = zones[zone - 1].nodes.Last();       //de laatste node van de vorige zone
                 Node startNode = zones[zone].nodes.First();         //de eerste node van de nieuwe zone
 
@@ -64,11 +64,7 @@ namespace STVRogue.GameLogic
         {
             return utils.shortestPath(u, v, zones);
         }
-
-
-
-
-
+        
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b)
         {
@@ -91,6 +87,7 @@ namespace STVRogue.GameLogic
         public Zone()
         {
             nodes.Add(new Node());                                  //de startnode
+            int totalConnections = 0;                               //het totaal aantal connecties tot nu toe
 
             int amountOfNodes = rnd.Next(1, 9);                     //1 tot 9 nieuwe nodes toevoegen
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
@@ -98,6 +95,12 @@ namespace STVRogue.GameLogic
                 nodes.Add(new Node());
 
                 int amountOfConnections = rnd.Next(1, 4);                               //connect hem met 1 tot 4 van de vorige nodes
+                while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //bereken average connectivity
+                {
+                    amountOfConnections -= 1;                                           //verlaag aantal nieuwe nodes als deze boven de drie uitkomt
+                }
+                totalConnections += amountOfConnections;
+    
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
                     int randomPreviousNode = rnd.Next(nodes.Count - 1);                 //kies random een van de vorige nodes
@@ -148,9 +151,15 @@ namespace STVRogue.GameLogic
     {
         public List<Node> fromNodes = new List<Node>();
         public List<Node> toNodes = new List<Node>();
+        public int level;
 
         public Bridge() { }
         public Bridge(String id) : base(id) { }
+
+        public Bridge(int lev)
+        {
+            level = lev;
+        }
 
         /* Use this to connect the bridge to a node from the same zone. */
         public void connectToNodeOfSameZone(Node nd)
