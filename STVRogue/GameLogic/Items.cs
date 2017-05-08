@@ -29,12 +29,12 @@ namespace STVRogue.GameLogic
 
     public class HealingPotion : Item
     {
-        public uint HPvalue;
+        public int HPvalue;
 
         /* Create a healing potion with random HP-value */
         public HealingPotion(String id) : base(id)
         {
-            HPvalue = (uint) RandomGenerator.rnd.Next(10) + 1;
+            HPvalue = (int) RandomGenerator.rnd.Next(10) + 1;
         }
 
         override public void use(Player player)
