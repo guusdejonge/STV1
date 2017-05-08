@@ -12,7 +12,7 @@ namespace STVRogue.GameLogic
         public String id;
         public String name;
         public int HP;
-        public uint AttackRating = 1;
+        public int AttackRating = 1;
         public Node location;
         public Creature() { }
         virtual public void Attack(Creature foe)
@@ -56,7 +56,7 @@ namespace STVRogue.GameLogic
         public Dungeon dungeon;
         public int HPbase = 100;
         public Boolean  accelerated = false ;
-        public uint KillPoint = 0;
+        public int KillPoint = 0;
         public List<Item> bag = new List<Item>();
         public Player() {
             id = "player";

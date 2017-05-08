@@ -19,7 +19,7 @@ namespace STVRogue.GameLogic
          * the nodes' capacity are not violated. Furthermore the seeding of the monsters
          * and items should meet the balance requirements stated in the Project Document.
          */
-        public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters) 
+        public Game(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters) 
         {
             Logger.log("Creating a game of difficulty level "+ difficultyLevel + ", node capacity multiplier "
                        + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
