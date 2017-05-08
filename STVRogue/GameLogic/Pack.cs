@@ -60,6 +60,7 @@ namespace STVRogue.GameLogic
                 Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
                 return;
             }
+            location.packs.Remove(this);
             location = u;
             u.packs.Add(this);
             Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");

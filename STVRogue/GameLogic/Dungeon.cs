@@ -74,7 +74,7 @@ namespace STVRogue.GameLogic
 
 
 
-               
+
             }
         }
 
@@ -155,6 +155,7 @@ namespace STVRogue.GameLogic
         public List<Pack> packs = new List<Pack>();
         public List<Item> items = new List<Item>();
         public bool contested;
+        public bool fled;
 
         public Node(int N) { this.N = N; }
         public Node(int N, String id) { this.N = N; this.id = id; }
@@ -229,9 +230,27 @@ namespace STVRogue.GameLogic
                 Random random = new Random();
                 var totalPackHp = pack.members.Sum(m => m.HP);
                 var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
-                if(random.NextDouble() < fleeProbability)
+                if (random.NextDouble() < fleeProbability && !fled)
                 {
-                    //if(neighbors.Any(q=>q.packs.Count()<M))
+                    Node node;
+                    if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M))!=null)
+                    {
+                        pack.move(node);
+                        fled = true;
+                        if (packs.Count == 0)
+                            contested = false;
+                        
+                    }
+                }
+                else
+                {
+                    pack.Attack(player);
+                    if (player.HP == 0)
+                    {
+                        Logger.log("GAME OVER");
+                        contested = false;
+                        break;
+                    }
                 }
             }
         }
