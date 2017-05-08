@@ -7,37 +7,29 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
-
-
-
     public class Dungeon
     {
         UtilsClass utils = new UtilsClass();
 
         public Node startNode;
         public Node exitNode;
-        public uint difficultyLevel;
+        public int L;
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
-        public uint M;
-        public uint N;
+        public int M;
+        public int N;
 
         private Random rnd = new Random();
-        private int connectivity = 4;
-
         List<Zone> zones = new List<Zone>();
 
-
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
-        public Dungeon(uint level, uint nodeCapacityMultiplier)
+        public Dungeon(int Level, int nodeCapacityMultiplier)
         {
-            Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
-            difficultyLevel = level;
+            Logger.log("Creating a dungeon of difficulty level " + Level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
+            L = Level;
             M = nodeCapacityMultiplier;
-
-            List<Zone> zones = new List<Zone>();
             zones.Add(new Zone());          //de eerste zone
 
-            for (int zone = 1; zone < level + 1; zone++)  //de opeenvolgende zones  
+            for (int zone = 1; zone < L + 1; zone++)  //de opeenvolgende zones  
             {
                 zones.Add(new Zone());
                 CreateBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
@@ -66,9 +58,24 @@ namespace STVRogue.GameLogic
             zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
         }
 
-        public void GeneratePacks(int N)    //N = numberOfMonsters van Game
+        public void GeneratePacks(int numberOfMonsters)    //N = numberOfMonsters van Game
         {
+            N = numberOfMonsters;
+            for (int zone = 0; zone < zones.Count() - 1; zone++)    //ga alles behalve de laatste zone langs
+            {
+                int monstersToCreate = MonstersInZone(zone);
+                while (monstersToCreate > 0)
+                {
+                    int packSize = rnd.Next(1, Math.Min(Math.Min(monstersToCreate, zone + 1), M));
+                    Pack newPack = new Pack(packSize);
+                }
+            }
+        }
+        
 
+        public int MonstersInZone(int zone)
+        {
+            return (int)((2 * zone * N) / (L + 2) * (L + 1));
         }
 
         /* Return a shortest path between node u and node v */
@@ -88,12 +95,12 @@ namespace STVRogue.GameLogic
         }
 
         /* To calculate the level of the given node. */
-        public uint level(Node d)
+        public int level(Node d)
         {
             if (d is Bridge)
             {
                 var b = (Bridge)d;
-                return (uint)b.level;
+                return (int)b.level;
             }
             else
                 return 0;

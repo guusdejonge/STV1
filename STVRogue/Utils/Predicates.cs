@@ -68,10 +68,10 @@ namespace STVRogue.Utils
         }
 
         /* Count the number of bridges between the given start and exit node. */
-        public uint countNumberOfBridges(Node startNode, Node exitNode)
+        public int countNumberOfBridges(Node startNode, Node exitNode)
         {
             List<Node> nodes = reachableNodes(startNode);
-            uint n = 0;
+            int n = 0;
             foreach (Node nd in nodes)
                 if (isBridge(startNode, exitNode, nd)) n++;
             return n;
@@ -80,7 +80,7 @@ namespace STVRogue.Utils
         /* Check if a graph beween start and end nodes forms a valid dungeon of the
          * specified level.
          */
-        public Boolean isValidDungeon(Node startNode, Node exitNode, uint level)
+        public Boolean isValidDungeon(Node startNode, Node exitNode, int level)
         {
             if (startNode is Bridge || exitNode is Bridge) return false;
             if (countNumberOfBridges(startNode, exitNode) != level) return false;

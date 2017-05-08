@@ -14,18 +14,30 @@ namespace STVRogue.GameLogic
         public int startingHP = 0 ;
         public Node location;
         public Dungeon dungeon;
-        
-        public Pack(String id, uint n) {
-           this.id = id ;
-           for (int i=0; i<n; i++) {
-              Monster m = new Monster("" + id + "_" + i) ;
-              members.Add(m) ; 
-              startingHP += m.HP ; 
-           }
+
+        public Pack(String id, int n)
+        {
+            this.id = id;
+            for (int i = 0; i < n; i++)
+            {
+                Monster m = new Monster("" + id + "_" + i);
+                members.Add(m);
+                startingHP += m.HP;
+            }
+        }
+
+        public Pack(int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                Monster m = new Monster();
+                members.Add(m);
+                startingHP += m.HP;
+            }
         }
 
         public void Attack(Player p)
-        {
+            {
             foreach (Monster m in members) {
                m.Attack(p);
                if (p.HP == 0) break ;
