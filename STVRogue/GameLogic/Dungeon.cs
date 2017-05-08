@@ -27,18 +27,21 @@ namespace STVRogue.GameLogic
             Logger.log("Creating a dungeon of difficulty level " + Level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             L = Level;
             M = nodeCapacityMultiplier;
-            zones.Add(new Zone());          //de eerste zone
+            int minAmountZones = MonstersInZone(0) * M;
+            zones.Add(new Zone(N, minAmountZones));          //de eerste zone
 
             for (int zone = 1; zone < L + 1; zone++)  //de opeenvolgende zones  
             {
-                zones.Add(new Zone());
+                int minAmountZones = MonstersInZone(zone) * M;
+                zones.Add(new Zone(N));
                 CreateBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
             }
         }
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
-            Bridge newBridge = new Bridge(zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
+            Bridge newBridge = new Bridge(N);   //de index van de nieuwe zone is het level van de bridge
+            newBridge.level = zones.IndexOf(zoneTo);
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
             Node startNode = zoneTo.nodes.First();                  //de eerste node van de nieuwe zone
@@ -64,14 +67,16 @@ namespace STVRogue.GameLogic
             for (int zone = 0; zone < zones.Count() - 1; zone++)    //ga alles behalve de laatste zone langs
             {
                 int monstersToCreate = MonstersInZone(zone);
-                while (monstersToCreate > 0)
-                {
-                    int packSize = rnd.Next(1, Math.Min(Math.Min(monstersToCreate, zone + 1), M));
-                    Pack newPack = new Pack(packSize);
-                }
+                List<Pack> packsToCreate = new List<Pack>();
+
+
+
+
+
+
+               
             }
         }
-        
 
         public int MonstersInZone(int zone)
         {
@@ -111,16 +116,17 @@ namespace STVRogue.GameLogic
     {
         public List<Node> nodes = new List<Node>();
         Random rnd = new Random();
+        public int zone;
 
-        public Zone()
+        public Zone(int N, int minAmountNodes)
         {
-            nodes.Add(new Node());                                  //de startnode
+            nodes.Add(new Node(N));                                 //de startnode
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
 
             int amountOfNodes = rnd.Next(2, 10);                     //2 tot 10 nieuwe nodes toevoegen
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
-                nodes.Add(new Node());
+                nodes.Add(new Node(N));
 
                 int amountOfConnections = rnd.Next(1, 4);                               //connect hem met 1 tot 4 van de vorige nodes
                 while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
@@ -143,14 +149,15 @@ namespace STVRogue.GameLogic
 
     public class Node
     {
+        public int N;
         public String id;
         public List<Node> neighbors = new List<Node>();
         public List<Pack> packs = new List<Pack>();
         public List<Item> items = new List<Item>();
         public bool contested;
 
-        public Node() { }
-        public Node(String id) { this.id = id; }
+        public Node(int N) { this.N = N; }
+        public Node(int N, String id) { this.N = N; this.id = id; }
 
         /* To connect this node to another node. */
         public void connect(Node nd)
@@ -236,13 +243,8 @@ namespace STVRogue.GameLogic
         public List<Node> toNodes = new List<Node>();
         public int level;
 
-        public Bridge() { }
-        public Bridge(String id) : base(id) { }
-
-        public Bridge(int lev)
-        {
-            level = lev;
-        }
+        public Bridge(int N) : base(N) { }
+        public Bridge(int N, String id) : base(N, id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */
         public void connectToNodeOfSameZone(Node nd)
