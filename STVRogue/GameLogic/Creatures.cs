@@ -43,6 +43,12 @@ namespace STVRogue.GameLogic
             this.id = id; name = "Orc";
             HP = 1 + RandomGenerator.rnd.Next(6);
         }
+
+        public Monster()
+        {
+            name = "Orc";
+            HP = 1 + RandomGenerator.rnd.Next(6);
+        }
     }
 
     public class Player : Creature
