@@ -11,7 +11,7 @@ namespace STVRogue.GameLogic
     {
         String id;
         public List<Monster> members = new List<Monster>() ;
-        int startingHP = 0 ;
+        public int startingHP = 0 ;
         public Node location;
         public Dungeon dungeon;
         

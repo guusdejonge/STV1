@@ -118,7 +118,7 @@ namespace STVRogue.GameLogic
                 int amountOfConnections = rnd.Next(1, 4);                               //connect hem met 1 tot 4 van de vorige nodes
                 while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
-                    amountOfConnections -= 1;                                           
+                    amountOfConnections -= 1;
                 }
                 totalConnections += amountOfConnections;
 
@@ -168,6 +168,8 @@ namespace STVRogue.GameLogic
             while (contested)
             {
                 var pack = packs.First();
+
+                //Player's turn
                 var command = commands.First().text.ToLower().Split(' ');
                 switch (command[0])
                 {
@@ -177,7 +179,18 @@ namespace STVRogue.GameLogic
                         break;
                     case "attack":
                         player.Attack(pack.members.First());
-                        
+                        if (pack.members.Count() == 0)
+                        {
+                            packs.Remove(pack);
+                            Logger.log("One pack defeated.");
+
+                            if (packs.Count() == 0)
+                            {
+                                contested = false;
+                                Logger.log("All packs defeated");
+                            }
+                        }
+
                         break;
                     case "item":
                         if (command[1] == "potion")
@@ -185,7 +198,7 @@ namespace STVRogue.GameLogic
                             var item = player.bag.Where(q => q.GetType() == typeof(HealingPotion)).First();
                             player.use(item);
                         }
-                        else if(command[1] == "crystal")
+                        else if (command[1] == "crystal")
                         {
                             var item = player.bag.Where(q => q.GetType() == typeof(Crystal)).First();
                             player.use(item);
@@ -194,9 +207,17 @@ namespace STVRogue.GameLogic
                         {
                             Logger.log("Item does not exist");
                         }
-                            
-                        break;
 
+                        break;
+                }
+
+                //Pack's turn
+                Random random = new Random();
+                var totalPackHp = pack.members.Sum(m => m.HP);
+                var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
+                if(random.NextDouble() < fleeProbability)
+                {
+                    //if(neighbors.Any(q=>q.packs.Count()<M))
                 }
             }
         }
