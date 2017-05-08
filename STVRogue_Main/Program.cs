@@ -16,7 +16,7 @@ namespace STVRogue
             while (true)
             {
                 Console.ReadKey();
-                game.update(new Command());
+                game.update(new Command(""));
             }
         }
     }

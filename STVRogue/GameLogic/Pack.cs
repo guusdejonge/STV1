@@ -31,21 +31,30 @@ namespace STVRogue.GameLogic
                if (p.HP == 0) break ;
             }
         }
-        
+
         /* Move the pack to an adjacent node. */
-        public void move(Node u) {
-             if (!location.neighbors.Contains(u)) throw new ArgumentException() ; 
-             uint capacity = dungeon.M * (dungeon.level(u) + 1) ;
-             if (u.packs.Count >= capacity) {
-                 Logger.log("Pack " +  id + " is trying to move to an already full node " + u.id + ". Rejected.");
-                 return ;
-             }
-             location = u ;
-             u.packs.Add(this);
-             Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
-        
+        public void move(Node u)
+        {
+            if (!location.neighbors.Contains(u)) throw new ArgumentException();
+            int capacity = (int)(dungeon.M * (dungeon.level(u) + 1));
+            // count monsters already in the node:
+            foreach (Pack Q in location.packs)
+            {
+                capacity = capacity - Q.members.Count;
+            }
+            // capacity now expresses how much space the node has left
+            if (members.Count > capacity)
+            {
+                Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
+                return;
+            }
+            location = u;
+            u.packs.Add(this);
+            Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
+
         }
-        
+
+
         /* Move the pack one node further along a shortest path to u. */
         public void moveTowards(Node u) {
             List<Node> path = dungeon.shortestPath(location,u) ;

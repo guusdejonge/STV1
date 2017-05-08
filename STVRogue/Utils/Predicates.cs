@@ -9,7 +9,7 @@ namespace STVRogue.Utils
 {
     /* Providing some useful predicates and functions to extract information from various
      * game entities.
-     */ 
+     */
     public class Predicates
     {
         public Boolean isPath(List<Node> path)
@@ -34,9 +34,15 @@ namespace STVRogue.Utils
             {
                 x0 = todo[0]; todo.RemoveAt(0);
                 seen.Add(x0);
+                //Console.WriteLine("++ marking " + x0.id + " as seen");
                 foreach (Node y in x0.neighbors)
                 {
-                    if (!seen.Contains(y)) todo.Add(y);
+                    //Console.WriteLine("-- considering " + x0.id + " -> " + y.id);
+                    if (!seen.Contains(y) && !todo.Contains(y))
+                    {
+                        //Console.WriteLine("++ adding " + y.id + " to todo-list");
+                        todo.Add(y);
+                    }
                 }
             }
             return seen;
@@ -54,10 +60,11 @@ namespace STVRogue.Utils
             List<Node> around = nd.neighbors;
             // temporarily disconnect the bridge 
             foreach (Node a in around) a.neighbors.Remove(nd);
-            if (isReachable(startNode, exitNode)) return false;
+            Boolean isBridge = true;
+            if (isReachable(startNode, exitNode)) isBridge = false;
             // restore the connections
             foreach (Node a in around) a.neighbors.Add(nd);
-            return true;
+            return isBridge;
         }
 
         /* Count the number of bridges between the given start and exit node. */
@@ -93,13 +100,13 @@ namespace STVRogue.Utils
                 totalConnectivityDegree += nd.neighbors.Count;
                 // check bridge
                 Boolean isBridge_ = isBridge(startNode, exitNode, nd);
-                if (nd is Bridge && !isBridge_)   return false;
+                if (nd is Bridge && !isBridge_) return false;
                 if (!(nd is Bridge) && isBridge_) return false;
             }
             float avrgConnectivity = (float)totalConnectivityDegree / (float)nodes.Count;
             if (avrgConnectivity > 3) return false;
             return true;
         }
-
     }
+
 }

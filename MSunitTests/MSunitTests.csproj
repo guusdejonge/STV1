@@ -55,6 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="MSTest_Player.cs" />
+    <Compile Include="MSTest_Predicates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
