@@ -1,0 +1,8 @@
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\bin\Debug\STVRogue_Main.exe.config
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\bin\Debug\STVRogue_Main.exe
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\bin\Debug\STVRogue_Main.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\bin\Debug\STVRogue.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\bin\Debug\STVRogue.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\obj\Debug\STVRogue_Main.csprojResolveAssemblyReference.cache
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\obj\Debug\STVRogue_Main.exe
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue_Main\obj\Debug\STVRogue_Main.pdb

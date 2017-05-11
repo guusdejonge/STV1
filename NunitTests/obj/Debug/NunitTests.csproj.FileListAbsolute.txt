@@ -1,0 +1,17 @@
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\NunitTests.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\NunitTests.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.NUnit.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FSharp.Core.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\nunit.framework.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\STVRogue.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\STVRogue.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.xml
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.NUnit.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FsCheck.NUnit.xml
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\FSharp.Core.xml
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\bin\Debug\nunit.framework.xml
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\obj\Debug\NunitTests.csprojResolveAssemblyReference.cache
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\obj\Debug\NunitTests.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\NunitTests\obj\Debug\NunitTests.pdb

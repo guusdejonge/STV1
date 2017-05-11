@@ -1,0 +1,5 @@
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue\bin\Debug\STVRogue.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue\bin\Debug\STVRogue.pdb
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue\obj\Debug\STVRogue.csprojResolveAssemblyReference.cache
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue\obj\Debug\STVRogue.dll
+C:\Users\Guus de Jonge\Documents\GitHub\STV1\STVRogue\obj\Debug\STVRogue.pdb
