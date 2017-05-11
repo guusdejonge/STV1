@@ -63,9 +63,7 @@ namespace STVRogue.GameLogic
             location = u;
             u.packs.Add(this);
             //Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
-
         }
-
 
         /* Move the pack one node further along a shortest path to u. */
         public void moveTowards(Node u) {
