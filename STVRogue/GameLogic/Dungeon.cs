@@ -43,6 +43,7 @@ namespace STVRogue.GameLogic
             zones.Add(new Zone(M, monstersLeft));                   //de laatste zone
 
             GeneratePacks();
+            GenerateItems();
         }
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
@@ -84,6 +85,14 @@ namespace STVRogue.GameLogic
                         p.dungeon = this;
                     }
                 }
+            }
+        }
+
+        public void GenerateItems()
+        {
+            foreach (Zone z in zones)    //ga alle zones langs
+            {
+                z.CreateItems();
             }
         }
 
@@ -135,13 +144,14 @@ namespace STVRogue.GameLogic
             this.M = M;
             this.monstersInZone = monstersInZone;
 
-            int minAmountOfNodes = monstersInZone / M + 3;          //minimaal 3 nodes
-            int amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //3 tot 10 nieuwe nodes toevoegen
+            int minAmountOfNodes = monstersInZone / M + 3;          //min + 3 nodes
+            int amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //min + 3 tot 10 nieuwe nodes toevoegen
+
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
                 nodes.Add(new Node(M));
 
-                int amountOfConnections = rnd.Next(1, Math.Min(4, nodes.Count()));                               //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
+                int amountOfConnections = rnd.Next(1, Math.Min(4, nodes.Count()));      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
                     amountOfConnections -= 1;
@@ -151,11 +161,11 @@ namespace STVRogue.GameLogic
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
                     int randomPreviousNode = rnd.Next(nodes.Count - 1);                 //kies random een van de vorige nodes
-                    while (!nodes[node].neighbors.Contains(nodes[randomPreviousNode]))     //controleer of hij deze al als neighbor heeft
+                    while (!nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
                     {
                         randomPreviousNode = rnd.Next(nodes.Count - 1);  
                     }
-                    nodes[node].connect(nodes[randomPreviousNode]);                 //zo niet: connect hiermee
+                    nodes[node].connect(nodes[randomPreviousNode]);                     //zo niet: connect hiermee
                 }
             }
         }
@@ -164,9 +174,9 @@ namespace STVRogue.GameLogic
         {
             int maxRandomNode = 0;
 
-            if (nodes.Any(q => q.GetType() == typeof(Bridge))) //kijk of je maken heb met de laatse zone 
+            if (nodes.Any(q => q.GetType() == typeof(Bridge)))  //kijk of je maken heb met de laatse zone 
             {
-                maxRandomNode = nodes.Count() - 2;  //in de exit node mag nu geen pack geplaatst worden
+                maxRandomNode = nodes.Count() - 2;              //in de exit node mag nu geen pack geplaatst worden
             }
             else                                                //zo niet: dan te maken met normale zone
             {
@@ -176,14 +186,14 @@ namespace STVRogue.GameLogic
             int minAmountOfPacks = (int)Math.Ceiling((double)(monstersInZone / M));
             int maxAmountOfPacks = monstersInZone;
             int Packs = rnd.Next(minAmountOfPacks, maxAmountOfPacks);
-            int[] monstersInPack = new int[Packs];        //een array waarin komt te staan hoeveel monsters in elke pack moet.
+            int[] monstersInPack = new int[Packs];              //een array waarin komt te staan hoeveel monsters in elke pack komt
 
             for(int i = 0; i < Packs; i++)
             {
-                monstersInPack[i] = monstersInZone / Packs;  //het aantal dat er sowieso in komt. bijv: 8 monsters, 3 packs, dus sowieso 2 per pack
+                monstersInPack[i] = monstersInZone / Packs;     //het aantal dat er sowieso in komt. bijv: 8 monsters, 3 packs, dus sowieso 2 per pack
             }
                
-            int rest = monstersInZone % Packs;   //nu nog de rest eerlijk verdelen: bijv: nog 2 over om te verdelen. de eerste en tweede pack nog +1.
+            int rest = monstersInZone % Packs;                  //nu nog de rest eerlijk verdelen: bijv: nog 2 over om te verdelen. de eerste en tweede pack nog +1.
             for (int i = 0; i < Packs; i++)
             {
                 if(rest>0)
@@ -195,28 +205,52 @@ namespace STVRogue.GameLogic
 
             foreach(int i in monstersInPack)
             {
-                int randomNode = rnd.Next(0, maxRandomNode);    //kies willekeurige node
-                int currentMonstersInThisNode = 0;
+                int randomNode = rnd.Next(0, maxRandomNode);        //kies willekeurige node
 
-                foreach(Pack p in nodes[randomNode].packs)          //tel huidig aantal monsters in die node
-                {
-                    currentMonstersInThisNode += p.members.Count;
-                }
+                int currentMonstersInThisNode = calculateMonstersInNode(nodes[randomNode]);
 
                 while(currentMonstersInThisNode + i > M)            //als M overschreven worden, kies nieuwe node totdat dit niet meer het geval is
                 {
-                    currentMonstersInThisNode = 0;
                     randomNode = rnd.Next(0, maxRandomNode);
-                    foreach (Pack p in nodes[randomNode].packs)
-                    {
-                        currentMonstersInThisNode += p.members.Count;
-                    }
+                    currentMonstersInThisNode = calculateMonstersInNode(nodes[randomNode]);
                 }
 
                 Pack newPack = new Pack(i);
                 newPack.location = nodes[randomNode];             //zet deze node als de pack zn location
                 nodes[randomNode].packs.Add(newPack);             //voeg pack toe aan de node
             }
+        }
+
+        public void CreateItems()
+        {
+            int randomAmountOfItems = rnd.Next(1, nodes.Count());
+
+            for(int i = 0; i < randomAmountOfItems; i++)
+            {
+                int item = rnd.Next(1, 2);
+                int randomNode = rnd.Next(0, nodes.Count() - 1);
+
+                if (item == 1)
+                {
+                    nodes[randomNode].items.Add(new HealingPotion());
+                }
+                else
+                {
+                    nodes[randomNode].items.Add(new Crystal());
+                }
+            }
+        }
+
+        public int calculateMonstersInNode(Node n)
+        {
+            int currentMonstersInThisNode = 0;
+
+            foreach (Pack p in n.packs)          //tel huidig aantal monsters in die node
+            {
+                currentMonstersInThisNode += p.members.Count;
+            }
+
+            return currentMonstersInThisNode;
         }
     }
 
