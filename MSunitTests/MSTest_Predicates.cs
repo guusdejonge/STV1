@@ -16,11 +16,11 @@ namespace UnitTests_STVRogue
             [TestMethod]
             public void MSTest_reachableNodes()
             {
-                Node N0 = new Node("N0");
-                Node N1 = new Node("N1");
-                Node N2 = new Node("N2");
-                Node N3 = new Node("N3");
-                Node N4 = new Node("N4");
+                Node N0 = new Node(0);      //alle M tijdelijk 0 gemaakt
+                Node N1 = new Node(0);
+                Node N2 = new Node(0);
+                Node N3 = new Node(0);
+                Node N4 = new Node(0);
                 N0.connect(N1);
                 N1.connect(N2);
                 N1.connect(N3);

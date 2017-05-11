@@ -9,13 +9,13 @@ namespace STVRogue.GameLogic
 {
     public class Pack
     {
-        String id;
+        //String id;
         public List<Monster> members = new List<Monster>() ;
         public int startingHP = 0 ;
         public Node location;
         public Dungeon dungeon;
 
-        public Pack(String id, int n)
+        /*public Pack(String id, int n)
         {
             this.id = id;
             for (int i = 0; i < n; i++)
@@ -24,7 +24,7 @@ namespace STVRogue.GameLogic
                 members.Add(m);
                 startingHP += m.HP;
             }
-        }
+        }*/
 
         public Pack(int n)
         {
@@ -57,12 +57,12 @@ namespace STVRogue.GameLogic
             // capacity now expresses how much space the node has left
             if (members.Count > capacity)
             {
-                Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
+                //Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
                 return;
             }
             location = u;
             u.packs.Add(this);
-            Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
+            //Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
 
         }
 
