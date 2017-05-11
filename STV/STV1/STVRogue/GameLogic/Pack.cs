@@ -72,5 +72,15 @@ namespace STVRogue.GameLogic
             List<Node> path = dungeon.shortestPath(location,u) ;
             move(path[0]) ;
         }
+
+        public virtual int GetStartingHP()
+        {
+            return startingHP;
+        }
+
+        public virtual List<Monster> GetMembers()
+        {
+            return members;
+        }
     }
 }

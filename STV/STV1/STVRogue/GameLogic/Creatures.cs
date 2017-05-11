@@ -12,12 +12,21 @@ namespace STVRogue.GameLogic
         public String id;
         public String name;
         public int HP;
+        //public int hp;
+        //public int HP {
+        //    get {
+        //        return GetHP();
+        //    }
+        //    set { hp = value; }
+        //}
+
         public int AttackRating = 1;
         public Node location;
         public Creature() { }
         virtual public void Attack(Creature foe)
         {
-            foe.HP = (int)Math.Max(0, foe.HP - AttackRating);
+            int diff = foe.HP - AttackRating;
+            foe.HP = (int)Math.Max(0, foe.HP-AttackRating);
             String killMsg = foe.HP == 0 ? ", KILLING it" : "";
             Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
@@ -30,6 +39,11 @@ namespace STVRogue.GameLogic
                 node.fight(this as Player, null);
             }
         }
+
+        //virtual public int GetHP()
+        //{
+        //    return hp;
+        //}
     }
 
 
@@ -48,6 +62,11 @@ namespace STVRogue.GameLogic
         {
             name = "Orc";
             HP = 1 + RandomGenerator.rnd.Next(6);
+        }
+
+        public virtual Pack GetPack()
+        {
+            return pack;
         }
     }
 
