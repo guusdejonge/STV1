@@ -26,14 +26,14 @@ namespace STVRogue.GameLogic
         virtual public void Attack(Creature foe)
         {
             int diff = foe.HP - AttackRating;
-            foe.HP = (int)Math.Max(0, foe.HP-AttackRating);
+            foe.HP = (int)Math.Max(0, foe.HP - AttackRating);
             String killMsg = foe.HP == 0 ? ", KILLING it" : "";
             Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
         virtual public void moveTo(Node node)
         {
             this.location = node;
-            if(this is Player && node.packs.Count > 0)
+            if (this is Player && node.packs.Count > 0)
             {
                 node.contested = true;
                 node.fight(this as Player, null);
@@ -74,10 +74,11 @@ namespace STVRogue.GameLogic
     {
         public Dungeon dungeon;
         public int HPbase = 100;
-        public Boolean  accelerated = false ;
+        public Boolean accelerated = false;
         public int KillPoint = 0;
         public List<Item> bag = new List<Item>();
-        public Player() {
+        public Player()
+        {
             id = "player";
             AttackRating = 5;
         }
@@ -96,22 +97,31 @@ namespace STVRogue.GameLogic
             if (!accelerated)
             {
                 base.Attack(foe);
-                if (foe_.HP == 0) {
-                   foe_.pack.members.Remove(foe_);
-                   KillPoint++;
+                if (foe_.HP == 0)
+                {
+                    foe_.pack.members.Remove(foe_);
+                    KillPoint++;
                 }
             }
             else
             {
+                var remove = new List<Monster>();
+
                 foreach (Monster target in foe_.pack.members)
                 {
                     base.Attack(target);
-                    if (target.HP == 0) { 
-                       foe_.pack.members.Remove(foe_);
-                       KillPoint++;
+                    if (target.HP == 0)
+                    {
+                        remove.Add(foe_);
+                        KillPoint++;
                     }
-		}
-		accelerated = false;
+                }
+
+                foreach (Monster m in remove)
+                {
+                    foe_.pack.members.Remove(m);
+                }
+                accelerated = false;
             }
         }
     }

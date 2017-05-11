@@ -84,5 +84,43 @@ namespace STVRogue.GameLogic
             //ASSERT
             Assert.AreEqual(0, player.KillPoint);
         }
+
+        [TestMethod]
+        public void MSTEST_attack_accelerated()
+        {
+            //ARRANGE
+            var pack = new Mock<Pack>(2);
+            var monster = new Mock<Monster>();
+            var monster2 = new Mock<Monster>();
+
+            var monsters = new List<Monster>() { };
+            var player = new Player();
+
+            player.accelerated = true;
+
+            monsters.Add(monster.Object);
+            monsters.Add(monster2.Object);
+
+            pack.SetupAllProperties();
+            pack.Object.members = monsters;
+
+            monster.SetupAllProperties();
+            monster.Object.HP = 3;
+            monster.Object.pack = pack.Object;
+
+            monster2.SetupAllProperties();
+            monster2.Object.HP = 3;
+            monster2.Object.pack = pack.Object;
+
+            //ACT
+            player.Attack(monster.Object);
+
+            //ASSERT
+            Assert.AreEqual(2, player.KillPoint);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+
     }
 }
