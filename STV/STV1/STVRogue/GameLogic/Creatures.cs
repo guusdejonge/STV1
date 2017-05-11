@@ -80,6 +80,7 @@ namespace STVRogue.GameLogic
         public Player() {
             id = "player";
             AttackRating = 5;
+            HP = HPbase;
         }
 
         public void use(Item item)
