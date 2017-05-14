@@ -10,6 +10,13 @@ namespace STVRogue.Utils
 {
     public class UtilsClass
     {
+        public virtual Single fleeProb(Pack pack)
+        {
+            var totalPackHp = pack.members.Sum(m => m.HP);
+            var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
+            return fleeProbability;
+        }
+
         public List<Node> shortestPath(Node u, Node v, List<Zone> zones)
         {
             var distances = new Dictionary<Node, int>();

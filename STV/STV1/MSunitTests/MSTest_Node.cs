@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STVRogue.GameLogic;
 using Moq;
 using STVRogue;
+using STVRogue.Utils;
 
 namespace UnitTests_STVRogue
 {
@@ -84,10 +85,12 @@ namespace UnitTests_STVRogue
             commands.Add(c);
             c = new Command("item crystal");
             commands.Add(c);
+            c = new Command("item null");
+            commands.Add(c);
             c = new Command("flee");
             c.previousNode = previous;
             commands.Add(c);
-            c = new Command("item null");
+            
 
             n.fight(p, commands);
 
@@ -129,10 +132,127 @@ namespace UnitTests_STVRogue
         }
 
         [TestMethod]
-        public void MSTest_nodes_fleePack()
+        public void MSTest_nodes_fleePackEmptyNode()
         {
-            var node = new Mock<Node>(3);
+            //NEED DUNGEON
+            var node = new Node(3);
+            var emptyNode = new Node(3);
 
+            var utils = new Mock<UtilsClass>();
+
+            var pack = new Pack(2);
+
+            var commands = new List<Command>();
+            var c = new Command("attack");
+            commands.Add(c);
+
+            var player = new Player();
+            player.AttackRating = 0;
+
+            node.packs.Add(pack);
+            node.contested = true;
+            node.utils = utils.Object;
+            node.neighbors.Add(emptyNode);
+            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+
+            node.fight(player, commands);
+
+            Assert.IsFalse(node.packs.Contains(pack));
+        }
+
+        [TestMethod]
+        public void MSTest_nodes_fleePackFullNode()
+        {
+            //NEED DUNGEON
+            var node = new Node(3);
+            var fullNode = new Node(1);
+            var pack = new Pack(1);
+            var fullPack = new Pack(1);
+
+            var utils = new Mock<UtilsClass>();
+
+            var commands = new List<Command>();
+            var c = new Command("attack");
+            commands.Add(c);
+
+            var player = new Player();
+            player.AttackRating = 0;
+
+            fullNode.packs.Add(fullPack);
+
+            node.packs.Add(pack);
+            node.contested = true;
+            node.utils = utils.Object;
+            node.neighbors.Add(fullNode);
+            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+
+            node.fight(player, commands);
+
+            Assert.IsTrue(node.packs.Contains(pack));
+
+        }
+
+        [TestMethod]
+        public void MSTest_nodes_fleePackExitNode()
+        {
+            //NEED DUNGEON
+            var node = new Node(3);
+            var exitNode = new Node(1);
+            var pack = new Pack(1);
+            var dungeon = new Dungeon(1, 1);
+            var utils = new Mock<UtilsClass>();
+            var commands = new List<Command>();
+
+            var c = new Command("attack");
+            commands.Add(c);
+
+            var player = new Player();
+            player.AttackRating = 0;
+
+            dungeon.exitNode = exitNode;
+            pack.dungeon = dungeon;
+            node.packs.Add(pack);
+            node.contested = true;
+            node.utils = utils.Object;
+            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+            
+            node.fight(player, commands);
+
+            Assert.IsTrue(node.packs.Contains(pack));
+        }
+
+        [TestMethod]
+        public void MSTest_nodes_fleeSecondPack()
+        {
+            //NEED DUNGEON
+            var node = new Node(3);
+            var pack = new Pack(1);
+            var secondPack = new Pack(1);
+
+            Assert.IsTrue(node.packs.Contains(secondPack));
+
+        }
+
+        [TestMethod]
+        public void MSTest_nodes_gameOver()
+        {
+            var node = new Node(3);
+            var pack = new Pack(5);
+            var player = new Player();
+
+            player.HP = 4;
+            player.AttackRating = 0;
+            node.contested = true;
+            node.packs.Add(pack);
+
+            var commands = new List<Command>();
+            var c = new Command("attack");
+            commands.Add(c);
+
+            node.fight(player, commands);
+
+            Assert.AreEqual(0, player.HP);
+            Assert.IsFalse(node.contested);
         }
 
     }

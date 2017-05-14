@@ -266,6 +266,8 @@ namespace STVRogue.GameLogic
         public List<Item> items = new List<Item>();
         public bool contested;
         public bool fled;
+        public UtilsClass utils = new UtilsClass();
+
 
         public Node(int M) { this.M = M; }
         //public Node(int M, String id) { this.M = M; this.id = id; }
@@ -342,10 +344,11 @@ namespace STVRogue.GameLogic
                 if (packs.Count() != 0)
                 {
                     Random random = new Random();
-                    
-                    if (random.NextDouble() < fleeProb(pack) && !fled)
+                    var fleeProb = utils.fleeProb(pack);
+                    if (random.NextDouble() < fleeProb && !fled)
                     {
                         Node node = null;
+                        Node neighborCheck = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M);
                         if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && node != q.packs.First().dungeon.exitNode)) != null)
                         {
                             pack.move(node);
@@ -371,12 +374,7 @@ namespace STVRogue.GameLogic
             return true;
         }
 
-        private Single fleeProb(Pack pack)
-        {
-            var totalPackHp = pack.members.Sum(m => m.HP);
-            var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
-            return fleeProbability;
-        }
+        
     }
 
     public class Bridge : Node
