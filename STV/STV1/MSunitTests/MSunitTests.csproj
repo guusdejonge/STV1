@@ -65,6 +65,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="MSTest_Node.cs" />
+    <Compile Include="MSTest_Game.cs" />
+    <Compile Include="MSTest_Item.cs" />
+    <Compile Include="MSTest_Creature.cs" />
+    <Compile Include="MSTest_Bridge.cs" />
     <Compile Include="MSTest_Pack.cs" />
     <Compile Include="MSTest_Player.cs" />
     <Compile Include="MSTest_Predicates.cs" />

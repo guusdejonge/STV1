@@ -29,9 +29,9 @@ namespace STVRogue.GameLogic
             M = nodeCapacityMultiplier;
 
             int monstersLeft = N;
-
-            zones.Add(new Zone(M, MonstersInZone(0)));                             //de eerste zone
-            monstersLeft -= MonstersInZone(0);
+            int monstersDone = MonstersInZone(0);
+            zones.Add(new Zone(M, monstersDone));                             //de eerste zone
+            monstersLeft -= monstersDone;
 
             for (int zone = 1; zone < L; zone++)  //de opeenvolgende zones  
             {
@@ -111,7 +111,7 @@ namespace STVRogue.GameLogic
         }
 
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
-        public void disconnect(Bridge b)
+        public virtual void disconnect(Bridge b)
         {
             Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
             var fromNodes = b.fromNodes;
@@ -268,7 +268,7 @@ namespace STVRogue.GameLogic
         public bool fled;
 
         public Node(int M) { this.M = M; }
-        public Node(int M, String id) { this.M = M; this.id = id; }
+        //public Node(int M, String id) { this.M = M; this.id = id; }
 
         /* To connect this node to another node. */
         public void connect(Node nd)
@@ -277,7 +277,7 @@ namespace STVRogue.GameLogic
         }
 
         /* To disconnect this node from the given node. */
-        public void disconnect(Node nd)
+        public virtual void disconnect(Node nd)
         {
             neighbors.Remove(nd); nd.neighbors.Remove(this);
         }
@@ -288,7 +288,7 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player, List<Command> commands)
+        public virtual bool fight(Player player, List<Command> commands)
         {
             while (contested)
             {
@@ -336,33 +336,46 @@ namespace STVRogue.GameLogic
                         break;
                 }
 
-                //Pack's turn
-                Random random = new Random();
-                var totalPackHp = pack.members.Sum(m => m.HP);
-                var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
-                if (random.NextDouble() < fleeProbability && !fled)
-                {
-                    Node node;
-                    if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M)) != null)
-                    {
-                        pack.move(node);
-                        fled = true;
-                        if (packs.Count == 0)
-                            contested = false;
+                commands.Remove(commands.First());
 
-                    }
-                }
-                else
+                //Pack's turn
+                if (packs.Count() != 0)
                 {
-                    pack.Attack(player);
-                    if (player.HP == 0)
+                    Random random = new Random();
+                    
+                    if (random.NextDouble() < fleeProb(pack) && !fled)
                     {
-                        Logger.log("GAME OVER");
-                        contested = false;
-                        break;
+                        Node node = null;
+                        if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && node != q.packs.First().dungeon.exitNode)) != null)
+                        {
+                            pack.move(node);
+                            fled = true;
+                            if (packs.Count == 0)
+                                contested = false;
+
+                        }
+                    }
+                    else
+                    {
+                        pack.Attack(player);
+                        if (player.HP == 0)
+                        {
+                            Logger.log("GAME OVER");
+                            contested = false;
+                            break;
+                        }
                     }
                 }
             }
+
+            return true;
+        }
+
+        private Single fleeProb(Pack pack)
+        {
+            var totalPackHp = pack.members.Sum(m => m.HP);
+            var fleeProbability = (1 - (totalPackHp / pack.startingHP)) * 0.5f;
+            return fleeProbability;
         }
     }
 
@@ -373,7 +386,7 @@ namespace STVRogue.GameLogic
         public int level;
 
         public Bridge(int N) : base(N) { }
-        public Bridge(int N, String id) : base(N, id) { }
+        //public Bridge(int N, String id) : base(N, id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */
         public void connectToNodeOfSameZone(Node nd)

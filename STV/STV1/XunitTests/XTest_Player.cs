@@ -25,7 +25,7 @@ namespace STVRogue.GameLogic
         public void XTest_use_item_in_bag()
         {
             Player P = new Player();
-            Item x = new HealingPotion("pot1");
+            Item x = new HealingPotion();
             P.bag.Add(x);
             P.use(x);
             Assert.False(P.bag.Contains(x));

@@ -12,13 +12,6 @@ namespace STVRogue.GameLogic
         public String id;
         public String name;
         public int HP;
-        //public int hp;
-        //public int HP {
-        //    get {
-        //        return GetHP();
-        //    }
-        //    set { hp = value; }
-        //}
 
         public int AttackRating = 1;
         public Node location;
@@ -39,11 +32,6 @@ namespace STVRogue.GameLogic
                 node.fight(this as Player, null);
             }
         }
-
-        //virtual public int GetHP()
-        //{
-        //    return hp;
-        //}
     }
 
 
@@ -52,11 +40,11 @@ namespace STVRogue.GameLogic
         public Pack pack;
 
         /* Create a monster with a random HP */
-        public Monster(String id)
-        {
-            this.id = id; name = "Orc";
-            HP = 1 + RandomGenerator.rnd.Next(6);
-        }
+        //public Monster(String id)
+        //{
+        //    this.id = id; name = "Orc";
+        //    HP = 1 + RandomGenerator.rnd.Next(6);
+        //}
 
         public Monster()
         {
@@ -64,10 +52,6 @@ namespace STVRogue.GameLogic
             HP = 1 + RandomGenerator.rnd.Next(6);
         }
 
-        public virtual Pack GetPack()
-        {
-            return pack;
-        }
     }
 
     public class Player : Creature

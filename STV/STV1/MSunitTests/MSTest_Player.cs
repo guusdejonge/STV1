@@ -27,7 +27,7 @@ namespace STVRogue.GameLogic
         public void MSTest_use_item_in_bag()
         {
             Player P = new Player();
-            Item x = new HealingPotion("pot1");
+            Item x = new HealingPotion();
             P.bag.Add(x);
             P.use(x);
             Assert.IsFalse(P.bag.Contains(x));
@@ -121,6 +121,14 @@ namespace STVRogue.GameLogic
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
+        public void MSTest_attack_noMonster()
+        {
+            var player = new Player();
+
+            var obj = new Mock<Player>();
+
+            player.Attack(obj.Object);
+        }
 
     }
 }
