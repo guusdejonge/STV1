@@ -192,14 +192,14 @@ namespace UnitTests_STVRogue
 
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void MSTest_nodes_fleePackExitNode()
         {
             //NEED DUNGEON
             var node = new Node(3);
             var exitNode = new Node(1);
             var pack = new Pack(1);
-            var dungeon = new Dungeon(1, 1);
+            var dungeon = new Dungeon(1, 1, 1);
             var utils = new Mock<UtilsClass>();
             var commands = new List<Command>();
 
@@ -225,9 +225,9 @@ namespace UnitTests_STVRogue
         public void MSTest_nodes_fleeSecondPack()
         {
             //NEED DUNGEON
-            var node = new Node(3);
-            var pack = new Pack(1);
-            var secondPack = new Pack(1);
+            Node node = new Node(3);
+            Pack pack = new Pack(1);
+            Pack secondPack = new Pack(1);
 
             Assert.IsTrue(node.packs.Contains(secondPack));
 

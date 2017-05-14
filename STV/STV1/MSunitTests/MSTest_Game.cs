@@ -13,12 +13,10 @@ namespace UnitTests_STVRogue
     public class MSTest_Game
     {
         [TestMethod]
-        public void MSTest_createNewGame()
+        public void MSTest_create_game()
         {
-            
+            Game g = new Game(3, 10, 10);
+            Assert.IsTrue(g != null);
         }
-
-
-
     }
 }

@@ -65,6 +65,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="MSTest_Dungeon.cs" />
     <Compile Include="MSTest_Node.cs" />
     <Compile Include="MSTest_Game.cs" />
     <Compile Include="MSTest_Item.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="MSTest_Pack.cs" />
     <Compile Include="MSTest_Player.cs" />
     <Compile Include="MSTest_Predicates.cs" />
+    <Compile Include="MSTest_Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

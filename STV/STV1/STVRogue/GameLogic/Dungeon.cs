@@ -19,14 +19,15 @@ namespace STVRogue.GameLogic
         public int N;
 
         private Random rnd = new Random();
-        List<Zone> zones = new List<Zone>();
+        public List<Zone> zones = new List<Zone>();
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
-        public Dungeon(int Level, int nodeCapacityMultiplier)
+        public Dungeon(int Level, int nodeCapacityMultiplier, int numberOfMonsters)
         {
             Logger.log("Creating a dungeon of difficulty level " + Level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             L = Level;
             M = nodeCapacityMultiplier;
+            N = numberOfMonsters;
 
             int monstersLeft = N;
             int monstersDone = MonstersInZone(0);
@@ -62,13 +63,21 @@ namespace STVRogue.GameLogic
                 newBridge.connectToNodeOfSameZone(neighbor);
             }
 
+            List<Node> NeighborsStartNode= new List<Node>();
+
             foreach (Node neighbor in startNode.neighbors)          //voor elke neighbor van de eerste node van de nieuwe zone
             {
                 newBridge.connectToNodeOfNextZone(neighbor);
-                startNode.disconnect(neighbor);                     //disconnect de eerste node met de neighbors (wordt straks verwijderd)
+                NeighborsStartNode.Add(neighbor);
             }
 
+
             exitNode = newBridge;                               //replace exitNode van de vorige zone voor de bridge
+
+            foreach(Node n in NeighborsStartNode)
+            {
+                n.disconnect(startNode);
+            }
             zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
         }
 
@@ -101,7 +110,7 @@ namespace STVRogue.GameLogic
 
         public int MonstersInZone(int zone)                 //geldt voor alle zones behalve de laatste
         {
-            return ((2 * zone * N) / (L + 2) * (L + 1));
+            return (int)Math.Floor((double)((2 * (zone + 1) * N) / ((L + 2) * (L + 1))));
         }
 
         /* Return a shortest path between node u and node v */
@@ -140,16 +149,16 @@ namespace STVRogue.GameLogic
         public int M;
         public int monstersInZone;
 
-        public Zone(int M, int monstersInZone)
+        public Zone(int M2, int monstersInZone2)
         {
             nodes.Add(new Node(M));                                 //de startnode
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
-            this.M = M;
-            this.monstersInZone = monstersInZone;
+            this.M = M2;
+            this.monstersInZone = monstersInZone2;
 
             int minAmountOfNodes = monstersInZone / M + 3;          //min + 3 nodes
             int amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //min + 3 tot 10 nieuwe nodes toevoegen
-
+            
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
                 nodes.Add(new Node(M));
@@ -163,10 +172,10 @@ namespace STVRogue.GameLogic
 
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
-                    int randomPreviousNode = rnd.Next(nodes.Count - 1);                 //kies random een van de vorige nodes
-                    while (!nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
+                    int randomPreviousNode = rnd.Next(0, nodes.Count - 1);                 //kies random een van de vorige nodes
+                    while (nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
                     {
-                        randomPreviousNode = rnd.Next(nodes.Count - 1);
+                        randomPreviousNode = rnd.Next(0, nodes.Count - 1);
                     }
                     nodes[node].connect(nodes[randomPreviousNode]);                     //zo niet: connect hiermee
                 }
@@ -196,15 +205,19 @@ namespace STVRogue.GameLogic
                 monstersInPack[i] = monstersInZone / Packs;     //het aantal dat er sowieso in komt. bijv: 8 monsters, 3 packs, dus sowieso 2 per pack
             }
 
-            int rest = monstersInZone % Packs;                  //nu nog de rest eerlijk verdelen: bijv: nog 2 over om te verdelen. de eerste en tweede pack nog +1.
-            for (int i = 0; i < Packs; i++)
+            if(Packs > 0)
             {
-                if (rest > 0)
+                int rest = monstersInZone % Packs;                  //nu nog de rest eerlijk verdelen: bijv: nog 2 over om te verdelen. de eerste en tweede pack nog +1.
+                for (int i = 0; i < Packs; i++)
                 {
-                    monstersInPack[i]++;
-                    rest--;
+                    if (rest > 0)
+                    {
+                        monstersInPack[i]++;
+                        rest--;
+                    }
                 }
             }
+            
 
             foreach (int i in monstersInPack)
             {

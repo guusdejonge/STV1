@@ -54,7 +54,6 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_attack_kill()
         {
-            //ARRANGE
             Pack pack = new Pack(3);
 
             var player = new Mock<Player>();
@@ -72,7 +71,6 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_attack_dont_kill()
         {
-            //ARRANGE
             Pack pack = new Pack(3);
 
             var player = new Mock<Player>();
