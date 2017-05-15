@@ -16,7 +16,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_zone_zero_monsters()
         {
-            Zone z = new Zone(10, 0);
+            Zone z = new Zone(10, 0, null);
             int amountOfMonsters = 0;
             foreach(Node n in z.nodes)
             {
@@ -31,7 +31,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_zone_multiple_monsters()
         {
-            Zone z = new Zone(10, 10);
+            Zone z = new Zone(10, 10, null);
             z.CreatePacks();
 
             int amountOfMonsters = 0;
@@ -49,11 +49,10 @@ namespace UnitTests_STVRogue
         public void MSTest_zone_averageconnectivity()
         {
             var u = new Mock<UtilsClass>();
+            u.Setup(m => m.rnd(1, 4)).Returns(4);
 
-            Zone z = new Zone(3, 100);
-            z.utils = u.Object;
-            u.Setup(m => m.rnd(1, Math.Min(4, z.nodes.Count()))).Returns(Math.Min(4, z.nodes.Count));
-
+            Zone z = new Zone(3, 0, u.Object);
+            
             int totalconnections = 0;
 
             foreach (Node n in z.nodes)
@@ -72,7 +71,7 @@ namespace UnitTests_STVRogue
             for (int i = 0; i < 10; i++)
             {
                 int multiplier = 3;
-                Zone z = new Zone(multiplier, 100);
+                Zone z = new Zone(multiplier, 100, null);
                 z.CreatePacks();
 
                 foreach(Node n in z.nodes)
@@ -93,7 +92,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_zone_createitem()
         {
-            Zone z = new Zone(10, 0);
+            Zone z = new Zone(10, 0, null);
 
             z.CreateItems();
 
