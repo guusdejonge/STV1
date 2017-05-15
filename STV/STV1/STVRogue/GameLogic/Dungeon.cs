@@ -187,9 +187,9 @@ namespace STVRogue.GameLogic
                 int amountOfConnections = utils.rnd(1, 4);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 amountOfConnections = Math.Min(4, nodes.Count() - 1);
 
-                while ((totalConnections + amountOfConnections) / (node + 4) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
+                while (((totalConnections + amountOfConnections) / (node + 1) + 8) > 3 && amountOfConnections > 1)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
-                    amountOfConnections = 1;
+                    amountOfConnections -= 1;
                 }
                 totalConnections += amountOfConnections;
 
