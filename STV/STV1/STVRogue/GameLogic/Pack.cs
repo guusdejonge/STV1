@@ -14,6 +14,7 @@ namespace STVRogue.GameLogic
         public int startingHP = 0 ;
         public Node location;
         public Dungeon dungeon;
+        public List<Node> path;
 
         /*public Pack(String id, int n)
         {
@@ -34,6 +35,7 @@ namespace STVRogue.GameLogic
                 members.Add(m);
                 startingHP += m.HP;
             }
+            path = new List<Node>();
         }
 
         public void Attack(Player p)
@@ -68,8 +70,8 @@ namespace STVRogue.GameLogic
 
         /* Move the pack one node further along a shortest path to u. */
         public void moveTowards(Node u) {
-            List<Node> path = dungeon.shortestPath(location,u) ;
-            move(path[0]) ;
+            path = dungeon.shortestPath(location,u) ;
+            move(path[1]) ;
         }
 
         public virtual int GetStartingHP()

@@ -138,7 +138,7 @@ namespace UnitTests_STVRogue
         }
 
 
-        //[TestMethod]
+        [TestMethod]
         public void MSTest_pack_movetowards_same_zone()
         {
             Pack p = new Pack(3);
@@ -154,7 +154,7 @@ namespace UnitTests_STVRogue
 
             p.moveTowards(end);
 
-            Assert.IsTrue(p.location == end);
+            Assert.IsTrue(p.location == p.path[1]);
         }
     }
 }
