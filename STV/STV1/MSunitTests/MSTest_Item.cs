@@ -46,24 +46,25 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_useCrystalInBridge()
         {
-            //Crystal c = new Crystal();
+            Crystal c = new Crystal();
 
-            //Player p = new Player();
+            Player p = new Player();
 
-            //Bridge b = new Bridge(3);
+            Bridge b = new Bridge(3);
 
-            //var d = new Dungeon(3, 3);
+            var d = new Dungeon(3, 3,3);
 
-            //p.dungeon = d;
-            //p.location = b;
+            p.dungeon = d;
+            p.location = b;
 
-            //c.use(p);
-            //c.use(p);
+            c.use(p);
+            c.use(p);
 
 
 
-            //Assert.IsTrue(p.accelerated);
-            //Assert.IsTrue(c.used);
+            Assert.IsTrue(p.accelerated);
+            Assert.IsTrue(c.used);
+            Assert.IsTrue(b.fromNodes.Count()==0);
         }
 
 

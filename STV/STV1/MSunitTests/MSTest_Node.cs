@@ -136,11 +136,12 @@ namespace UnitTests_STVRogue
         {
             //NEED DUNGEON
             var node = new Node(3);
+            var exitNode = new Node(3);
             var emptyNode = new Node(3);
-
+            var dungeon = new Dungeon(1, 5,1);
             var utils = new Mock<UtilsClass>();
 
-            var pack = new Pack(2);
+            var pack = new Pack(1);
 
             var commands = new List<Command>();
             var c = new Command("attack");
@@ -148,7 +149,9 @@ namespace UnitTests_STVRogue
 
             var player = new Player();
             player.AttackRating = 0;
-
+            dungeon.exitNode = exitNode;
+            pack.dungeon = dungeon;
+            pack.location = node;
             node.packs.Add(pack);
             node.contested = true;
             node.utils = utils.Object;
@@ -168,18 +171,23 @@ namespace UnitTests_STVRogue
             var fullNode = new Node(1);
             var pack = new Pack(1);
             var fullPack = new Pack(1);
+            var previousNode = new Node(3);
 
             var utils = new Mock<UtilsClass>();
-
+            var dungeon = new Dungeon(1, 1, 1);
             var commands = new List<Command>();
             var c = new Command("attack");
+            commands.Add(c);
+            c = new Command("flee");
+            c.previousNode = previousNode;
             commands.Add(c);
 
             var player = new Player();
             player.AttackRating = 0;
 
             fullNode.packs.Add(fullPack);
-
+            pack.dungeon = dungeon;
+            pack.location = node;
             node.packs.Add(pack);
             node.contested = true;
             node.utils = utils.Object;
@@ -228,6 +236,33 @@ namespace UnitTests_STVRogue
             Node node = new Node(3);
             Pack pack = new Pack(1);
             Pack secondPack = new Pack(1);
+            var emptyNode = new Node(3);
+            var previousNode = new Node(3);
+            var dungeon = new Dungeon(1, 5, 1);
+            var utils = new Mock<UtilsClass>();
+
+
+            var commands = new List<Command>();
+            var c = new Command("attack");
+            commands.Add(c);
+            c = new Command("attack");
+            commands.Add(c);
+            c = new Command("flee");
+            c.previousNode = previousNode;
+            commands.Add(c);
+
+            var player = new Player();
+            player.AttackRating = 0;
+            pack.dungeon = dungeon;
+            pack.location = node;
+            node.packs.Add(pack);
+            node.packs.Add(secondPack);
+            node.contested = true;
+            node.utils = utils.Object;
+            node.neighbors.Add(emptyNode);
+            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+
+            node.fight(player, commands);
 
             Assert.IsTrue(node.packs.Contains(secondPack));
 

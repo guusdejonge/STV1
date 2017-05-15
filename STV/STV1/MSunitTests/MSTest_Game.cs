@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STVRogue.GameLogic;
 using Moq;
+using STVRogue;
 
 namespace UnitTests_STVRogue
 {
@@ -17,6 +18,18 @@ namespace UnitTests_STVRogue
         {
             Game g = new Game(3, 10, 10);
             Assert.IsTrue(g != null);
+        }
+
+        [TestMethod]
+        public void MSTest_game_command()
+        {
+            Game g = new Game(3, 10, 10);
+
+            Command c = new Command("attack");
+
+            var test = g.update(c);
+
+            Assert.IsTrue(test);
         }
     }
 }

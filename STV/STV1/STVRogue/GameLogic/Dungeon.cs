@@ -362,7 +362,8 @@ namespace STVRogue.GameLogic
                     {
                         Node node = null;
                         Node neighborCheck = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M);
-                        if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && node != q.packs.First().dungeon.exitNode)) != null)
+                        Node exitCheck = neighbors.FirstOrDefault(q => q!= pack.dungeon.exitNode);
+                        if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && q != pack.dungeon.exitNode)) != null)
                         {
                             pack.move(node);
                             fled = true;
