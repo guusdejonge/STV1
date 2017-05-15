@@ -58,12 +58,15 @@ namespace STVRogue.GameLogic
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
             Node startNode = zoneTo.nodes.First();                  //de eerste node van de nieuwe zone
 
+            List<Node> NeighborsExitNode = new List<Node>();
+
             foreach (Node neighbor in exitNode.neighbors)           //voor elke neighbor van de laatste node van de vorige zone
             {
                 newBridge.connectToNodeOfSameZone(neighbor);
+                NeighborsExitNode.Add(neighbor);
             }
 
-            List<Node> NeighborsStartNode= new List<Node>();
+            List<Node> NeighborsStartNode = new List<Node>();
 
             foreach (Node neighbor in startNode.neighbors)          //voor elke neighbor van de eerste node van de nieuwe zone
             {
@@ -71,13 +74,19 @@ namespace STVRogue.GameLogic
                 NeighborsStartNode.Add(neighbor);
             }
 
+            foreach (Node n in NeighborsExitNode)
+            {
+                n.disconnect(exitNode);
+            }
 
-            exitNode = newBridge;                               //replace exitNode van de vorige zone voor de bridge
+            zoneFrom.nodes.Remove(exitNode);
+            zoneFrom.nodes.Add(newBridge);
 
             foreach(Node n in NeighborsStartNode)
             {
                 n.disconnect(startNode);
             }
+
             zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
         }
 
