@@ -38,7 +38,7 @@ namespace STVRogue.GameLogic
     }
     
     public class GameCreationException: Exception {
-       public GameCreationException() {}
+       //public GameCreationException() {}
        public GameCreationException(String explanation) : base(explanation){}  
     }
 }
