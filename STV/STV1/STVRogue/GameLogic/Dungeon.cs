@@ -148,6 +148,7 @@ namespace STVRogue.GameLogic
         Random rnd = new Random();
         public int M;
         public int monstersInZone;
+        public int amountOfNodes;
 
         public Zone(int M2, int monstersInZone2)
         {
@@ -157,8 +158,9 @@ namespace STVRogue.GameLogic
             this.monstersInZone = monstersInZone2;
 
             int minAmountOfNodes = monstersInZone / M + 3;          //min + 3 nodes
-            int amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //min + 3 tot 10 nieuwe nodes toevoegen
-            
+
+            amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //min + 3 tot 10 nieuwe nodes toevoegen
+
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
                 nodes.Add(new Node(M));
@@ -280,7 +282,6 @@ namespace STVRogue.GameLogic
         public bool contested;
         public bool fled;
         public UtilsClass utils = new UtilsClass();
-
 
         public Node(int M) { this.M = M; }
         //public Node(int M, String id) { this.M = M; this.id = id; }

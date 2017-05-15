@@ -57,8 +57,6 @@ namespace UnitTests_STVRogue
             Pack pack = new Pack(3);
 
             var player = new Mock<Player>();
-          
-            
 
             player.SetupAllProperties();
             player.Object.HP = 2;
@@ -81,6 +79,44 @@ namespace UnitTests_STVRogue
             pack.Attack(player.Object);
 
             Assert.IsTrue(player.Object.HP > 0);
+        }
+
+        [TestMethod]
+        public void MSTest_pack_move()
+        {
+            Pack p = new Pack(3);
+
+            Dungeon d = new Dungeon(2, 10, 0);
+
+            Node start = d.startNode;
+            Node end = start.neighbors[0];
+
+            start.packs.Add(p);
+            p.dungeon = d;
+            p.location = start;
+
+            p.move(end);
+
+            Assert.IsTrue(p.location == end);
+        }
+
+        [TestMethod]
+        public void MSTest_pack_movetowards_same_zone()
+        {
+            Pack p = new Pack(3);
+
+            Dungeon d = new Dungeon(2, 10, 0);
+
+            Node start = d.startNode;
+            Node end = d.zones[0].nodes.Last();     //first node of last zone as ending point
+
+            start.packs.Add(p);
+            p.dungeon = d;
+            p.location = start;
+
+            p.moveTowards(end);
+
+            Assert.IsTrue(p.location == end);
         }
     }
 }
