@@ -101,6 +101,44 @@ namespace UnitTests_STVRogue
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void MSTest_pack_moveToNoNeighbor()
+        {
+            Pack p = new Pack(3);
+
+            Dungeon d = new Dungeon(2, 10, 0);
+
+            Node start = d.startNode;
+            Node end = new Node(3);
+            start.packs.Add(p);
+            p.dungeon = d;
+            p.location = start;
+
+            p.move(end);
+
+        }
+
+        [TestMethod]
+        public void MSTest_pack_moveFullNode()
+        {
+            Pack p = new Pack(3);
+
+            Dungeon d = new Dungeon(2, 1, 0);
+
+            Node start = d.startNode;
+            Node end = start.neighbors[0];
+
+            start.packs.Add(p);
+            p.dungeon = d;
+            p.location = start;
+
+            p.move(end);
+
+            Assert.IsTrue(p.location == start);
+        }
+
+
+        //[TestMethod]
         public void MSTest_pack_movetowards_same_zone()
         {
             Pack p = new Pack(3);
