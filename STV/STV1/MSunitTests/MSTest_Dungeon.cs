@@ -49,9 +49,9 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_dungeon_disconnect()
         {
-            var zone1 = new Mock<Zone>(1, 1);
+            var zone1 = new Mock<Zone>(1, 1,null);
             zone1.SetupAllProperties();
-            var zone2 = new Mock<Zone>(2, 2);
+            var zone2 = new Mock<Zone>(2, 2,null);
             zone2.SetupAllProperties();
 
             Dungeon dungeon = new Dungeon(2, 2, 2);

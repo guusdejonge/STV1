@@ -18,7 +18,7 @@ namespace UnitTests_STVRogue
         {
             var utils = new UtilsClass();
 
-            var zone1 = new Mock<Zone>(1,1);
+            var zone1 = new Mock<Zone>(1,1,null);
             zone1.SetupAllProperties();
 
             var zones = new List<Zone>();
@@ -57,9 +57,9 @@ namespace UnitTests_STVRogue
         {
             var utils = new UtilsClass();
 
-            var zone1 = new Mock<Zone>(1, 1);
+            var zone1 = new Mock<Zone>(1, 1,null);
             zone1.SetupAllProperties();
-            var zone2 = new Mock<Zone>(2, 2);
+            var zone2 = new Mock<Zone>(2, 2,null);
             zone2.SetupAllProperties();
 
             var zones = new List<Zone>();
