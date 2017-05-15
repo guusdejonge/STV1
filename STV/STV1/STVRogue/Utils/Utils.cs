@@ -17,6 +17,13 @@ namespace STVRogue.Utils
             return fleeProbability;
         }
 
+        public virtual int rnd(int min, int max)
+        {
+            Random rnd = new Random();
+            int random = rnd.Next(min, max);
+            return random;
+        }
+
         public List<Node> shortestPath(Node u, Node v, List<Zone> zones)
         {
             var distances = new Dictionary<Node, int>();

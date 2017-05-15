@@ -149,6 +149,7 @@ namespace STVRogue.GameLogic
         public int M;
         public int monstersInZone;
         public int amountOfNodes;
+        public UtilsClass utils = new UtilsClass();
 
         public Zone(int M2, int monstersInZone2)
         {
@@ -159,13 +160,13 @@ namespace STVRogue.GameLogic
 
             int minAmountOfNodes = monstersInZone / M + 3;          //min + 3 nodes
 
-            amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);  //min + 3 tot 10 nieuwe nodes toevoegen
+            amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);
 
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
                 nodes.Add(new Node(M));
 
-                int amountOfConnections = rnd.Next(1, Math.Min(4, nodes.Count()));      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
+                int amountOfConnections = utils.rnd(1, Math.Min(4, nodes.Count()));      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
                     amountOfConnections -= 1;
