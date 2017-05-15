@@ -68,10 +68,10 @@ namespace UnitTests_STVRogue
         {
             bool test = true;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1; i++)
             {
                 int multiplier = 3;
-                Zone z = new Zone(multiplier, 100, null);
+                Zone z = new Zone(multiplier, 10, null);
                 z.CreatePacks();
 
                 foreach(Node n in z.nodes)

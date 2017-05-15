@@ -31,5 +31,12 @@ namespace UnitTests_STVRogue
 
             Assert.IsTrue(test);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(GameCreationException))]
+        public void MSTest_game_created_exception()
+        {
+            Game g = new Game(3, 3, 1000);
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace STVRogue.GameLogic
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
-            Bridge newBridge = new Bridge(N);   //de index van de nieuwe zone is het level van de bridge
+            Bridge newBridge = new Bridge(M);   //de index van de nieuwe zone is het level van de bridge
             newBridge.level = zones.IndexOf(zoneTo);
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
@@ -176,7 +176,7 @@ namespace STVRogue.GameLogic
             this.M = M2;
             this.monstersInZone = monstersInZone2;
 
-            int minAmountOfNodes = monstersInZone / M + 3;          //min + 3 nodes
+            int minAmountOfNodes = monstersInZone / M + 10;          //min + 10 nodes
 
             amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);
 
@@ -240,23 +240,33 @@ namespace STVRogue.GameLogic
                     }
                 }
             }
-            
+
+            List<Node> AvailableNodes = new List<Node>();
+            AvailableNodes = nodes.Take(maxRandomNode+1).ToList();
 
             foreach (int i in monstersInPack)
             {
                 int randomNode = rnd.Next(0, maxRandomNode);        //kies willekeurige node
 
-                int currentMonstersInThisNode = calculateMonstersInNode(nodes[randomNode]);
+                int currentMonstersInThisNode = calculateMonstersInNode(AvailableNodes[randomNode]);
 
                 while (currentMonstersInThisNode + i > M)            //als M overschreven worden, kies nieuwe node totdat dit niet meer het geval is
                 {
+                    AvailableNodes.Remove(AvailableNodes[randomNode]);
+                    maxRandomNode--;
+                    if(maxRandomNode < 0)
+                    {
+                        throw new GameCreationException("Combination of low multiplier and high amount of monsters");
+                    }
                     randomNode = rnd.Next(0, maxRandomNode);
-                    currentMonstersInThisNode = calculateMonstersInNode(nodes[randomNode]);
+                    currentMonstersInThisNode = calculateMonstersInNode(AvailableNodes[randomNode]);
                 }
 
                 Pack newPack = new Pack(i);
-                newPack.location = nodes[randomNode];             //zet deze node als de pack zn location
-                nodes[randomNode].packs.Add(newPack);             //voeg pack toe aan de node
+                int k = nodes.FindIndex(q => q == AvailableNodes[randomNode]);
+
+                newPack.location = nodes[k];             //zet deze node als de pack zn location
+                nodes[k].packs.Add(newPack);             //voeg pack toe aan de node
             }
         }
 
@@ -419,7 +429,7 @@ namespace STVRogue.GameLogic
         public List<Node> toNodes = new List<Node>();
         public int level;
 
-        public Bridge(int N) : base(N) { }
+        public Bridge(int M) : base(M) { }
         //public Bridge(int N, String id) : base(N, id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */
