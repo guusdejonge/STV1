@@ -52,7 +52,19 @@ namespace UnitTests_STVRogue
 
         }
 
+        [TestMethod]
+        public void MSTest_moveToNodeWithoutPlayer()
+        {
+            var p = new Monster();
 
+            Node n = new Node(3);
+
+            p.moveTo(n);
+
+            Assert.AreEqual(p.location, n);
+            Assert.IsFalse(n.contested);
+
+        }
 
 
     }

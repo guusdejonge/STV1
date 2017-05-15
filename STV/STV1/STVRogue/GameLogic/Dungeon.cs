@@ -250,7 +250,7 @@ namespace STVRogue.GameLogic
 
                 int currentMonstersInThisNode = calculateMonstersInNode(AvailableNodes[randomNode]);
 
-                while (currentMonstersInThisNode + i > M)            //als M overschreven worden, kies nieuwe node totdat dit niet meer het geval is
+                while (currentMonstersInThisNode + i > M)            //als M overschreden worden, kies nieuwe node totdat dit niet meer het geval is
                 {
                     AvailableNodes.Remove(AvailableNodes[randomNode]);
                     maxRandomNode--;
