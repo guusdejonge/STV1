@@ -68,7 +68,7 @@ namespace UnitTests_STVRogue
         {
             bool test = true;
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 100; i++)
             {
                 int multiplier = 3;
                 Zone z = new Zone(multiplier, 10, null);
@@ -100,7 +100,7 @@ namespace UnitTests_STVRogue
 
             foreach(Node n in z.nodes)
             {
-                if(n.items.Count()>0)
+                if(n.items.Count() > 0)
                 {
                     itemcreated = true;
                 }
@@ -108,32 +108,5 @@ namespace UnitTests_STVRogue
 
             Assert.IsTrue(itemcreated);
         }
-
-        /*
-        [TestMethod]
-        public void MSTest_zone_averageconnectivity()
-        {
-            bool test = true;
-
-            for (int i = 0; i < 10; i++)
-            {
-                int totalconnections = 0;
-
-                Zone z = new Zone(5, 100);
-
-                foreach(Node n in z.nodes)
-                {
-                    totalconnections += n.neighbors.Count();
-                }
-
-                if(totalconnections * 0.5 / z.nodes.Count() > 3)    //die *0.5 is omdat 1 connection bij 2 nodes in de neighbor lijst staat
-                {
-                    test = false;
-                }
-            }
-
-            Assert.IsTrue(test);
-        }
-        */
     }
 }
