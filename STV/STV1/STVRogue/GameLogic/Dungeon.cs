@@ -31,17 +31,17 @@ namespace STVRogue.GameLogic
 
             int monstersLeft = N;
             int monstersDone = MonstersInZone(0);
-            zones.Add(new Zone(M, monstersDone));                             //de eerste zone
+            zones.Add(new Zone(M, monstersDone, null));                             //de eerste zone
             monstersLeft -= monstersDone;
 
             for (int zone = 1; zone < L; zone++)  //de opeenvolgende zones  
             {
-                zones.Add(new Zone(M, MonstersInZone(zone)));
+                zones.Add(new Zone(M, MonstersInZone(zone), null));
                 CreateBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
                 monstersLeft -= MonstersInZone(zone);
             }
 
-            zones.Add(new Zone(M, monstersLeft));                   //de laatste zone
+            zones.Add(new Zone(M, monstersLeft, null));                   //de laatste zone
 
             startNode = zones[0].nodes[0];
             exitNode = zones.Last().nodes.Last();
@@ -158,10 +158,19 @@ namespace STVRogue.GameLogic
         public int M;
         public int monstersInZone;
         public int amountOfNodes;
-        public UtilsClass utils = new UtilsClass();
+        public UtilsClass utils;
 
-        public Zone(int M2, int monstersInZone2)
+        public Zone(int M2, int monstersInZone2, UtilsClass u)
         {
+            if(u != null)
+            {
+                utils = u;
+            }
+            else
+            {
+                utils = new UtilsClass();
+            }
+
             nodes.Add(new Node(M));                                 //de startnode
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
             this.M = M2;
@@ -175,10 +184,12 @@ namespace STVRogue.GameLogic
             {
                 nodes.Add(new Node(M));
 
-                int amountOfConnections = utils.rnd(1, Math.Min(4, nodes.Count()));      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
-                while ((totalConnections + amountOfConnections) / (node + 1) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
+                int amountOfConnections = utils.rnd(1, 4);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
+                amountOfConnections = Math.Min(4, nodes.Count() - 1);
+
+                while ((totalConnections + amountOfConnections) / (node + 4) > 3)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
-                    amountOfConnections -= 1;
+                    amountOfConnections = 1;
                 }
                 totalConnections += amountOfConnections;
 
