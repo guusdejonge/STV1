@@ -24,9 +24,17 @@ namespace STVRogue.Utils
             var currentNode = u;
 
 
-            while (path.Last() != v)
+            while (path.LastOrDefault() != v)
             {
                 var currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
+
+                if (currentNode is Bridge)
+                {
+                    var b = currentNode as Bridge;
+                    currentNode = b.toNodes.First();
+                    currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
+                    currentNode = b;
+                }
 
                 
                     if (currentZone.nodes.Contains(v))
@@ -52,6 +60,13 @@ namespace STVRogue.Utils
             var unvisitedNodes = zone.nodes;
             var currentNode = u;
 
+            if(u is Bridge)
+            {
+                //distances.Add(u, new Tuple<int, Node>(0, u));
+                //unvisitedNodes.Add(u);
+                zone.nodes.Add(u);
+            }
+
             foreach (Node node in zone.nodes)
             {
                 if (node == u)
@@ -61,30 +76,61 @@ namespace STVRogue.Utils
 
             }
 
-            while (unvisitedNodes.Contains(v) && distances.OrderBy(x => x.Value.Item1).First().Value.Item1 == 999)
-            {
-                currentNode = distances.OrderBy(x => x.Value.Item1).First().Key;
+            var b = unvisitedNodes.FirstOrDefault(q => q is Bridge) as Bridge;
 
+            if (b != null && b!=u)
+            {
+                foreach (var node in b.toNodes)
+                    unvisitedNodes.Remove(node);
+            }
+            
+
+            
+
+            var unvis = unvisitedNodes.Contains(v);
+            var check = distances.OrderBy(x => x.Value.Item1).First().Value.Item1;
+            while (unvis && (check == 999 || check == 0))
+            {
+                currentNode = distances.OrderBy(x => x.Value.Item1).First(q=>unvisitedNodes.Contains(q.Key)).Key;
+              
+                
                 foreach (Node node in currentNode.neighbors)
                 {
+                    if(currentNode is Bridge)
+                    {
+                        var n = currentNode as Bridge;
+                        if (n == u)
+                        {
+                            if (n.fromNodes.Contains(node))
+                                continue;
+                        }
+
+                        if (n != u)
+                        {
+                            if (n.toNodes.Contains(node))
+                                continue;
+                        }
+                        
+                    }
                     var currentDistance = distances[node].Item1;
-                    var potentialDistance = distances[currentNode].Item1;
+                    var potentialDistance = (distances[currentNode].Item1)+1;
 
                     if (potentialDistance < currentDistance)
                         distances[node] = new Tuple<int, Node>(potentialDistance, currentNode);
                 }
 
                 unvisitedNodes.Remove(currentNode);
-
+                unvis = unvisitedNodes.Contains(v);
             }
 
-            var endNode = v;
+            Node temp = v;
+            Node remove = null;
             while (distances.ContainsKey(u))
             {
-                var temp = endNode;
-                path.Add(endNode);
-                endNode = distances[temp].Item2;
-                distances.Remove(endNode);
+                path.Add(temp);
+                remove = temp;
+                temp = distances[temp].Item2;
+                distances.Remove(remove);
             }
 
 
