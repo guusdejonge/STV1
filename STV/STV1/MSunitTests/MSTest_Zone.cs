@@ -68,7 +68,7 @@ namespace UnitTests_STVRogue
         {
             bool test = true;
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int multiplier = 3;
                 Zone z = new Zone(multiplier, 10, null);
