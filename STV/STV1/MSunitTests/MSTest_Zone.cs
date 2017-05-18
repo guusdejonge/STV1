@@ -70,8 +70,8 @@ namespace UnitTests_STVRogue
 
             for (int i = 0; i < 10; i++)
             {
-                int multiplier = 3;
-                Zone z = new Zone(multiplier, 10, null);
+                int multiplier = 10;
+                Zone z = new Zone(multiplier, 20, null);
                 z.CreatePacks();
 
                 foreach(Node n in z.nodes)

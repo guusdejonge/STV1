@@ -36,7 +36,7 @@ namespace UnitTests_STVRogue
         [ExpectedException(typeof(GameCreationException))]
         public void MSTest_game_created_exception()
         {
-            Game g = new Game(3, 3, 1000);
+            Game g = new Game(10, 3, 10000);
         }
     }
 }
