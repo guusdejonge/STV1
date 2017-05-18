@@ -276,7 +276,7 @@ namespace STVRogue.GameLogic
 
             for (int i = 0; i < randomAmountOfItems; i++)
             {
-                int item = rnd.Next(1, 2);
+                int item = utils.rnd(1, 2);
                 int randomNode = rnd.Next(0, nodes.Count() - 1);
 
                 if (item == 1)
