@@ -95,8 +95,7 @@ namespace STVRogue.Utils
             
 
             var unvis = unvisitedNodes.Contains(v);
-            var check = distances.OrderBy(x => x.Value.Item1).First().Value.Item1;
-            while (unvis && (check == 999 || check == 0))
+            while (unvis)
             {
                 currentNode = distances.OrderBy(x => x.Value.Item1).First(q=>unvisitedNodes.Contains(q.Key)).Key;
               
