@@ -138,7 +138,7 @@ namespace UnitTests_STVRogue
             var node = new Node(3);
             var exitNode = new Node(3);
             var emptyNode = new Node(3);
-            var dungeon = new Dungeon(1, 5,1);
+            var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
             var utils = new Mock<UtilsClass>();
 
             var pack = new Pack(1);
@@ -174,7 +174,7 @@ namespace UnitTests_STVRogue
             var previousNode = new Node(3);
 
             var utils = new Mock<UtilsClass>();
-            var dungeon = new Dungeon(1, 1, 1);
+            var dungeon = new Dungeon(1, 1, 1, DateTime.Now.Millisecond);
             var commands = new List<Command>();
             var c = new Command("attack");
             commands.Add(c);
@@ -207,7 +207,7 @@ namespace UnitTests_STVRogue
             var node = new Node(3);
             var exitNode = new Node(1);
             var pack = new Pack(1);
-            var dungeon = new Dungeon(1, 1, 1);
+            var dungeon = new Dungeon(1, 1, 1, DateTime.Now.Millisecond);
             var utils = new Mock<UtilsClass>();
             var commands = new List<Command>();
 
@@ -238,7 +238,7 @@ namespace UnitTests_STVRogue
             Pack secondPack = new Pack(1);
             var emptyNode = new Node(3);
             var previousNode = new Node(3);
-            var dungeon = new Dungeon(1, 5, 1);
+            var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
             var utils = new Mock<UtilsClass>();
 
 

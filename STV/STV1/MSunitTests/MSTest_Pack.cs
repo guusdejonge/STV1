@@ -86,7 +86,7 @@ namespace UnitTests_STVRogue
         {
             Pack p = new Pack(3);
 
-            Dungeon d = new Dungeon(2, 10, 0);
+            Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 
             Node start = d.startNode;
             Node end = start.neighbors[0];
@@ -106,7 +106,7 @@ namespace UnitTests_STVRogue
         {
             Pack p = new Pack(3);
 
-            Dungeon d = new Dungeon(2, 10, 0);
+            Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 
             Node start = d.startNode;
             Node end = new Node(3);
@@ -123,7 +123,7 @@ namespace UnitTests_STVRogue
         {
             Pack p = new Pack(3);
 
-            Dungeon d = new Dungeon(2, 1, 0);
+            Dungeon d = new Dungeon(2, 1, 0, DateTime.Now.Millisecond);
 
             Node start = d.startNode;
             Node end = start.neighbors[0];
@@ -143,7 +143,7 @@ namespace UnitTests_STVRogue
         {
             Pack p = new Pack(3);
 
-            Dungeon d = new Dungeon(2, 10, 0);
+            Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 
             Node start = d.startNode;
             Node end = d.zones[0].nodes.Last();     //first node of last zone as ending point

@@ -15,21 +15,21 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_dungeon_two_levels()
         {
-            Dungeon d = new Dungeon(2, 10, 10);
+            Dungeon d = new Dungeon(2, 10, 10, DateTime.Now.Millisecond);
             Assert.IsTrue(d.zones.Count() == 3);
         }
 
         [TestMethod]
         public void MSTest_dungeon_multiple_levels()
         {
-            Dungeon d = new Dungeon(10, 10, 10);
+            Dungeon d = new Dungeon(10, 10, 10, DateTime.Now.Millisecond);
             Assert.IsTrue(d.zones.Count() == 11);
         }
 
         [TestMethod]
         public void MSTest_dungeon_monsters_distribution_no_rest()
         {
-            Dungeon d = new Dungeon(2, 10, 18);
+            Dungeon d = new Dungeon(2, 10, 18, DateTime.Now.Millisecond);
             bool z1 = d.zones[0].monstersInZone == 3;
             bool z2 = d.zones[1].monstersInZone == 6;
             bool z3 = d.zones[2].monstersInZone == 9;
@@ -39,7 +39,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_dungeon_monsters_distribution_rest()
         {
-            Dungeon d = new Dungeon(2, 10, 17);
+            Dungeon d = new Dungeon(2, 10, 17, DateTime.Now.Millisecond);
             bool z1 = d.zones[0].monstersInZone == 2;
             bool z2 = d.zones[1].monstersInZone == 5;
             bool z3 = d.zones[2].monstersInZone == 10;
@@ -54,7 +54,7 @@ namespace UnitTests_STVRogue
             var zone2 = new Mock<Zone>(2, 2,null);
             zone2.SetupAllProperties();
 
-            Dungeon dungeon = new Dungeon(2, 2, 2);
+            Dungeon dungeon = new Dungeon(2, 2, 2, DateTime.Now.Millisecond);
             dungeon.zones.Clear();
 
             var zones = new List<Zone>();
@@ -107,7 +107,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_dungeon_level()
         {
-            Dungeon dungeon = new Dungeon(2, 2, 2);
+            Dungeon dungeon = new Dungeon(2, 2, 2, DateTime.Now.Millisecond);
 
             var brug = dungeon.zones.First().nodes.First(q => q is Bridge);
             var node = dungeon.zones.First().nodes.First();

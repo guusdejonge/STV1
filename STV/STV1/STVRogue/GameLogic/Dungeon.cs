@@ -17,31 +17,33 @@ namespace STVRogue.GameLogic
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public int M;
         public int N;
+        public static int S;
 
-        private Random rnd = new Random();
+        private Random rnd;
         public List<Zone> zones = new List<Zone>();
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
-        public Dungeon(int Level, int nodeCapacityMultiplier, int numberOfMonsters)
+        public Dungeon(int Level, int nodeCapacityMultiplier, int numberOfMonsters, int Seed)
         {
             Logger.log("Creating a dungeon of difficulty level " + Level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             L = Level;
             M = nodeCapacityMultiplier;
             N = numberOfMonsters;
+            rnd = new Random(Seed);
 
             int monstersLeft = N;
             int monstersDone = MonstersInZone(0);
-            zones.Add(new Zone(M, monstersDone, null));                             //de eerste zone
+            zones.Add(new Zone(M, monstersDone, null, rnd.Next()));                             //de eerste zone
             monstersLeft -= monstersDone;
 
             for (int zone = 1; zone < L; zone++)  //de opeenvolgende zones  
             {
-                zones.Add(new Zone(M, MonstersInZone(zone), null));
+                zones.Add(new Zone(M, MonstersInZone(zone), null, rnd.Next()));
                 CreateBridge(zones[zone - 1], zones[zone]);            //de zone geeft het level van de bridge aan
                 monstersLeft -= MonstersInZone(zone);
             }
 
-            zones.Add(new Zone(M, monstersLeft, null));                   //de laatste zone
+            zones.Add(new Zone(M, monstersLeft, null, rnd.Next()));                   //de laatste zone
 
             startNode = zones[0].nodes[0];
             exitNode = zones.Last().nodes.Last();
@@ -52,7 +54,7 @@ namespace STVRogue.GameLogic
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
-            Bridge newBridge = new Bridge(M);   //de index van de nieuwe zone is het level van de bridge
+            Bridge newBridge = new Bridge(M, rnd.Next());   //de index van de nieuwe zone is het level van de bridge
             newBridge.level = zones.IndexOf(zoneTo);
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
@@ -154,14 +156,15 @@ namespace STVRogue.GameLogic
     public class Zone
     {
         public List<Node> nodes = new List<Node>();
-        Random rnd = new Random();
+        Random rnd;
         public int M;
         public int monstersInZone;
         public int amountOfNodes;
         public UtilsClass utils;
 
-        public Zone(int M2, int monstersInZone2, UtilsClass u)
+        public Zone(int M2, int monstersInZone2, UtilsClass u, int Seed)
         {
+            rnd = new Random(Seed);
             if(u != null)
             {
                 utils = u;
@@ -171,7 +174,7 @@ namespace STVRogue.GameLogic
                 utils = new UtilsClass();
             }
 
-            nodes.Add(new Node(M));                                 //de startnode
+            nodes.Add(new Node(M, rnd.Next()));                      //de startnode
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
             this.M = M2;
             this.monstersInZone = monstersInZone2;
@@ -182,7 +185,7 @@ namespace STVRogue.GameLogic
 
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
-                nodes.Add(new Node(M));
+                nodes.Add(new Node(M, rnd.Next()));
 
                 int amountOfConnections = utils.rnd(1, 4);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 amountOfConnections = Math.Min(4, nodes.Count() - 1);
@@ -313,8 +316,10 @@ namespace STVRogue.GameLogic
         public bool contested;
         public bool fled;
         public UtilsClass utils = new UtilsClass();
+        public int Seed;
 
-        public Node(int M) { this.M = M; }
+        public Node(int M) { this.M = M; Seed = DateTime.Now.Millisecond; }
+        public Node(int M, int S) { this.M = M; Seed = S; }
         //public Node(int M, String id) { this.M = M; this.id = id; }
 
         /* To connect this node to another node. */
@@ -388,7 +393,7 @@ namespace STVRogue.GameLogic
                 //Pack's turn
                 if (packs.Count() != 0)
                 {
-                    Random random = new Random();
+                    Random random = new Random(Seed);
                     var fleeProb = utils.fleeProb(pack);
                     if (random.NextDouble() < fleeProb && !fled)
                     {
@@ -430,6 +435,7 @@ namespace STVRogue.GameLogic
         public int level;
 
         public Bridge(int M) : base(M) { }
+        public Bridge(int M, int S) : base(M, S) { }
         //public Bridge(int N, String id) : base(N, id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */

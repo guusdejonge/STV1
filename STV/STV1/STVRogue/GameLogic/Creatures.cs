@@ -12,6 +12,7 @@ namespace STVRogue.GameLogic
         public String id;
         public String name;
         public int HP;
+        public List<Item> bag = new List<Item>();
 
         public int AttackRating = 1;
         public Node location;
@@ -25,12 +26,39 @@ namespace STVRogue.GameLogic
         }
         virtual public void moveTo(Node node)
         {
-            this.location = node;
+            if (this is Monster && location is Bridge)
+            {
+                Bridge b = (Bridge)location;
+                if(b.fromNodes.Contains(location) && !b.toNodes.Contains(node))
+                {
+                    this.location = node;
+                }
+                else if(b.toNodes.Contains(location) && !b.fromNodes.Contains(node))
+                {
+                    this.location = node;
+                }
+            }
+            else
+            {
+                this.location = node;
+            }
+
+            if (this is Player)
+            {
+                foreach (Item i in node.items)
+                {
+                    bag.Add(i);
+                }
+                node.items.Clear();
+            }
+
             if (this is Player && node.packs.Count > 0)
             {
                 node.contested = true;
                 node.fight(this as Player, null);
             }
+            
+            
         }
     }
 
@@ -60,7 +88,6 @@ namespace STVRogue.GameLogic
         public int HPbase = 100;
         public Boolean accelerated = false;
         public int KillPoint = 0;
-        public List<Item> bag = new List<Item>();
         public Player()
         {
             id = "player";
