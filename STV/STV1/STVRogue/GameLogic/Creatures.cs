@@ -38,6 +38,11 @@ namespace STVRogue.GameLogic
                     this.location = node;
                 }
             }
+            else if(this is Player && node is Bridge)
+            {
+                foreach (var n in node.zone.nodes)
+                    n.alert = false;
+            }
             else
             {
                 this.location = node;
@@ -55,9 +60,10 @@ namespace STVRogue.GameLogic
             if (this is Player && node.packs.Count > 0)
             {
                 node.contested = true;
-                node.fight(this as Player, null);
+
+                node.alert = true;
             }
-            
+           
             
         }
     }

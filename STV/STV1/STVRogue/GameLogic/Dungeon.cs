@@ -19,7 +19,7 @@ namespace STVRogue.GameLogic
         public int N;
         public static int S;
 
-        private Random rnd;
+        public Random rnd;
         public List<Zone> zones = new List<Zone>();
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
@@ -56,6 +56,7 @@ namespace STVRogue.GameLogic
         {
             Bridge newBridge = new Bridge(M, rnd.Next());   //de index van de nieuwe zone is het level van de bridge
             newBridge.level = zones.IndexOf(zoneTo);
+            newBridge.zone = zoneTo;
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
             Node startNode = zoneTo.nodes.First();                  //de eerste node van de nieuwe zone
@@ -84,7 +85,7 @@ namespace STVRogue.GameLogic
             zoneFrom.nodes.Remove(exitNode);
             zoneFrom.nodes.Add(newBridge);
 
-            foreach(Node n in NeighborsStartNode)
+            foreach (Node n in NeighborsStartNode)
             {
                 n.disconnect(startNode);
             }
@@ -162,10 +163,11 @@ namespace STVRogue.GameLogic
         public int amountOfNodes;
         public UtilsClass utils;
 
+
         public Zone(int M2, int monstersInZone2, UtilsClass u, int Seed)
         {
             rnd = new Random(Seed);
-            if(u != null)
+            if (u != null)
             {
                 utils = u;
             }
@@ -174,7 +176,9 @@ namespace STVRogue.GameLogic
                 utils = new UtilsClass();
             }
 
-            nodes.Add(new Node(M, rnd.Next()));                      //de startnode
+            Node n = new Node(M, rnd.Next());
+            nodes.Add(n);                      //de startnode
+            n.zone = this;
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
             this.M = M2;
             this.monstersInZone = monstersInZone2;
@@ -185,7 +189,9 @@ namespace STVRogue.GameLogic
 
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
-                nodes.Add(new Node(M, rnd.Next()));
+                Node m = new Node(M, rnd.Next());
+                nodes.Add(m);
+                m.zone = this;
 
                 int amountOfConnections = utils.rnd(1, 4);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 amountOfConnections = Math.Min(4, nodes.Count() - 1);
@@ -231,7 +237,7 @@ namespace STVRogue.GameLogic
                 monstersInPack[i] = monstersInZone / Packs;     //het aantal dat er sowieso in komt. bijv: 8 monsters, 3 packs, dus sowieso 2 per pack
             }
 
-            if(Packs > 0)
+            if (Packs > 0)
             {
                 int rest = monstersInZone % Packs;                  //nu nog de rest eerlijk verdelen: bijv: nog 2 over om te verdelen. de eerste en tweede pack nog +1.
                 for (int i = 0; i < Packs; i++)
@@ -245,7 +251,7 @@ namespace STVRogue.GameLogic
             }
 
             List<Node> AvailableNodes = new List<Node>();
-            AvailableNodes = nodes.Take(maxRandomNode+1).ToList();
+            AvailableNodes = nodes.Take(maxRandomNode + 1).ToList();
 
             foreach (int i in monstersInPack)
             {
@@ -257,7 +263,7 @@ namespace STVRogue.GameLogic
                 {
                     AvailableNodes.Remove(AvailableNodes[randomNode]);
                     maxRandomNode--;
-                    if(maxRandomNode < 0)
+                    if (maxRandomNode < 0)
                     {
                         throw new GameCreationException("Combination of low multiplier and high amount of monsters");
                     }
@@ -315,8 +321,10 @@ namespace STVRogue.GameLogic
         public List<Item> items = new List<Item>();
         public bool contested;
         public bool fled;
+        public bool alert;
         public UtilsClass utils = new UtilsClass();
         public int Seed;
+        public Zone zone;
 
         public Node(int M) { this.M = M; Seed = DateTime.Now.Millisecond; }
         public Node(int M, int S) { this.M = M; Seed = S; }
@@ -340,92 +348,76 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public virtual bool fight(Player player, List<Command> commands)
+        public virtual bool fight(Player player, Command command)
         {
-            while (contested)
+
+            var pack = packs.First();
+
+            //Player's turn
+            var cmd = command.text.ToLower().Split(' ');
+            switch (cmd[0])
             {
-                var pack = packs.First();
-
-                //Player's turn
-                var command = commands.First().text.ToLower().Split(' ');
-                switch (command[0])
-                {
-                    case "flee":
-                        player.moveTo(commands.First().previousNode);
-                        contested = false;
-                        break;
-                    case "attack":
-                        player.Attack(pack.members.First());
-                        if (pack.members.Count() == 0)
-                        {
-                            packs.Remove(pack);
-                            Logger.log("One pack defeated.");
-
-                            if (packs.Count() == 0)
-                            {
-                                contested = false;
-                                Logger.log("All packs defeated");
-                            }
-                        }
-
-                        break;
-                    case "item":
-                        if (command[1] == "potion")
-                        {
-                            var item = player.bag.Where(q => q.GetType() == typeof(HealingPotion)).First();
-                            player.use(item);
-                        }
-                        else if (command[1] == "crystal")
-                        {
-                            var item = player.bag.Where(q => q.GetType() == typeof(Crystal)).First();
-                            player.use(item);
-                        }
-                        else
-                        {
-                            Logger.log("Item does not exist");
-                        }
-
-                        break;
-                }
-
-                commands.Remove(commands.First());
-
-                //Pack's turn
-                if (packs.Count() != 0)
-                {
-                    Random random = new Random(Seed);
-                    var fleeProb = utils.fleeProb(pack);
-                    if (random.NextDouble() < fleeProb && !fled)
+                case "flee":
+                    player.moveTo(command.previousNode);
+                    contested = false;
+                    Console.WriteLine("You fled to your previous node.");
+                    return true;
+                case "attack":
+                    player.Attack(pack.members.First());
+                    if (pack.members.Count() == 0)
                     {
-                        Node node = null;
-                        Node neighborCheck = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M);
-                        Node exitCheck = neighbors.FirstOrDefault(q => q!= pack.dungeon.exitNode);
-                        if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && q != pack.dungeon.exitNode)) != null)
-                        {
-                            pack.move(node);
-                            fled = true;
-                            if (packs.Count == 0)
-                                contested = false;
+                        packs.Remove(pack);
+                        Logger.log("One pack defeated.");
 
+                        if (packs.Count() == 0)
+                        {
+                            contested = false;
+                            Logger.log("All packs defeated");
                         }
                     }
-                    else
+
+                    break;
+                case "use":
+                    var item = player.bag[int.Parse(cmd[1])];
+                    player.use(item);
+                    break;
+            }
+
+            //Pack's turn
+            if (packs.Count() != 0)
+            {
+                Random random = new Random(Seed);
+                var fleeProb = utils.fleeProb(pack);
+                if (random.NextDouble() < fleeProb && !fled)
+                {
+                    Node node = null;
+                    Node neighborCheck = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M);
+                    Node exitCheck = neighbors.FirstOrDefault(q => q != pack.dungeon.exitNode);
+                    if ((node = neighbors.FirstOrDefault(q => q.packs.Sum(p => p.members.Count()) < q.M && q != pack.dungeon.exitNode)) != null)
                     {
-                        pack.Attack(player);
-                        if (player.HP == 0)
-                        {
-                            Logger.log("GAME OVER");
+                        pack.move(node);
+                        fled = true;
+                        if (packs.Count == 0)
                             contested = false;
-                            break;
-                        }
+
+                    }
+                }
+                else
+                {
+                    pack.Attack(player);
+                    if (player.HP == 0)
+                    {
+                        Logger.log("GAME OVER");
+                        contested = false;
                     }
                 }
             }
 
+
             return true;
         }
 
-        
+
     }
 
     public class Bridge : Node

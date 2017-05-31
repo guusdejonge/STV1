@@ -58,7 +58,7 @@ namespace UnitTests_STVRogue
             commands.Add(c);
             c.previousNode = previous;
 
-            n.fight(p, commands);
+            //n.fight(p, commands);
 
             Assert.IsFalse(n.contested);
         }
@@ -92,7 +92,7 @@ namespace UnitTests_STVRogue
             commands.Add(c);
             
 
-            n.fight(p, commands);
+            //n.fight(p, commands);
 
             Assert.IsFalse(p.bag.Contains(crystal) && p.bag.Contains(hp));
             Assert.IsTrue(p.accelerated);
@@ -124,7 +124,7 @@ namespace UnitTests_STVRogue
             var c = new Command("attack");
             commands.Add(c);
 
-            n.fight(player,commands);
+            //n.fight(player,commands);
 
             Assert.IsFalse(n.contested);
             Assert.IsFalse(n.packs.Contains(pack.Object));
@@ -158,7 +158,7 @@ namespace UnitTests_STVRogue
             node.neighbors.Add(emptyNode);
             utils.Setup(m => m.fleeProb(pack)).Returns(1);
 
-            node.fight(player, commands);
+            //node.fight(player, commands);
 
             Assert.IsFalse(node.packs.Contains(pack));
         }
@@ -194,7 +194,7 @@ namespace UnitTests_STVRogue
             node.neighbors.Add(fullNode);
             utils.Setup(m => m.fleeProb(pack)).Returns(1);
 
-            node.fight(player, commands);
+            //node.fight(player, commands);
 
             Assert.IsTrue(node.packs.Contains(pack));
 
@@ -224,7 +224,7 @@ namespace UnitTests_STVRogue
             node.utils = utils.Object;
             utils.Setup(m => m.fleeProb(pack)).Returns(1);
             
-            node.fight(player, commands);
+            //node.fight(player, commands);
 
             Assert.IsTrue(node.packs.Contains(pack));
         }
@@ -262,7 +262,7 @@ namespace UnitTests_STVRogue
             node.neighbors.Add(emptyNode);
             utils.Setup(m => m.fleeProb(pack)).Returns(1);
 
-            node.fight(player, commands);
+            //node.fight(player, commands);
 
             Assert.IsTrue(node.packs.Contains(secondPack));
 
@@ -284,7 +284,7 @@ namespace UnitTests_STVRogue
             var c = new Command("attack");
             commands.Add(c);
 
-            node.fight(player, commands);
+            //node.fight(player, commands);
 
             Assert.AreEqual(0, player.HP);
             Assert.IsFalse(node.contested);

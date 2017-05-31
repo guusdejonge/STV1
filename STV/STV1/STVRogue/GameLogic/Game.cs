@@ -11,6 +11,7 @@ namespace STVRogue.GameLogic
     {
         public Player player;
         public Dungeon dungeon;
+        public List<Command> commands;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -19,14 +20,15 @@ namespace STVRogue.GameLogic
          * the nodes' capacity are not violated. Furthermore the seeding of the monsters
          * and items should meet the balance requirements stated in the Project Document.
          */
-        public Game(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters) 
+        public Game(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters)
         {
             int Seed = DateTime.Now.Millisecond;
 
-            Logger.log("Creating a game of difficulty level "+ difficultyLevel + ", node capacity multiplier "
+            Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
                        + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
             player = new Player();
             dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, Seed);
+            commands = new List<Command>();
         }
 
         public void saveGame(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters, int Seed)    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
@@ -37,7 +39,7 @@ namespace STVRogue.GameLogic
             saveLines.Add(nodeCapcityMultiplier.ToString());
             saveLines.Add(numberOfMonsters.ToString());
             saveLines.Add(Seed.ToString());
-            
+
             //save actions
 
             System.IO.File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt", saveLines.ToArray());
@@ -64,13 +66,71 @@ namespace STVRogue.GameLogic
          */
         public Boolean update(Command userCommand)
         {
-            Logger.log("Player does " +  userCommand);
+            var split = userCommand.text.Split(' ');
+            switch (split[0])
+            {
+                case "MOVE":
+                    userCommand.previousNode = player.location;
+                    var node = Convert.ToInt32(split[1]);
+                    var zone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
+                    player.moveTo(zone.nodes[node]);
+                    break;
+                case "USE":
+                    var itemId = Convert.ToInt32(split[1]);
+                    var item = player.bag[itemId];
+                    player.use(item);
+                    break;
+            }
+
+            commands.Add(userCommand);
+            Logger.log("Player does " + userCommand);
+            movePacks();
+
             return true;
         }
+
+        private void movePacks()
+        {
+            var currentZone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
+            //alert has gone off for this zone
+            if (currentZone.nodes.Any(n => n.alert == true))
+            {
+                foreach (var node in currentZone.nodes)
+                {
+                    var path = node.utils.shortestPath(node, player.location, dungeon.zones);
+
+                    var neighbors = node.neighbors;
+                    foreach (var pack in node.packs)
+                    {
+                        pack.move(path.First());
+                    }
+                }
+            }
+            //random movement of packs
+            else
+            {
+                foreach (var node in currentZone.nodes)
+                {
+                    var neighbors = node.neighbors;
+                    foreach (var pack in node.packs)
+                    {
+                        var random = dungeon.rnd.NextDouble();
+                        if (random < 0.5)
+                        {
+                            var index = dungeon.rnd.Next(neighbors.Count());
+                            var randomZone = dungeon.zones.Where(z => z.nodes.Contains(neighbors[index])).First();
+                            if (randomZone == currentZone)
+                                pack.move(neighbors[index]);
+                        }
+                    }
+                }
+            }
+        }
     }
-    
-    public class GameCreationException: Exception {
-       //public GameCreationException() {}
-       public GameCreationException(String explanation) : base(explanation){}  
+
+    public class GameCreationException : Exception
+    {
+        //public GameCreationException() {}
+        public GameCreationException(String explanation) : base(explanation) { }
     }
 }

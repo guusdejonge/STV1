@@ -33,6 +33,7 @@ namespace STVRogue.GameLogic
             {
                 Monster m = new Monster();
                 members.Add(m);
+                m.pack = this;
                 startingHP += m.HP;
             }
             path = new List<Node>();
