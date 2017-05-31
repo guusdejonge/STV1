@@ -40,7 +40,10 @@ namespace STVRogue.GameLogic
             saveLines.Add(numberOfMonsters.ToString());
             saveLines.Add(Seed.ToString());
 
-            //save actions
+            foreach(Command c in commands)
+            {
+                saveLines.Add(c.text);
+            }
 
             System.IO.File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt", saveLines.ToArray());
         }
