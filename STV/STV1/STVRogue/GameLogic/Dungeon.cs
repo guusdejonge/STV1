@@ -229,7 +229,7 @@ namespace STVRogue.GameLogic
 
             int minAmountOfPacks = (int)(monstersInZone / M) + 1;
             int maxAmountOfPacks = monstersInZone;
-            int Packs = rnd.Next(minAmountOfPacks, maxAmountOfPacks + 5);
+            int Packs = rnd.Next(minAmountOfPacks, maxAmountOfPacks + 1);
             int[] monstersInPack = new int[Packs];              //een array waarin komt te staan hoeveel monsters in elke pack komt
 
             for (int i = 0; i < Packs; i++)
