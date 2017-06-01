@@ -19,9 +19,11 @@ namespace STVRogue
             int level = 1;
             Node prevNode = null;
 
+            var zone = game.dungeon.zones.First();
+
             foreach(var node in game.dungeon.zones.First().nodes)
             {
-                Console.WriteLine("Node: {0}. Packs: {1}", game.dungeon.zones.First().nodes.IndexOf(node), node.packs.Count());
+                Console.WriteLine("Node: {0}. Packs: {1}, Monsters: {2}", zone.nodes.IndexOf(node), node.packs.Count(), zone.calculateMonstersInNode(node));
             }
 
             while (true)
