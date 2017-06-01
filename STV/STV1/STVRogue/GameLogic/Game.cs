@@ -131,19 +131,23 @@ namespace STVRogue.GameLogic
         {
             var currentZone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
             //alert has gone off for this zone
-            //if (currentZone.nodes.Any(n => n.alert == true))
-            //{
-            //    foreach (var node in currentZone.nodes)
-            //    {
-            //        var path = node.utils.shortestPath(node, player.location, dungeon.zones);
 
-            //        var neighbors = node.neighbors;
-            //        foreach (var pack in node.packs)
-            //        {
-            //            pack.move(path.First());
-            //        }
-            //    }
-            //}
+            if (currentZone.nodes.Any(n => n.alert == true))
+            {
+                foreach (var node in currentZone.nodes)
+                {
+                    var path = node.utils.shortestPath(node, player.location, dungeon.zones);
+
+                    if (player.location == node)
+                        continue;
+
+                    var neighbors = node.neighbors;
+                    foreach (var pack in node.packs)
+                    {
+                        pack.move(path.First());
+                    }
+                }
+            }
             ////random movement of packs
             //else
             //{
