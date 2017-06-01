@@ -16,6 +16,7 @@ namespace STVRogue
         {
             game = new Game(3, 10, 20);
             int level = 1;
+            int turn = 1;
 
             var zone = game.dungeon.zones.First();
 
@@ -26,7 +27,6 @@ namespace STVRogue
 
             while (true)
             {
-                
                 if (game.commands.Any(c => c.text.Contains("MOVE")))
                 {
                     var com = game.commands.Where(c => c.text.Contains("MOVE")).Last();
@@ -46,46 +46,67 @@ namespace STVRogue
                 if (game.player.location.contested)
                     fight(game.player.location);
 
-
                 Console.WriteLine();
+                Console.WriteLine("----------------------------");
+                Console.WriteLine(" TURN " + turn + ":");
+                turn++;
+                Console.WriteLine("----------------------------");
                 var nodeId = getNodeId(game.player.location);
-                Console.WriteLine("Possible commands:");
-                Console.WriteLine("     MOVE + nodeId. ");
+                Console.WriteLine();
+                Console.WriteLine(" * PLAYER");
+                Console.WriteLine("     HP: {0}", game.player.HP);
+                Console.WriteLine("     Level: {0}", level);
+                Console.WriteLine("     Killpoint: {0}", game.player.KillPoint);
+
+                Console.WriteLine(" * BAG");
                 if (game.player.bag.Count > 0)
                 {
-                    Console.WriteLine("      USE + itemId");
-                    Console.WriteLine("Bagpack contains:");
-                    foreach(var item in game.player.bag)
+                    foreach (var item in game.player.bag)
                     {
-                        Console.WriteLine("       {1}, itemId: {0}", game.player.bag.IndexOf(item), item.GetType().ToString().Replace("STVRogue.GameLogic.", ""));
+                        Console.WriteLine("     {1} (I: {0})", game.player.bag.IndexOf(item), item.GetType().ToString().Replace("STVRogue.GameLogic.", ""));
                     }
                 }
-                Console.WriteLine("     SAVE");
-                Console.WriteLine("     LOAD");
+                else
+                {
+                    Console.WriteLine("     -");
+                }
 
-                Console.WriteLine();
-                Console.WriteLine("HP: {0}", game.player.HP);
-                Console.WriteLine("Level: {0}", level);
-                Console.WriteLine("Killpoint: {0}", game.player.KillPoint);
-
-                Console.WriteLine();
+                Console.WriteLine(" * LOCATION");
 
                 if (game.prevNode!=null)
                 {
-                    Console.WriteLine("Previous node:");
-                    Console.WriteLine("      nodeId: {0}", nodeId);
-
-
+                    Console.Write("     Previous node:");
+                    Console.WriteLine(" {0}", nodeId);
                 }
-                Console.WriteLine("Current node:");
-                Console.WriteLine("      nodeId: {0}", nodeId);
 
-                Console.WriteLine("Next nodes:");
+                Console.Write("     Current node:");
+                Console.WriteLine(" {0}", nodeId);
+
+                Console.Write("     Neighbouring node: ");
                 foreach (var node in game.player.location.neighbors)
-                    Console.WriteLine("      nodeId: {0}", getNodeId(node));
-
-
+                {
+                    if (node != game.player.location.neighbors.Last())
+                    {
+                        Console.Write("{0}, ", getNodeId(node));
+                    }
+                    else
+                    {
+                        Console.Write("{0}", getNodeId(node));
+                    }
+                }
+ 
                 Console.WriteLine();
+                Console.WriteLine(" * POSSIBLE ACTIONS");
+                Console.WriteLine("     \"Move N\"\t: Move to node N");
+                if (game.player.bag.Count > 0)
+                {
+                    Console.WriteLine("     \"Use I\"\t: Use item I");
+                }
+                Console.WriteLine("     \"Save\"\t: Save current game state");
+                Console.WriteLine("     \"Load\"\t: Load last saved game state");
+                Console.WriteLine();
+                Console.WriteLine(" > ENTER YOUR MOVE: ");
+                Console.Write("      ");
                 var command = "";
                 if (game.commandsLoaded.Count() > 0)
                 {
