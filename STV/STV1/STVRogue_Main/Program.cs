@@ -152,7 +152,7 @@ namespace STVRogue
                 }
                 else
                 {
-                    new Command(Console.ReadLine());
+                    cmd = new Command(Console.ReadLine());
                 }
 
                 cmd.previousNode = prevNode;
