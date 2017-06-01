@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\STV",
+    "\\STV\\STV1",
+    "\\STV\\STV1\\STVRogue_Main"
   ],
+  "SelectedNode": "\\STV\\STV1\\STVRogue_Main\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

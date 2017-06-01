@@ -18,6 +18,12 @@ namespace STVRogue
             game.player.location = game.dungeon.startNode;
             int level = 1;
             Node prevNode = null;
+
+            foreach(var node in game.dungeon.zones.First().nodes)
+            {
+                Console.WriteLine("Node: {0}. Packs: {1}", game.dungeon.zones.First().nodes.IndexOf(node), node.packs.Count());
+            }
+
             while (true)
             {
                 
@@ -58,7 +64,7 @@ namespace STVRogue
                 Console.WriteLine();
                 Console.WriteLine("HP: {0}", game.player.HP);
                 Console.WriteLine("Level: {0}", level);
-                Console.WriteLine("Killpoint:", game.player.KillPoint);
+                Console.WriteLine("Killpoint: {0}", game.player.KillPoint);
 
 
                 Console.WriteLine();
@@ -103,6 +109,8 @@ namespace STVRogue
             {
                 Console.WriteLine("Possible commands:");
                 Console.WriteLine("     ATTACK");
+                Console.WriteLine("     FLEE");
+
                 if (game.player.bag.Count > 0)
                 {
                     Console.WriteLine("      USE + itemId");
@@ -112,7 +120,6 @@ namespace STVRogue
                         Console.WriteLine("       {1}, itemId: {0}", game.player.bag.IndexOf(item), item.GetType().ToString().Replace("STVRogue.GameLogic.", ""));
                     }
                 }
-                Console.WriteLine("     FLEE");
                 Console.WriteLine();
                 Console.WriteLine("HP: {0}", game.player.HP);
                 Console.WriteLine();

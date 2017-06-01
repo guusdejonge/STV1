@@ -52,7 +52,7 @@ namespace UnitTests_STVRogue
 
             Bridge b = new Bridge(3);
 
-            var d = new Dungeon(3, 3,3);
+            var d = new Dungeon(3, 3,3, 1);
 
             p.dungeon = d;
             p.location = b;

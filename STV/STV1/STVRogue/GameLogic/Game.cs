@@ -96,38 +96,54 @@ namespace STVRogue.GameLogic
         {
             var currentZone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
             //alert has gone off for this zone
-            if (currentZone.nodes.Any(n => n.alert == true))
-            {
-                foreach (var node in currentZone.nodes)
-                {
-                    var path = node.utils.shortestPath(node, player.location, dungeon.zones);
+            //if (currentZone.nodes.Any(n => n.alert == true))
+            //{
+            //    foreach (var node in currentZone.nodes)
+            //    {
+            //        var path = node.utils.shortestPath(node, player.location, dungeon.zones);
 
-                    var neighbors = node.neighbors;
-                    foreach (var pack in node.packs)
-                    {
-                        pack.move(path.First());
-                    }
-                }
-            }
-            //random movement of packs
-            else
-            {
-                foreach (var node in currentZone.nodes)
-                {
-                    var neighbors = node.neighbors;
-                    foreach (var pack in node.packs)
-                    {
-                        var random = dungeon.rnd.NextDouble();
-                        if (random < 0.5)
-                        {
-                            var index = dungeon.rnd.Next(neighbors.Count());
-                            var randomZone = dungeon.zones.Where(z => z.nodes.Contains(neighbors[index])).First();
-                            if (randomZone == currentZone)
-                                pack.move(neighbors[index]);
-                        }
-                    }
-                }
-            }
+            //        var neighbors = node.neighbors;
+            //        foreach (var pack in node.packs)
+            //        {
+            //            pack.move(path.First());
+            //        }
+            //    }
+            //}
+            ////random movement of packs
+            //else
+            //{
+            //    List<string> moves = new List<string>();
+            //    foreach (var node in currentZone.nodes)
+            //    {
+            //        var neighbors = node.neighbors;
+            //        foreach (var pack in node.packs)
+            //        {
+            //            var random = dungeon.rnd.NextDouble();
+            //            if (random < 0.5)
+            //            {
+            //                var index = dungeon.rnd.Next(neighbors.Count());
+            //                var randomZone = dungeon.zones.Where(z => z.nodes.Contains(neighbors[index])).First();
+            //                if (randomZone == currentZone)
+            //                {
+            //                    var packIndex = node.packs.IndexOf(pack);
+            //                    var nodeIndex = currentZone.nodes.IndexOf(node);
+            //                    var neighborIndex = index;
+
+            //                    moves.Add(string.Format("{0},{1},{2}", nodeIndex, packIndex, neighborIndex));
+            //                }
+            //            }
+            //        }
+            //    }
+
+            //    foreach(var move in moves)
+            //    {
+            //        var split = move.Split(',');
+            //        var node = currentZone.nodes[int.Parse(split[0])];
+            //        var pack = node.packs[int.Parse(split[1])];
+            //        var neighbor = node.neighbors[int.Parse(split[2])];
+            //        pack.move(neighbor);
+            //    }
+            //}
         }
     }
 
