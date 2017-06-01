@@ -121,7 +121,6 @@ namespace STVRogue.GameLogic
                 commands.Add(userCommand);
             }
             
-            Logger.log("Player does " + userCommand);
             movePacks();
 
             return true;

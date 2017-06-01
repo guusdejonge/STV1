@@ -133,7 +133,7 @@ namespace STVRogue.GameLogic
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public virtual void disconnect(Bridge b)
         {
-            Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
+            //Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
             var fromNodes = b.fromNodes;
             foreach (var node in fromNodes)
                 b.disconnect(node);
@@ -358,19 +358,16 @@ namespace STVRogue.GameLogic
                 case "flee":
                     player.moveTo(command.previousNode);
                     contested = false;
-                    Console.WriteLine("You fled to your previous node.");
                     return true;
                 case "attack":
                     player.Attack(pack.members.First());
                     if (pack.members.Count() == 0)
                     {
                         packs.Remove(pack);
-                        Logger.log("One pack defeated.");
 
                         if (packs.Count() == 0)
                         {
                             contested = false;
-                            Logger.log("All packs defeated");
                         }
                     }
 

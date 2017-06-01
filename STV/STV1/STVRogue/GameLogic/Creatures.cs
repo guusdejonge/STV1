@@ -22,7 +22,7 @@ namespace STVRogue.GameLogic
             int diff = foe.HP - AttackRating;
             foe.HP = (int)Math.Max(0, foe.HP - AttackRating);
             String killMsg = foe.HP == 0 ? ", KILLING it" : "";
-            Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
+            //Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
         virtual public void moveTo(Node node)
         {

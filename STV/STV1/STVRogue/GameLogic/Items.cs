@@ -17,12 +17,12 @@ namespace STVRogue.GameLogic
         virtual public void use(Player player)
         {
             if (used) {
-                Logger.log("" + player.id + " is trying to use an expired item: "
-                              + this.GetType().Name + " " +  id 
-                              + ". Rejected.");
+                //Logger.log("" + player.id + " is trying to use an expired item: "
+                //              + this.GetType().Name + " " +  id 
+                //              + ". Rejected.");
                 return ;
             }
-            Logger.log(""+ player.id + " uses " + this.GetType().Name + " " + id);
+            //Logger.log(""+ player.id + " uses " + this.GetType().Name + " " + id);
             used = true ;
         }
     }
