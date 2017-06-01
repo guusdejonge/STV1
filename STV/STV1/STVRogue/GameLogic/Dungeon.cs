@@ -204,10 +204,10 @@ namespace STVRogue.GameLogic
 
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
-                    int randomPreviousNode = rnd.Next(0, nodes.Count);                 //kies random een van de vorige nodes
+                    int randomPreviousNode = rnd.Next(0, nodes.Count - 1);                 //kies random een van de vorige nodes
                     while (nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
                     {
-                        randomPreviousNode = rnd.Next(0, nodes.Count);
+                        randomPreviousNode = rnd.Next(0, nodes.Count - 1);
                     }
                     nodes[node].connect(nodes[randomPreviousNode]);                     //zo niet: connect hiermee
                 }
