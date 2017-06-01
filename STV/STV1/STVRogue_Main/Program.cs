@@ -14,7 +14,7 @@ namespace STVRogue
         static Game game;
         static void Main(string[] args)
         {
-            game = new Game(0, 10, 20);
+            game = new Game(3, 10, 20);
             game.player.location = game.dungeon.startNode;
             int level = 1;
             Node prevNode = null;

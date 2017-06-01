@@ -157,7 +157,7 @@ namespace STVRogue.GameLogic
     public class Zone
     {
         public List<Node> nodes = new List<Node>();
-        Random rnd;
+        public Random rnd;
         public int M;
         public int monstersInZone;
         public int amountOfNodes;
@@ -183,9 +183,9 @@ namespace STVRogue.GameLogic
             this.M = M2;
             this.monstersInZone = monstersInZone2;
 
-            int minAmountOfNodes = monstersInZone / M + 10;          //min + 10 nodes
+            int minAmountOfNodes = monstersInZone / M + 5;          //min + 10 nodes
 
-            amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 10);
+            amountOfNodes = rnd.Next(minAmountOfNodes, minAmountOfNodes + 5);
 
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
@@ -204,10 +204,10 @@ namespace STVRogue.GameLogic
 
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
-                    int randomPreviousNode = rnd.Next(0, nodes.Count - 1);                 //kies random een van de vorige nodes
+                    int randomPreviousNode = rnd.Next(0, nodes.Count);                 //kies random een van de vorige nodes
                     while (nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
                     {
-                        randomPreviousNode = rnd.Next(0, nodes.Count - 1);
+                        randomPreviousNode = rnd.Next(0, nodes.Count);
                     }
                     nodes[node].connect(nodes[randomPreviousNode]);                     //zo niet: connect hiermee
                 }
@@ -218,7 +218,7 @@ namespace STVRogue.GameLogic
         {
             int maxRandomNode = 0;
 
-            if (nodes.Any(q => q.GetType() == typeof(Bridge)))  //kijk of je maken heb met de laatse zone 
+            if (!nodes.Any(q => q.GetType() == typeof(Bridge)))  //kijk of je maken heb met de laatse zone 
             {
                 maxRandomNode = nodes.Count() - 2;              //in de exit node mag nu geen pack geplaatst worden
             }
@@ -227,9 +227,9 @@ namespace STVRogue.GameLogic
                 maxRandomNode = nodes.Count() - 1;
             }
 
-            int minAmountOfPacks = (int)Math.Ceiling((double)(monstersInZone / M));
+            int minAmountOfPacks = (int)(monstersInZone / M) + 1;
             int maxAmountOfPacks = monstersInZone;
-            int Packs = rnd.Next(minAmountOfPacks, maxAmountOfPacks);
+            int Packs = rnd.Next(minAmountOfPacks, maxAmountOfPacks + 5);
             int[] monstersInPack = new int[Packs];              //een array waarin komt te staan hoeveel monsters in elke pack komt
 
             for (int i = 0; i < Packs; i++)
@@ -281,12 +281,12 @@ namespace STVRogue.GameLogic
 
         public void CreateItems()
         {
-            int randomAmountOfItems = rnd.Next(1, nodes.Count());
+            int randomAmountOfItems = rnd.Next(1, nodes.Count() + 1);
 
             for (int i = 0; i < randomAmountOfItems; i++)
             {
                 int item = utils.rnd(1, 2);
-                int randomNode = rnd.Next(0, nodes.Count() - 1);
+                int randomNode = rnd.Next(0, nodes.Count());
 
                 if (item == 1)
                 {
