@@ -155,7 +155,7 @@ namespace STVRogue
                     cmd = new Command(Console.ReadLine());
                 }
 
-                cmd.previousNode = prevNode;
+                cmd.previousNode = game.prevNode;
                 node.fight(game.player, cmd);
 
                 game.commands.Add(cmd);

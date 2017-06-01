@@ -17,7 +17,7 @@ namespace STVRogue.GameLogic
         public int M;
         public int N;
         public int S;
-        public Node prevNode = null;
+        public Node prevNode;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
