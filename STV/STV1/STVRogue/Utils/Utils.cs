@@ -43,7 +43,6 @@ namespace STVRogue.Utils
                     currentNode = b;
                 }
 
-                
                     if (currentZone.nodes.Contains(v))
                         path.AddRange(shortestPathInZone(currentNode, v, currentZone));
                     else
