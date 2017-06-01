@@ -40,7 +40,7 @@ namespace STVRogue.GameLogic
             saveLines.Add(numberOfMonsters.ToString());
             saveLines.Add(Seed.ToString());
 
-            foreach(Command c in commands)
+            foreach (Command c in commands)
             {
                 saveLines.Add(c.text);
             }
@@ -95,59 +95,100 @@ namespace STVRogue.GameLogic
         private void movePacks()
         {
             var currentZone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
-            //alert has gone off for this zone
 
+            List<Bridge> bridges = new List<Bridge>();
+            foreach (Zone z in dungeon.zones)
+            {
+
+                var bridge = z.nodes.Where(n => n.GetType() == typeof(Bridge)).FirstOrDefault() as Bridge;
+                if (bridge != null)
+                    bridges.Add(bridge);
+            }
+
+            //foreach(Bridge b in bridges)
+            //{
+            //    if(b.M/2 > b.packs.Count())
+            //    {
+            //        var nodes = b.zone.nodes.Where(n=>n!=b);
+            //        var packSum = nodes.Sum(n => n.packs.Count());
+
+            //        if (packSum > 0)
+            //        {
+            //            List<Tuple<Pack, int>> packDistance = new List<Tuple<Pack, int>>();
+            //            foreach(Node node in nodes)
+            //            {
+            //                var pack = node.packs.FirstOrDefault();
+            //                if (pack != null)
+            //                {
+            //                    var dist = node.utils.shortestPath(node, b, dungeon.zones).Count();
+            //                    packDistance.Add(new Tuple<Pack, int>(pack, dist));
+            //                }
+            //            }
+
+            //            var closestPack = packDistance.OrderBy(t => t.Item2).First().Item1;
+            //            closestPack.moveTowards(b);
+            //        }
+
+            //    }
+            //}
+
+            List<Tuple<Pack, Node>> movePacks = new List<Tuple<Pack, Node>>();
+
+            //alert has gone off for this zone
             if (currentZone.nodes.Any(n => n.alert == true))
             {
+
                 foreach (var node in currentZone.nodes)
                 {
-                    var path = node.utils.shortestPath(node, player.location, dungeon.zones);
-
+                    List<Node> path = new List<Node>();
                     if (player.location == node)
                         continue;
+
+                    if (node.packs.Count() > 0)
+                        path = node.utils.shortestPath(node, player.location, dungeon.zones);
 
                     var neighbors = node.neighbors;
                     foreach (var pack in node.packs)
                     {
-                        pack.move(path.First());
+                        var random = dungeon.rnd.NextDouble();
+                        if (random < 0.5)
+                        {
+                            movePacks.Add(new Tuple<Pack, Node>(pack, path[1]));
+                        }
+                    }
+
+                }
+
+
+            }
+
+            //random movement of packs
+            else
+            {
+                List<string> moves = new List<string>();
+                foreach (var node in currentZone.nodes)
+                {
+                    var neighbors = node.neighbors;
+                    foreach (var pack in node.packs)
+                    {
+                        var random = dungeon.rnd.NextDouble();
+                        if (random < 0.5)
+                        {
+                            var index = dungeon.rnd.Next(neighbors.Count());
+                            var randomZone = dungeon.zones.Where(z => z.nodes.Contains(neighbors[index])).First();
+                            if (randomZone == currentZone)
+                            {
+                                movePacks.Add(new Tuple<Pack, Node>(pack, neighbors[index]));
+                            }
+                        }
                     }
                 }
             }
-            ////random movement of packs
-            //else
-            //{
-            //    List<string> moves = new List<string>();
-            //    foreach (var node in currentZone.nodes)
-            //    {
-            //        var neighbors = node.neighbors;
-            //        foreach (var pack in node.packs)
-            //        {
-            //            var random = dungeon.rnd.NextDouble();
-            //            if (random < 0.5)
-            //            {
-            //                var index = dungeon.rnd.Next(neighbors.Count());
-            //                var randomZone = dungeon.zones.Where(z => z.nodes.Contains(neighbors[index])).First();
-            //                if (randomZone == currentZone)
-            //                {
-            //                    var packIndex = node.packs.IndexOf(pack);
-            //                    var nodeIndex = currentZone.nodes.IndexOf(node);
-            //                    var neighborIndex = index;
 
-            //                    moves.Add(string.Format("{0},{1},{2}", nodeIndex, packIndex, neighborIndex));
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    foreach(var move in moves)
-            //    {
-            //        var split = move.Split(',');
-            //        var node = currentZone.nodes[int.Parse(split[0])];
-            //        var pack = node.packs[int.Parse(split[1])];
-            //        var neighbor = node.neighbors[int.Parse(split[2])];
-            //        pack.move(neighbor);
-            //    }
-            //}
+            foreach (var tuple in movePacks)
+            {
+                tuple.Item1.move(tuple.Item2);
+            }
         }
     }
 

@@ -73,7 +73,9 @@ namespace STVRogue
 
                 if (prevNode!=null)
                 {
-                    Console.WriteLine("Previous node: nodeId {0}", getNodeId(prevNode));
+                    Console.WriteLine("Previous node:");
+                    Console.WriteLine("      nodeId: {0}", nodeId);
+
 
                 }
                 Console.WriteLine("Current node:");

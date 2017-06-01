@@ -54,9 +54,8 @@ namespace STVRogue.GameLogic
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
-            Bridge newBridge = new Bridge(M, rnd.Next());   //de index van de nieuwe zone is het level van de bridge
+            Bridge newBridge = new Bridge(M, rnd.Next(), zoneTo, zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
             newBridge.level = zones.IndexOf(zoneTo);
-            newBridge.zone = zoneTo;
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
             Node startNode = zoneTo.nodes.First();                  //de eerste node van de nieuwe zone
@@ -176,9 +175,8 @@ namespace STVRogue.GameLogic
                 utils = new UtilsClass();
             }
 
-            Node n = new Node(M, rnd.Next());
+            Node n = new Node(M, rnd.Next(), this, nodes.Count());
             nodes.Add(n);                      //de startnode
-            n.zone = this;
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
             this.M = M2;
             this.monstersInZone = monstersInZone2;
@@ -189,7 +187,7 @@ namespace STVRogue.GameLogic
 
             for (int node = 1; node < amountOfNodes + 1; node++)    //voor elke opvolgende node
             {
-                Node m = new Node(M, rnd.Next());
+                Node m = new Node(M, rnd.Next(), this, nodes.Count());
                 nodes.Add(m);
                 m.zone = this;
 
@@ -315,7 +313,7 @@ namespace STVRogue.GameLogic
     public class Node
     {
         public int M;
-        public String id;
+        public int id;
         public List<Node> neighbors = new List<Node>();
         public List<Pack> packs = new List<Pack>();
         public List<Item> items = new List<Item>();
@@ -326,8 +324,8 @@ namespace STVRogue.GameLogic
         public int Seed;
         public Zone zone;
 
-        public Node(int M) { this.M = M; Seed = DateTime.Now.Millisecond; }
-        public Node(int M, int S) { this.M = M; Seed = S; }
+        public Node(int M, Zone z, int id) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = z; this.id = id; }
+        public Node(int M, int S, Zone z ,int id) { this.M = M; Seed = S; this.zone = z; this.id =id; }
         //public Node(int M, String id) { this.M = M; this.id = id; }
 
         /* To connect this node to another node. */
@@ -426,8 +424,8 @@ namespace STVRogue.GameLogic
         public List<Node> toNodes = new List<Node>();
         public int level;
 
-        public Bridge(int M) : base(M) { }
-        public Bridge(int M, int S) : base(M, S) { }
+        public Bridge(int M, Zone z, int id) : base(M, z, id) { }
+        public Bridge(int M, int S, Zone z, int id) : base(M, S, z, id) { }
         //public Bridge(int N, String id) : base(N, id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */

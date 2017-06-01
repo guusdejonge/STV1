@@ -64,7 +64,7 @@ namespace STVRogue.Utils
         {
             var path = new List<Node>();
             var distances = new Dictionary<Node, Tuple<int, Node>>();
-            var unvisitedNodes = zone.nodes;
+            var unvisitedNodes = zone.nodes.Where(z=>z.M>-1).ToList();
             var currentNode = u;
 
             if(u is Bridge)
