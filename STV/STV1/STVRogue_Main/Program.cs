@@ -15,9 +15,7 @@ namespace STVRogue
         static void Main(string[] args)
         {
             game = new Game(3, 10, 20);
-            game.player.location = game.dungeon.startNode;
             int level = 1;
-            Node prevNode = null;
 
             var zone = game.dungeon.zones.First();
 
@@ -32,7 +30,7 @@ namespace STVRogue
                 if (game.commands.Any(c => c.text.Contains("MOVE")))
                 {
                     var com = game.commands.Where(c => c.text.Contains("MOVE")).Last();
-                    prevNode = com.previousNode;
+                    game.prevNode = com.previousNode;
                 }
                 if (game.player.location is Bridge)
                 {
@@ -62,16 +60,17 @@ namespace STVRogue
                         Console.WriteLine("       {1}, itemId: {0}", game.player.bag.IndexOf(item), item.GetType().ToString().Replace("STVRogue.GameLogic.", ""));
                     }
                 }
+                Console.WriteLine("     SAVE");
+                Console.WriteLine("     LOAD");
 
                 Console.WriteLine();
                 Console.WriteLine("HP: {0}", game.player.HP);
                 Console.WriteLine("Level: {0}", level);
                 Console.WriteLine("Killpoint: {0}", game.player.KillPoint);
 
-
                 Console.WriteLine();
 
-                if (prevNode!=null)
+                if (game.prevNode!=null)
                 {
                     Console.WriteLine("Previous node:");
                     Console.WriteLine("      nodeId: {0}", nodeId);
@@ -87,7 +86,16 @@ namespace STVRogue
 
 
                 Console.WriteLine();
-                var command = Console.ReadLine();
+                var command = "";
+                if (game.commandsLoaded.Count() > 0)
+                {
+                    command = game.commandsLoaded.First();
+                    game.commandsLoaded.RemoveAt(0);
+                }
+                else
+                {
+                    command = Console.ReadLine();
+                }
                 game.update(new Command(command.ToUpper()));
             }
         }
@@ -135,9 +143,22 @@ namespace STVRogue
                     Console.WriteLine("Monster {0}: {1}", i, node.packs.First().members[i].HP);
                 }
                 Console.WriteLine();
-                var cmd = new Command(Console.ReadLine());
+
+                var cmd = new Command("");
+                if (game.commandsLoaded.Count() > 0)
+                {
+                    cmd = new Command(game.commandsLoaded.First());
+                    game.commandsLoaded.RemoveAt(0);
+                }
+                else
+                {
+                    new Command(Console.ReadLine());
+                }
+
                 cmd.previousNode = prevNode;
                 node.fight(game.player, cmd);
+
+                game.commands.Add(cmd);
             }
         }
     }

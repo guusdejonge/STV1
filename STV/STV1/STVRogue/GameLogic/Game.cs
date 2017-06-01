@@ -12,6 +12,12 @@ namespace STVRogue.GameLogic
         public Player player;
         public Dungeon dungeon;
         public List<Command> commands;
+        public List<String> commandsLoaded = new List<String>();
+        public int L;
+        public int M;
+        public int N;
+        public int S;
+        public Node prevNode = null;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -22,23 +28,29 @@ namespace STVRogue.GameLogic
          */
         public Game(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters)
         {
-            int Seed = DateTime.Now.Millisecond;
+            L = difficultyLevel;
+            M = nodeCapcityMultiplier;
+            N = numberOfMonsters;
+            S = DateTime.Now.Millisecond;
 
             Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
                        + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
             player = new Player();
-            dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, Seed);
+            prevNode = null;
+            dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, S);
+            player.location = dungeon.startNode;
+
             commands = new List<Command>();
         }
 
-        public void saveGame(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters, int Seed)    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
+        public void saveGame()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
         {
             List<String> saveLines = new List<String>();
 
-            saveLines.Add(difficultyLevel.ToString());
-            saveLines.Add(nodeCapcityMultiplier.ToString());
-            saveLines.Add(numberOfMonsters.ToString());
-            saveLines.Add(Seed.ToString());
+            saveLines.Add(L.ToString());
+            saveLines.Add(M.ToString());
+            saveLines.Add(N.ToString());
+            saveLines.Add(S.ToString());
 
             foreach (Command c in commands)
             {
@@ -49,13 +61,26 @@ namespace STVRogue.GameLogic
         }
 
         public void loadGame()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
-        {
+        { 
             string[] readLines = System.IO.File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt");
-            dungeon = new Dungeon(Int32.Parse(readLines[0]), Int32.Parse(readLines[1]), Int32.Parse(readLines[2]), Int32.Parse(readLines[3]));
 
-            foreach (string s in readLines)
+            L = Int32.Parse(readLines[0]);
+            M = Int32.Parse(readLines[1]);
+            N = Int32.Parse(readLines[2]);
+            S = Int32.Parse(readLines[3]);
+
+            Logger.log("Loading a game of difficulty level " + L + ", node capacity multiplier "
+                      + M + ", and " + N + " monsters.");
+            player = new Player();
+            prevNode = null;
+            dungeon = new Dungeon(L, M, N, S);
+            player.location = dungeon.startNode;
+            commands = new List<Command>();
+
+            commandsLoaded = new List<String>();
+            for (int i = 4; i < readLines.Length; i++)
             {
-                //perform actions
+                commandsLoaded.Add(readLines[i]);
             }
         }
 
@@ -83,9 +108,19 @@ namespace STVRogue.GameLogic
                     var item = player.bag[itemId];
                     player.use(item);
                     break;
+                case "SAVE":
+                    saveGame();
+                    break;
+                case "LOAD":
+                    loadGame();
+                    break;
             }
-
-            commands.Add(userCommand);
+           
+            if(userCommand.text != "SAVE" && userCommand.text != "LOAD")
+            {
+                commands.Add(userCommand);
+            }
+            
             Logger.log("Player does " + userCommand);
             movePacks();
 

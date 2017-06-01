@@ -191,10 +191,10 @@ namespace STVRogue.GameLogic
                 nodes.Add(m);
                 m.zone = this;
 
-                int amountOfConnections = utils.rnd(1, 4);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
+                int amountOfConnections = utils.rnd(1, 5);      //connect hem met 1 tot 4 (of minder als er minder nodes zijn) van de vorige nodes
                 amountOfConnections = Math.Min(4, nodes.Count() - 1);
 
-                while (((totalConnections + amountOfConnections) / (node + 1) + 8) > 3 && amountOfConnections > 1)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
+                while (((totalConnections + amountOfConnections) / (node + 1) + 4) > 3 && amountOfConnections > 1)       //voorkom dat de average connectivity hierdoor hoger dan 3 zou worden
                 {
                     amountOfConnections -= 1;
                 }
@@ -283,7 +283,7 @@ namespace STVRogue.GameLogic
 
             for (int i = 0; i < randomAmountOfItems; i++)
             {
-                int item = utils.rnd(1, 2);
+                int item = utils.rnd(1, 3);
                 int randomNode = rnd.Next(0, nodes.Count());
 
                 if (item == 1)
