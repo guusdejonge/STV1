@@ -41,7 +41,10 @@ namespace STVRogue.GameLogic
             else if(this is Player && node is Bridge)
             {
                 foreach (var n in node.zone.nodes)
+                {
                     n.alert = false;
+                }
+                this.location = node;
             }
             else
             {
