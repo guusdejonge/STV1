@@ -13,10 +13,11 @@ namespace STVRogue.GameLogic
         public String name;
         public int HP;
         public List<Item> bag = new List<Item>();
+        public Random rnd;
 
         public int AttackRating = 1;
         public Node location;
-        public Creature() { }
+        public Creature(int Seed) { rnd = new Random(Seed); }
         virtual public void Attack(Creature foe)
         {
             int diff = foe.HP - AttackRating;
@@ -66,8 +67,6 @@ namespace STVRogue.GameLogic
 
                 node.alert = true;
             }
-           
-            
         }
     }
 
@@ -83,10 +82,11 @@ namespace STVRogue.GameLogic
         //    HP = 1 + RandomGenerator.rnd.Next(6);
         //}
 
-        public Monster()
+        public Monster(int Seed) : base(Seed)
         {
+            rnd = new Random(Seed);
             name = "Orc";
-            HP = 1 + RandomGenerator.rnd.Next(6);
+            HP = 1 + rnd.Next(6);
         }
 
     }
@@ -97,8 +97,9 @@ namespace STVRogue.GameLogic
         public int HPbase = 100;
         public Boolean accelerated = false;
         public int KillPoint = 0;
-        public Player()
+        public Player(int Seed) : base(Seed)
         {
+            rnd = new Random(Seed);
             id = "player";
             AttackRating = 5;
             HP = HPbase;

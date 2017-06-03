@@ -27,11 +27,11 @@ namespace STVRogue.GameLogic
             }
         }*/
 
-        public Pack(int n)
+        public Pack(int n, int Seed)
         {
             for (int i = 0; i < n; i++)
             {
-                Monster m = new Monster();
+                Monster m = new Monster(Seed);
                 members.Add(m);
                 m.pack = this;
                 startingHP += m.HP;

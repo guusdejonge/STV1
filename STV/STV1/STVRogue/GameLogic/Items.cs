@@ -10,8 +10,9 @@ namespace STVRogue.GameLogic
     public class Item
     {
         public String id;
-	public Boolean used = false ;
-        public Item() { }
+	    public Boolean used = false ;
+        public Random rnd;
+        public Item(int Seed) { rnd = new Random(Seed); }
         //public Item(String id) { this.id = id; }
 
         virtual public void use(Player player)
@@ -29,7 +30,11 @@ namespace STVRogue.GameLogic
     public class HealingPotion : Item
     {
         public int HPvalue;
-        public HealingPotion() { HPvalue = (int)RandomGenerator.rnd.Next(10) + 1; }
+        public HealingPotion(int Seed) : base(Seed)
+        {
+            rnd = new Random(Seed);
+            HPvalue = (int)rnd.Next(10) + 1;
+        }
         /* Create a healing potion with random HP-value */
         //public HealingPotion(String id) : base(id)
         //{
@@ -45,7 +50,7 @@ namespace STVRogue.GameLogic
 
     public class Crystal : Item
     {
-        public Crystal() { }
+        public Crystal(int Seed) : base(Seed) { rnd = new Random(Seed); }
         //public Crystal(String id) : base(id) { }
         override public void use(Player player)
         {

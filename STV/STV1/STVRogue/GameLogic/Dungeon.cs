@@ -24,11 +24,12 @@ namespace STVRogue.GameLogic
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(int Level, int nodeCapacityMultiplier, int numberOfMonsters, int Seed)
-        {
+        {     
             L = Level;
             M = nodeCapacityMultiplier;
             N = numberOfMonsters;
             rnd = new Random(Seed);
+            //RandomGenerator.initializeWithSeed(Seed);
             utils = new UtilsClass(S);
 
             int monstersLeft = N;
@@ -50,11 +51,18 @@ namespace STVRogue.GameLogic
 
             GeneratePacks();
             GenerateItems();
+
+            Console.WriteLine("DEBUG INFORMATION:");
+            foreach (var node in zones.First().nodes)
+            {
+                Console.WriteLine("Node: {0}. Packs: {1}, Monsters: {2}", zones.First().nodes.IndexOf(node), node.packs.Count(), zones.First().calculateMonstersInNode(node));
+            }
+            Console.WriteLine();
         }
 
         public void CreateBridge(Zone zoneFrom, Zone zoneTo)
         {
-            Bridge newBridge = new Bridge(M, rnd.Next(), zoneTo, zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
+            Bridge newBridge = new Bridge(M, rnd.Next(), zoneFrom, zones.IndexOf(zoneTo));   //de index van de nieuwe zone is het level van de bridge
             newBridge.level = zones.IndexOf(zoneTo);
 
             Node exitNode = zoneFrom.nodes.Last();                  //de laatste node van de vorige zone
@@ -270,7 +278,7 @@ namespace STVRogue.GameLogic
                     currentMonstersInThisNode = calculateMonstersInNode(AvailableNodes[randomNode]);
                 }
 
-                Pack newPack = new Pack(i);
+                Pack newPack = new Pack(i, rnd.Next());
                 int k = nodes.FindIndex(q => q == AvailableNodes[randomNode]);
 
                 newPack.location = nodes[k];             //zet deze node als de pack zn location
@@ -288,11 +296,11 @@ namespace STVRogue.GameLogic
                 int randomNode = rnd.Next(0, nodes.Count());
                 if (item == 1)
                 {
-                    nodes[randomNode].items.Add(new HealingPotion());
+                    nodes[randomNode].items.Add(new HealingPotion(rnd.Next()));
                 }
                 else
                 {
-                    nodes[randomNode].items.Add(new Crystal());
+                    nodes[randomNode].items.Add(new Crystal(rnd.Next()));
                 }
             }
         }
@@ -325,7 +333,7 @@ namespace STVRogue.GameLogic
         public Zone zone;
 
         public Node(int M, Zone z, int id) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = z; this.id = id; utils = new UtilsClass(Seed); }
-        public Node(int M, int S, Zone z ,int id) { this.M = M; Seed = S; this.zone = z; this.id =id; }
+        public Node(int M, int S, Zone z ,int id) { this.M = M; Seed = S; this.zone = z; this.id =id; utils = new UtilsClass(Seed); }
         //public Node(int M, String id) { this.M = M; this.id = id; }
 
         /* To connect this node to another node. */
@@ -355,12 +363,12 @@ namespace STVRogue.GameLogic
             var cmd = command.text.ToLower().Split(' ');
             switch (cmd[0])
             {
-                case "flee":
+                case "f":
                     player.moveTo(command.previousNode);
                     contested = false;
                     Logger.log("YOU FLED");
                     return true;
-                case "attack":
+                case "a":
                     player.Attack(pack.members.First());
                     if (pack.members.Count() == 0)
                     {
@@ -379,7 +387,7 @@ namespace STVRogue.GameLogic
                     }
                     else
                     {
-                        Logger.log("YOU ATTACK THE PACK");
+                        Logger.log("YOU ATTACKED THE PACK");
                     }
 
                     break;

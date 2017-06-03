@@ -167,7 +167,8 @@ namespace STVRogue.Utils
             Console.WriteLine();
         }
     }
-
+    
+    /*
     public class RandomGenerator
     {
         static private Random rnd_ = null;
@@ -186,7 +187,7 @@ namespace STVRogue.Utils
             rnd_ = new Random(seed);
         }
 
-
     }
+    */
 
 }

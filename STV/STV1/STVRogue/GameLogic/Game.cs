@@ -18,6 +18,7 @@ namespace STVRogue.GameLogic
         public int N;
         public int S;
         public Node prevNode;
+        public int turn;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -28,6 +29,7 @@ namespace STVRogue.GameLogic
          */
         public Game(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters)
         {
+            turn = 1;
             L = difficultyLevel;
             M = nodeCapcityMultiplier;
             N = numberOfMonsters;
@@ -35,52 +37,41 @@ namespace STVRogue.GameLogic
 
             Logger.log("CREATING A DUNGEON OF DIFFICULTY LEVEL " + difficultyLevel + ", NODE CAPACITY MULTIPLIER "
                        + nodeCapcityMultiplier + ", AND " + numberOfMonsters + " MONSTERS.");
-            player = new Player();
+            player = new Player(S);
             prevNode = null;
+            commands = new List<Command>();
             dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, S);
             player.location = dungeon.startNode;
-
-            commands = new List<Command>();
+     
         }
 
-        public void saveGame()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
+        public void saveGameplay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
         {
-            List<String> saveLines = new List<String>();
+            commandsLoaded.Clear();
+            Gameplay G = new Gameplay(L, M, N, S, commands);
+            G.Save();
+            Logger.log("SAVING GAMEPLAY TO STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
 
-            saveLines.Add(L.ToString());
-            saveLines.Add(M.ToString());
-            saveLines.Add(N.ToString());
-            saveLines.Add(S.ToString());
-
-            foreach (Command c in commands)
-            {
-                saveLines.Add(c.text);
-            }
-
-            System.IO.File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt", saveLines.ToArray());
         }
 
-        public void loadGame()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
-        { 
-            string[] readLines = System.IO.File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt");
+        public void loadGameplay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
+        {
+            turn = 1;
+            Gameplay G = new Gameplay();
+            G.Load();
+            Logger.log("LOADING GAMEPLAY FROM STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
+            
 
-            L = Int32.Parse(readLines[0]);
-            M = Int32.Parse(readLines[1]);
-            N = Int32.Parse(readLines[2]);
-            S = Int32.Parse(readLines[3]);
-
-            Logger.log("LOADING A DUNGEON OF DIFFICULTY LEVEL " + L + ", NODE CAPACITY MULTIPLIER "
-                       + M + ", AND " + N + " MONSTERS.");
-            player = new Player();
+            player = new Player(G.S);
             prevNode = null;
-            dungeon = new Dungeon(L, M, N, S);
+            dungeon = new Dungeon(G.L, G.M, G.N, G.S);
             player.location = dungeon.startNode;
-            commands = new List<Command>();
 
-            commandsLoaded = new List<String>();
-            for (int i = 4; i < readLines.Length; i++)
+            commands.Clear();
+            commandsLoaded.Clear();
+            foreach(Command c in G.Commands)
             {
-                commandsLoaded.Add(readLines[i]);
+                commandsLoaded.Add(c.text);
             }
         }
 
@@ -97,31 +88,33 @@ namespace STVRogue.GameLogic
             var split = userCommand.text.Split(' ');
             switch (split[0])
             {
-                case "MOVE":
+                case "M":
                     userCommand.previousNode = player.location;
                     var node = Convert.ToInt32(split[1]);
-                    var zone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
+                    var zone = dungeon.zones[Convert.ToInt32(split[2])];
+                    prevNode = player.location;
                     player.moveTo(zone.nodes[node]);
                     Logger.log("YOU MOVED TO NODE " + node);
                     break;
-                case "USE":
+                case "U":
                     var itemId = Convert.ToInt32(split[1]);
                     var item = player.bag[itemId];
                     player.use(item);
                     Logger.log("YOU USED ITEM " + itemId);
                     break;
-                case "SAVE":
-                    saveGame();
+                case "S":
+                    saveGameplay();
                     Logger.log("GAME SAVED");
                     break;
-                case "LOAD":
-                    loadGame();
+                case "L":
+                    loadGameplay();
                     break;
             }
            
             if(userCommand.text != "SAVE" && userCommand.text != "LOAD")
             {
                 commands.Add(userCommand);
+                turn++;
             }
             
             movePacks();
