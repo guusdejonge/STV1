@@ -22,7 +22,6 @@ namespace STVRogue.GameLogic
                 //              + ". Rejected.");
                 return ;
             }
-            //Logger.log(""+ player.id + " uses " + this.GetType().Name + " " + id);
             used = true ;
         }
     }

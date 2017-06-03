@@ -10,6 +10,13 @@ namespace STVRogue.Utils
 {
     public class UtilsClass
     {
+        public Random rand;
+
+        public UtilsClass(int Seed)
+        {
+            rand = new Random(Seed);
+        }
+
         public virtual Single fleeProb(Pack pack)
         {
             var totalPackHp = pack.members.Sum(m => m.HP);
@@ -19,8 +26,7 @@ namespace STVRogue.Utils
 
         public virtual int rnd(int min, int max)
         {
-            Random rnd = new Random();
-            int random = rnd.Next(min, max);
+            int random = rand.Next(min, max);
             return random;
         }
 
@@ -156,7 +162,9 @@ namespace STVRogue.Utils
         /* You can change the behavior of this logger. */
         public static void log(String s)
         {
-            Console.Out.WriteLine("** " + s);
+            Console.WriteLine();
+            Console.Out.WriteLine(" ~ " + s + "...");
+            Console.WriteLine();
         }
     }
 

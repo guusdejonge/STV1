@@ -33,8 +33,8 @@ namespace STVRogue.GameLogic
             N = numberOfMonsters;
             S = DateTime.Now.Millisecond;
 
-            Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
-                       + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
+            Logger.log("CREATING A DUNGEON OF DIFFICULTY LEVEL " + difficultyLevel + ", NODE CAPACITY MULTIPLIER "
+                       + nodeCapcityMultiplier + ", AND " + numberOfMonsters + " MONSTERS.");
             player = new Player();
             prevNode = null;
             dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, S);
@@ -69,8 +69,8 @@ namespace STVRogue.GameLogic
             N = Int32.Parse(readLines[2]);
             S = Int32.Parse(readLines[3]);
 
-            Logger.log("Loading a game of difficulty level " + L + ", node capacity multiplier "
-                      + M + ", and " + N + " monsters.");
+            Logger.log("LOADING A DUNGEON OF DIFFICULTY LEVEL " + L + ", NODE CAPACITY MULTIPLIER "
+                       + M + ", AND " + N + " MONSTERS.");
             player = new Player();
             prevNode = null;
             dungeon = new Dungeon(L, M, N, S);
@@ -102,14 +102,17 @@ namespace STVRogue.GameLogic
                     var node = Convert.ToInt32(split[1]);
                     var zone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
                     player.moveTo(zone.nodes[node]);
+                    Logger.log("YOU MOVED TO NODE " + node);
                     break;
                 case "USE":
                     var itemId = Convert.ToInt32(split[1]);
                     var item = player.bag[itemId];
                     player.use(item);
+                    Logger.log("YOU USED ITEM " + itemId);
                     break;
                 case "SAVE":
                     saveGame();
+                    Logger.log("GAME SAVED");
                     break;
                 case "LOAD":
                     loadGame();
@@ -122,7 +125,7 @@ namespace STVRogue.GameLogic
             }
             
             movePacks();
-
+            
             return true;
         }
 

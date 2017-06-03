@@ -17,15 +17,15 @@ namespace STVRogue
         static void Main(string[] args)
         {
             game = new Game(3, 10, 20);
-            
-            
-
+ 
             var zone = game.dungeon.zones.First();
 
+            Console.WriteLine("DEBUG INFORMATION:");
             foreach(var node in game.dungeon.zones.First().nodes)
             {
                 Console.WriteLine("Node: {0}. Packs: {1}, Monsters: {2}", zone.nodes.IndexOf(node), node.packs.Count(), zone.calculateMonstersInNode(node));
             }
+            Console.WriteLine();
 
             while (true)
             {
@@ -47,7 +47,6 @@ namespace STVRogue
 
                 var nodeId = getNodeId(game.player.location);
 
-                Console.WriteLine();
                 Console.WriteLine(" ---------------------------");
                 Console.WriteLine(" TURN " + turn + ":"); turn++;
                 Console.WriteLine(" ---------------------------");
@@ -131,9 +130,7 @@ namespace STVRogue
 
         static void fight(Node node)
         {
-            Console.WriteLine(" **********************");
-            Console.WriteLine(" YOU ENCOUTERED A PACK");
-            Console.WriteLine(" ***********************");
+            Logger.log("YOU ENCOUNTERED A PACK");
             while (node.contested)
             {
                 Console.WriteLine(" * MONSTERS");
@@ -188,8 +185,6 @@ namespace STVRogue
                 {
                     cmd = new Command(Console.ReadLine());
                 }
-                Console.WriteLine();
-                Console.Write(" ***********************");
                 Console.WriteLine();
                 cmd.previousNode = game.prevNode;
                 node.fight(game.player, cmd);

@@ -9,7 +9,7 @@ namespace STVRogue.GameLogic
 {
     public class Dungeon
     {
-        UtilsClass utils = new UtilsClass();
+        UtilsClass utils;
 
         public Node startNode;
         public Node exitNode;
@@ -25,11 +25,11 @@ namespace STVRogue.GameLogic
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(int Level, int nodeCapacityMultiplier, int numberOfMonsters, int Seed)
         {
-            Logger.log("Creating a dungeon of difficulty level " + Level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             L = Level;
             M = nodeCapacityMultiplier;
             N = numberOfMonsters;
             rnd = new Random(Seed);
+            utils = new UtilsClass(S);
 
             int monstersLeft = N;
             int monstersDone = MonstersInZone(0);
@@ -133,7 +133,7 @@ namespace STVRogue.GameLogic
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public virtual void disconnect(Bridge b)
         {
-            //Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
+            Logger.log("DISCONNECTED BRIDGE " + b.id + " FROM ITS ZONE");
             var fromNodes = b.fromNodes;
             foreach (var node in fromNodes)
                 b.disconnect(node);
@@ -166,13 +166,14 @@ namespace STVRogue.GameLogic
         public Zone(int M2, int monstersInZone2, UtilsClass u, int Seed)
         {
             rnd = new Random(Seed);
+
             if (u != null)
             {
                 utils = u;
             }
             else
             {
-                utils = new UtilsClass();
+                utils = new UtilsClass(Seed);
             }
 
             Node n = new Node(M, rnd.Next(), this, nodes.Count());
@@ -285,7 +286,6 @@ namespace STVRogue.GameLogic
             {
                 int item = utils.rnd(1, 3);
                 int randomNode = rnd.Next(0, nodes.Count());
-
                 if (item == 1)
                 {
                     nodes[randomNode].items.Add(new HealingPotion());
@@ -320,11 +320,11 @@ namespace STVRogue.GameLogic
         public bool contested;
         public bool fled;
         public bool alert;
-        public UtilsClass utils = new UtilsClass();
+        public UtilsClass utils;
         public int Seed;
         public Zone zone;
 
-        public Node(int M, Zone z, int id) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = z; this.id = id; }
+        public Node(int M, Zone z, int id) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = z; this.id = id; utils = new UtilsClass(Seed); }
         public Node(int M, int S, Zone z ,int id) { this.M = M; Seed = S; this.zone = z; this.id =id; }
         //public Node(int M, String id) { this.M = M; this.id = id; }
 
@@ -358,17 +358,28 @@ namespace STVRogue.GameLogic
                 case "flee":
                     player.moveTo(command.previousNode);
                     contested = false;
+                    Logger.log("YOU FLED");
                     return true;
                 case "attack":
                     player.Attack(pack.members.First());
                     if (pack.members.Count() == 0)
                     {
+                        Logger.log("YOU KILLED THE PACK");
+
                         packs.Remove(pack);
 
                         if (packs.Count() == 0)
                         {
                             contested = false;
                         }
+                        else
+                        {
+                            Logger.log("YOU ENCOUNTERED ANOTHER PACK");
+                        }
+                    }
+                    else
+                    {
+                        Logger.log("YOU ATTACK THE PACK");
                     }
 
                     break;
