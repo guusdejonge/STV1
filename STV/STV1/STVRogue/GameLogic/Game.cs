@@ -19,6 +19,7 @@ namespace STVRogue.GameLogic
         public int S;
         public Node prevNode;
         public int turn;
+        public Specification specification; //Null if no specification is beind tested
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -42,24 +43,33 @@ namespace STVRogue.GameLogic
             commands = new List<Command>();
             dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, S);
             player.location = dungeon.startNode;
-     
+
+            specification = null;
         }
 
-        public void saveGameplay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
+        public void test()
+        {
+            if (specification != null)
+            {
+                specification.test(this);
+            }
+        }
+
+        public void saveGamePlay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
         {
             commandsLoaded.Clear();
-            Gameplay G = new Gameplay(L, M, N, S, commands);
-            G.Save();
-            Logger.log("SAVING GAMEPLAY TO STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
+            GamePlay G = new GamePlay(L, M, N, S, commands);
+            G.Save("savedata.txt");
+            Logger.log("SAVING GamePlay TO STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
 
         }
 
-        public void loadGameplay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
+        public void loadGamePlay()    //the game will be saved in STVRogue_Main\bin\Debug as savedata.txt
         {
             turn = 1;
-            Gameplay G = new Gameplay();
-            G.Load();
-            Logger.log("LOADING GAMEPLAY FROM STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
+            GamePlay G = new GamePlay();
+            G.Load("savedata.txt");
+            Logger.log("LOADING GamePlay FROM STVROGUE_MAIN/BIN/DEBUG/SAVEDATA.TXT");
             
 
             player = new Player(G.S);
@@ -73,6 +83,8 @@ namespace STVRogue.GameLogic
             {
                 commandsLoaded.Add(c.text);
             }
+
+            specification = null;
         }
 
         private string GetCurrentDirectory()
@@ -103,11 +115,11 @@ namespace STVRogue.GameLogic
                     Logger.log("YOU USED ITEM " + itemId);
                     break;
                 case "S":
-                    saveGameplay();
+                    saveGamePlay();
                     Logger.log("GAME SAVED");
                     break;
                 case "L":
-                    loadGameplay();
+                    loadGamePlay();
                     break;
             }
            

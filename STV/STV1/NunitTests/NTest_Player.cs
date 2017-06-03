@@ -19,15 +19,15 @@ namespace STVRogue.GameLogic
         [Test]
         public void NTest_use_onEmptyBag()
         {
-            Player P = new Player();
-            Assert.Throws<ArgumentException>(() => P.use(new Item()));
+            Player P = new Player(DateTime.Now.Millisecond);
+            Assert.Throws<ArgumentException>(() => P.use(new Item(DateTime.Now.Millisecond)));
         }
 
         [Test]
         public void NTest_use_item_in_bag()
         {
-            Player P = new Player();
-            Item x = new HealingPotion();
+            Player P = new Player(DateTime.Now.Millisecond);
+            Item x = new HealingPotion(DateTime.Now.Millisecond);
             P.bag.Add(x);
             P.use(x);
             Assert.True(x.used) ;

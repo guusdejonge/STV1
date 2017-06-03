@@ -90,7 +90,7 @@ namespace UnitTests_STVRogue
         }
 
         [TestMethod]
-        public void MSTest_zone_createitem()
+        public void MSTest_zone_createItem()
         {
             Zone z = new Zone(10, 0, null, DateTime.Now.Millisecond);
 

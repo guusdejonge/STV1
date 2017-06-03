@@ -15,7 +15,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_empty_pack_members()
         {
-            Pack P = new Pack(0);
+            Pack P = new Pack(0, DateTime.Now.Millisecond);
             Assert.IsTrue(P.GetMembers().Count() == 0);
         }
         
@@ -24,14 +24,14 @@ namespace UnitTests_STVRogue
         {
             Random rnd = new Random();
             int rndInt = rnd.Next(1, 10);
-            Pack P = new Pack(rndInt);
+            Pack P = new Pack(rndInt, DateTime.Now.Millisecond);
             Assert.IsTrue(P.GetMembers().Count() == rndInt);
         }
 
         [TestMethod]
         public void MSTest_empty_pack_startingHP()
         {
-            Pack P = new Pack(0);
+            Pack P = new Pack(0, DateTime.Now.Millisecond);
             Assert.IsTrue(P.GetStartingHP() == 0);
         }
 
@@ -40,7 +40,7 @@ namespace UnitTests_STVRogue
         {
             Random rnd = new Random();
             int rndInt = rnd.Next(1, 10);
-            Pack P = new Pack(rndInt);
+            Pack P = new Pack(rndInt, DateTime.Now.Millisecond);
 
             int totalMemberHP = 0;
             foreach(Monster m in P.GetMembers())
@@ -54,7 +54,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_attack_kill()
         {
-            Pack pack = new Pack(3);
+            Pack pack = new Pack(3, DateTime.Now.Millisecond);
 
             var player = new Mock<Player>();
 
@@ -69,7 +69,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_attack_dont_kill()
         {
-            Pack pack = new Pack(3);
+            Pack pack = new Pack(3, DateTime.Now.Millisecond);
 
             var player = new Mock<Player>();
 
@@ -84,7 +84,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_move()
         {
-            Pack p = new Pack(3);
+            Pack p = new Pack(3, DateTime.Now.Millisecond);
 
             Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 
@@ -104,7 +104,7 @@ namespace UnitTests_STVRogue
         [ExpectedException(typeof(ArgumentException))]
         public void MSTest_pack_moveToNoNeighbor()
         {
-            Pack p = new Pack(3);
+            Pack p = new Pack(3, DateTime.Now.Millisecond);
 
             Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 
@@ -121,7 +121,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_moveFullNode()
         {
-            Pack p = new Pack(3);
+            Pack p = new Pack(3, DateTime.Now.Millisecond);
 
             Dungeon d = new Dungeon(2, 1, 0, DateTime.Now.Millisecond);
 
@@ -141,7 +141,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_pack_movetowards_same_zone()
         {
-            Pack p = new Pack(3);
+            Pack p = new Pack(3, DateTime.Now.Millisecond);
 
             Dungeon d = new Dungeon(2, 10, 0, DateTime.Now.Millisecond);
 

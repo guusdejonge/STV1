@@ -16,7 +16,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_utils_shortestPathInZone()
         {
-            var utils = new UtilsClass();
+            var utils = new UtilsClass(DateTime.Now.Millisecond);
 
             var zone1 = new Mock<Zone>(1,1,null);
             zone1.SetupAllProperties();
@@ -55,7 +55,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_utils_shortestPathBetweenZones()
         {
-            var utils = new UtilsClass();
+            var utils = new UtilsClass(DateTime.Now.Millisecond);
 
             var zone1 = new Mock<Zone>(1, 1,null);
             zone1.SetupAllProperties();

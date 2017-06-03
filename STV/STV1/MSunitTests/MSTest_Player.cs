@@ -19,15 +19,15 @@ namespace STVRogue.GameLogic
         [ExpectedException(typeof(ArgumentException))]
         public void MSTest_use_onEmptyBag()
         {
-            Player P = new Player();
-            P.use(new Item());
+            Player P = new Player(DateTime.Now.Millisecond);
+            P.use(new Item(DateTime.Now.Millisecond));
         }
 
         [TestMethod]
         public void MSTest_use_item_in_bag()
         {
-            Player P = new Player();
-            Item x = new HealingPotion();
+            Player P = new Player(DateTime.Now.Millisecond);
+            Item x = new HealingPotion(DateTime.Now.Millisecond);
             P.bag.Add(x);
             P.use(x);
             Assert.IsFalse(P.bag.Contains(x));
@@ -41,7 +41,7 @@ namespace STVRogue.GameLogic
             var monster = new Mock<Monster>();
 
             var monsters = new List<Monster>();
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
 
             monsters.Add(monster.Object);
 
@@ -67,7 +67,7 @@ namespace STVRogue.GameLogic
             var monster = new Mock<Monster>();
 
             var monsters = new List<Monster>();
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
 
             monsters.Add(monster.Object);
 
@@ -94,7 +94,7 @@ namespace STVRogue.GameLogic
             var monster2 = new Mock<Monster>();
 
             var monsters = new List<Monster>() { };
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
 
             player.accelerated = true;
 
@@ -123,7 +123,7 @@ namespace STVRogue.GameLogic
         [ExpectedException(typeof(ArgumentException))]
         public void MSTest_attack_noMonster()
         {
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
 
             var obj = new Mock<Player>();
 

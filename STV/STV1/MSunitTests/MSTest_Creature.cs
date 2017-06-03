@@ -15,11 +15,11 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_moveToNodeWithPack()
         {
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
             //Node n = new Node(3);
             var packs = new List<Pack>();
-            Pack pack = new Pack(3);
+            Pack pack = new Pack(3, DateTime.Now.Millisecond);
             packs.Add(pack);
 
             var n = new Mock<Node>(3);
@@ -41,7 +41,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_moveToNodeWithoutPack()
         {
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
             Node n = new Node(3);
 
@@ -55,7 +55,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_moveToNodeWithoutPlayer()
         {
-            var p = new Monster();
+            var p = new Monster(DateTime.Now.Millisecond);
 
             Node n = new Node(3);
 

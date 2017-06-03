@@ -15,9 +15,9 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_items_useItemTwice()
         {
-            Crystal c = new Crystal();
+            Crystal c = new Crystal(DateTime.Now.Millisecond);
 
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
           
 
@@ -33,9 +33,9 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_useItemOnce()
         {
-            Crystal c = new Crystal();
+            Crystal c = new Crystal(DateTime.Now.Millisecond);
 
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
             c.use(p);
 
@@ -46,9 +46,9 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_useCrystalInBridge()
         {
-            Crystal c = new Crystal();
+            Crystal c = new Crystal(DateTime.Now.Millisecond);
 
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
             Bridge b = new Bridge(3);
 

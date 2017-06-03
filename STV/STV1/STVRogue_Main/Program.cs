@@ -16,8 +16,6 @@ namespace STVRogue
         static void Main(string[] args)
         {
             game = new Game(3, 10, 20);
- 
-            var zone = game.dungeon.zones.First();
 
             while (true)
             {
@@ -114,6 +112,8 @@ namespace STVRogue
                     }
                     game.update(new Command(command.ToUpper()));
                 }
+
+                game.test();
             }
         }
 
@@ -159,12 +159,12 @@ namespace STVRogue
                 }
                 Console.WriteLine();
                 Console.WriteLine(" * POSSIBLE ACTIONS");
-                Console.WriteLine("     A \t: Attack pack");
+                Console.WriteLine("     A \t\t: Attack pack");
                 if (game.player.bag.Count > 0)
                 {
                     Console.WriteLine("     U \'i\' \t: Use item i");
                 }
-                Console.WriteLine("     F \t: Flee");
+                Console.WriteLine("     F \t\t: Flee");
                 Console.WriteLine();
                 Console.WriteLine(" > ENTER YOUR MOVE: ");
                 Console.Write("      ");

@@ -332,6 +332,7 @@ namespace STVRogue.GameLogic
         public int Seed;
         public Zone zone;
 
+        public Node(int M) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = new Zone(M, 10, utils, Seed); this.id = 0; utils = new UtilsClass(Seed); }
         public Node(int M, Zone z, int id) { this.M = M; Seed = DateTime.Now.Millisecond; this.zone = z; this.id = id; utils = new UtilsClass(Seed); }
         public Node(int M, int S, Zone z ,int id) { this.M = M; Seed = S; this.zone = z; this.id =id; utils = new UtilsClass(Seed); }
         //public Node(int M, String id) { this.M = M; this.id = id; }
@@ -440,6 +441,7 @@ namespace STVRogue.GameLogic
         public List<Node> toNodes = new List<Node>();
         public int level;
 
+        public Bridge(int M) : base(M) { }
         public Bridge(int M, Zone z, int id) : base(M, z, id) { }
         public Bridge(int M, int S, Zone z, int id) : base(M, S, z, id) { }
         //public Bridge(int N, String id) : base(N, id) { }

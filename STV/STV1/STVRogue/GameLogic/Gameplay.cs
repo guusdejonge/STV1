@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace STVRogue.GameLogic
 {
-    class Gameplay
+    public class GamePlay
     {
         public int L;
         public int M;
@@ -14,9 +15,9 @@ namespace STVRogue.GameLogic
         public int S;
         public List<Command> Commands = new List<Command>();
 
-        public Gameplay() { }
+        public GamePlay() { }
 
-        public Gameplay(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters, int seed, List<Command> com)
+        public GamePlay(int difficultyLevel, int nodeCapcityMultiplier, int numberOfMonsters, int seed, List<Command> com)
         {
             L = difficultyLevel;
             M = nodeCapcityMultiplier;
@@ -29,7 +30,7 @@ namespace STVRogue.GameLogic
             }
         }
 
-        public void Save()
+        public void Save(string fileName)
         {
             List<String> saveLines = new List<String>();
 
@@ -38,19 +39,17 @@ namespace STVRogue.GameLogic
             saveLines.Add(N.ToString());
             saveLines.Add(S.ToString());
 
-
-
             foreach (Command c in Commands)
             {
                 saveLines.Add(c.text);
             }
 
-            System.IO.File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt", saveLines.ToArray());
+            System.IO.File.WriteAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName), saveLines.ToArray());
         }
 
-        public void Load()
+        public void Load(string fileName)
         {
-            string[] readLines = System.IO.File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "savedata.txt");
+            string[] readLines = System.IO.File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName));
 
             L = Int32.Parse(readLines[0]);
             M = Int32.Parse(readLines[1]);
@@ -68,6 +67,15 @@ namespace STVRogue.GameLogic
             {
                 Console.WriteLine("JA");
             }
+        }
+
+        public void Replay(Specification s)
+        {
+            Game g = new Game(L, M, N);
+          
+            Save("savedata.txt");
+            g.loadGamePlay();
+            g.specification = s;
         }
     }
 }

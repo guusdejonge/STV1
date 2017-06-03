@@ -47,10 +47,10 @@ namespace UnitTests_STVRogue
             Node n = new Node(3);
             n.contested = true;
 
-            var pack = new Pack(1);
+            var pack = new Pack(1, DateTime.Now.Millisecond);
             n.packs.Add(pack);
 
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
             List<Command> commands = new List<Command>();
 
@@ -70,12 +70,12 @@ namespace UnitTests_STVRogue
             Node n = new Node(3);
             n.contested = true;
 
-            var pack = new Pack(1);
+            var pack = new Pack(1, DateTime.Now.Millisecond);
             n.packs.Add(pack);
-            Player p = new Player();
+            Player p = new Player(DateTime.Now.Millisecond);
 
-            Crystal crystal = new Crystal();
-            HealingPotion hp = new HealingPotion();
+            Crystal crystal = new Crystal(DateTime.Now.Millisecond);
+            HealingPotion hp = new HealingPotion(DateTime.Now.Millisecond);
             p.bag.Add(crystal);
             p.bag.Add(hp);
 
@@ -105,7 +105,7 @@ namespace UnitTests_STVRogue
             var monster = new Mock<Monster>();
 
             var monsters = new List<Monster>();
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
 
             monsters.Add(monster.Object);
 
@@ -141,13 +141,13 @@ namespace UnitTests_STVRogue
             var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
             var utils = new Mock<UtilsClass>();
 
-            var pack = new Pack(1);
+            var pack = new Pack(1, DateTime.Now.Millisecond);
 
             var commands = new List<Command>();
             var c = new Command("attack");
             commands.Add(c);
 
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
             player.AttackRating = 0;
             dungeon.exitNode = exitNode;
             pack.dungeon = dungeon;
@@ -169,8 +169,8 @@ namespace UnitTests_STVRogue
             //NEED DUNGEON
             var node = new Node(3);
             var fullNode = new Node(1);
-            var pack = new Pack(1);
-            var fullPack = new Pack(1);
+            var pack = new Pack(1, DateTime.Now.Millisecond);
+            var fullPack = new Pack(1, DateTime.Now.Millisecond);
             var previousNode = new Node(3);
 
             var utils = new Mock<UtilsClass>();
@@ -182,7 +182,7 @@ namespace UnitTests_STVRogue
             c.previousNode = previousNode;
             commands.Add(c);
 
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
             player.AttackRating = 0;
 
             fullNode.packs.Add(fullPack);
@@ -206,7 +206,7 @@ namespace UnitTests_STVRogue
             //NEED DUNGEON
             var node = new Node(3);
             var exitNode = new Node(1);
-            var pack = new Pack(1);
+            var pack = new Pack(1, DateTime.Now.Millisecond);
             var dungeon = new Dungeon(1, 1, 1, DateTime.Now.Millisecond);
             var utils = new Mock<UtilsClass>();
             var commands = new List<Command>();
@@ -214,7 +214,7 @@ namespace UnitTests_STVRogue
             var c = new Command("attack");
             commands.Add(c);
 
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
             player.AttackRating = 0;
 
             dungeon.exitNode = exitNode;
@@ -234,8 +234,8 @@ namespace UnitTests_STVRogue
         {
             //NEED DUNGEON
             Node node = new Node(3);
-            Pack pack = new Pack(1);
-            Pack secondPack = new Pack(1);
+            Pack pack = new Pack(1, DateTime.Now.Millisecond);
+            Pack secondPack = new Pack(1, DateTime.Now.Millisecond);
             var emptyNode = new Node(3);
             var previousNode = new Node(3);
             var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
@@ -251,7 +251,7 @@ namespace UnitTests_STVRogue
             c.previousNode = previousNode;
             commands.Add(c);
 
-            var player = new Player();
+            var player = new Player(DateTime.Now.Millisecond);
             player.AttackRating = 0;
             pack.dungeon = dungeon;
             pack.location = node;
@@ -272,8 +272,8 @@ namespace UnitTests_STVRogue
         public void MSTest_nodes_gameOver()
         {
             var node = new Node(3);
-            var pack = new Pack(5);
-            var player = new Player();
+            var pack = new Pack(5, DateTime.Now.Millisecond);
+            var player = new Player(DateTime.Now.Millisecond);
 
             player.HP = 4;
             player.AttackRating = 0;
