@@ -15,7 +15,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_playerHP_never_negative()
         {
-            string[] files = {"savedata.txt"};
+            string[] files = {"savedata1.txt", "savedata2.txt"};
             List<GamePlay> plays = loadSavedGamePlays(files);
             Specification S = new onNegativeHP_Spec();
 
