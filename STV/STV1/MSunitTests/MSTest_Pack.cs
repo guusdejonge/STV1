@@ -56,7 +56,7 @@ namespace UnitTests_STVRogue
         {
             Pack pack = new Pack(3, DateTime.Now.Millisecond);
 
-            var player = new Mock<Player>();
+            var player = new Mock<Player>(DateTime.Now.Millisecond);
 
             player.SetupAllProperties();
             player.Object.HP = 2;
@@ -71,7 +71,7 @@ namespace UnitTests_STVRogue
         {
             Pack pack = new Pack(3, DateTime.Now.Millisecond);
 
-            var player = new Mock<Player>();
+            var player = new Mock<Player>(DateTime.Now.Millisecond);
 
             player.SetupAllProperties();
             player.Object.HP = 10;

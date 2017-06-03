@@ -37,8 +37,8 @@ namespace STVRogue.GameLogic
         public void MSTest_attack_one_monster_low_HP()
         {
             //ARRANGE
-            var pack = new Mock<Pack>(1);
-            var monster = new Mock<Monster>();
+            var pack = new Mock<Pack>(1, DateTime.Now.Millisecond);
+            var monster = new Mock<Monster>(DateTime.Now.Millisecond);
 
             var monsters = new List<Monster>();
             var player = new Player(DateTime.Now.Millisecond);
@@ -63,8 +63,8 @@ namespace STVRogue.GameLogic
         public void MSTEST_attack_one_monster_high_HP()
         {
             //ARRANGE
-            var pack = new Mock<Pack>(1);
-            var monster = new Mock<Monster>();
+            var pack = new Mock<Pack>(1, DateTime.Now.Millisecond);
+            var monster = new Mock<Monster>(DateTime.Now.Millisecond);
 
             var monsters = new List<Monster>();
             var player = new Player(DateTime.Now.Millisecond);
@@ -89,9 +89,9 @@ namespace STVRogue.GameLogic
         public void MSTEST_attack_accelerated()
         {
             //ARRANGE
-            var pack = new Mock<Pack>(2);
-            var monster = new Mock<Monster>();
-            var monster2 = new Mock<Monster>();
+            var pack = new Mock<Pack>(2, DateTime.Now.Millisecond);
+            var monster = new Mock<Monster>(DateTime.Now.Millisecond);
+            var monster2 = new Mock<Monster>((DateTime.Now.Millisecond));
 
             var monsters = new List<Monster>() { };
             var player = new Player(DateTime.Now.Millisecond);
@@ -100,7 +100,7 @@ namespace STVRogue.GameLogic
 
             monsters.Add(monster.Object);
             monsters.Add(monster2.Object);
-
+            
             pack.SetupAllProperties();
             pack.Object.members = monsters;
 
@@ -125,7 +125,7 @@ namespace STVRogue.GameLogic
         {
             var player = new Player(DateTime.Now.Millisecond);
 
-            var obj = new Mock<Player>();
+            var obj = new Mock<Player>(DateTime.Now.Millisecond);
 
             player.Attack(obj.Object);
         }

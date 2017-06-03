@@ -54,7 +54,7 @@ namespace UnitTests_STVRogue
 
             List<Command> commands = new List<Command>();
 
-            Command c = new Command("flee");
+            Command c = new Command("F");
             commands.Add(c);
             c.previousNode = previous;
 
@@ -77,17 +77,19 @@ namespace UnitTests_STVRogue
             Crystal crystal = new Crystal(DateTime.Now.Millisecond);
             HealingPotion hp = new HealingPotion(DateTime.Now.Millisecond);
             p.bag.Add(crystal);
+            p.bag.Add(crystal);
+            p.bag.Add(crystal);
             p.bag.Add(hp);
 
             List<Command> commands = new List<Command>();
 
-            Command c = new Command("item potion");
+            Command c = new Command("I 0");
             commands.Add(c);
-            c = new Command("item crystal");
+            c = new Command("I 0");
             commands.Add(c);
-            c = new Command("item null");
+            c = new Command("I 0");
             commands.Add(c);
-            c = new Command("flee");
+            c = new Command("F");
             c.previousNode = previous;
             commands.Add(c);
             
@@ -101,8 +103,8 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_nodes_playerFightWeakPack()
         {
-            var pack = new Mock<Pack>(1);
-            var monster = new Mock<Monster>();
+            var pack = new Mock<Pack>(1, DateTime.Now.Millisecond);
+            var monster = new Mock<Monster>(DateTime.Now.Millisecond);
 
             var monsters = new List<Monster>();
             var player = new Player(DateTime.Now.Millisecond);
@@ -121,7 +123,7 @@ namespace UnitTests_STVRogue
             n.contested = true;
 
             List<Command> commands = new List<Command>();
-            var c = new Command("attack");
+            var c = new Command("A");
             commands.Add(c);
 
             //n.fight(player,commands);
@@ -139,12 +141,12 @@ namespace UnitTests_STVRogue
             var exitNode = new Node(3);
             var emptyNode = new Node(3);
             var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
-            var utils = new Mock<UtilsClass>();
+            var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
 
             var pack = new Pack(1, DateTime.Now.Millisecond);
 
             var commands = new List<Command>();
-            var c = new Command("attack");
+            var c = new Command("A");
             commands.Add(c);
 
             var player = new Player(DateTime.Now.Millisecond);
@@ -173,12 +175,12 @@ namespace UnitTests_STVRogue
             var fullPack = new Pack(1, DateTime.Now.Millisecond);
             var previousNode = new Node(3);
 
-            var utils = new Mock<UtilsClass>();
+            var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
             var dungeon = new Dungeon(1, 1, 1, DateTime.Now.Millisecond);
             var commands = new List<Command>();
-            var c = new Command("attack");
+            var c = new Command("A");
             commands.Add(c);
-            c = new Command("flee");
+            c = new Command("F");
             c.previousNode = previousNode;
             commands.Add(c);
 
@@ -239,7 +241,7 @@ namespace UnitTests_STVRogue
             var emptyNode = new Node(3);
             var previousNode = new Node(3);
             var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
-            var utils = new Mock<UtilsClass>();
+            var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
 
 
             var commands = new List<Command>();
@@ -281,7 +283,7 @@ namespace UnitTests_STVRogue
             node.packs.Add(pack);
 
             var commands = new List<Command>();
-            var c = new Command("attack");
+            var c = new Command("A");
             commands.Add(c);
 
             //node.fight(player, commands);

@@ -48,7 +48,7 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_zone_averageconnectivity()
         {
-            var u = new Mock<UtilsClass>();
+            var u = new Mock<UtilsClass>(DateTime.Now.Millisecond);
             u.Setup(m => m.rnd(1, 4)).Returns(4);
 
             Zone z = new Zone(3, 0, u.Object, DateTime.Now.Millisecond);
