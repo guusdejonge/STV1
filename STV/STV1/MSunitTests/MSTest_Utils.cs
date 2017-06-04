@@ -108,11 +108,6 @@ namespace UnitTests_STVRogue
             Assert.AreEqual(expected[1], result[1]);
             Assert.AreEqual(expected[2], result[2]);
             Assert.AreEqual(expected[3], result[3]);
-
-
         }
-
-
-
     }
 }

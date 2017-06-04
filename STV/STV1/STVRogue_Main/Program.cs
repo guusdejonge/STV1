@@ -9,7 +9,7 @@ using STVRogue.Utils;
 namespace STVRogue
 {
     /* A dummy top-level program to run the STVRogue game */
-    class Program
+    public class Program
     {
         static Game game;
         public static int level = 1;

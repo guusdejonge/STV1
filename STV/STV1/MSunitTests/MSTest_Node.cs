@@ -43,126 +43,85 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_nodes_playerFleeFight()
         {
-            Node previous = new Node(3);
-            Node n = new Node(3);
-            n.contested = true;
+            Game g = new Game(3, 10, 10); 
+            Node firstNeighbor = g.player.location.neighbors.First();
 
-            var pack = new Pack(1, DateTime.Now.Millisecond);
-            n.packs.Add(pack);
+            if (firstNeighbor.packs.Count() == 0)
+            {
+                firstNeighbor.packs.Add(new Pack(1, DateTime.Now.Millisecond));
+            }
 
-            Player p = new Player(DateTime.Now.Millisecond);
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+            Command flee = new Command("F");
+            flee.previousNode = g.prevNode;
+            firstNeighbor.fight(g.player, flee);
 
-            List<Command> commands = new List<Command>();
-
-            Command c = new Command("F");
-            commands.Add(c);
-            c.previousNode = previous;
-
-            //n.fight(p, commands);
-
-            Assert.IsFalse(n.contested);
+            Assert.IsFalse(firstNeighbor.contested);
         }
 
         [TestMethod]
         public void MSTest_nodes_playerUseItems()
         {
-            Node previous = new Node(3);
-            Node n = new Node(3);
-            n.contested = true;
+            Game g = new Game(3, 10, 10);
+            g.player.bag.Add(new Crystal(DateTime.Now.Millisecond));
+            g.player.bag.Add(new HealingPotion(DateTime.Now.Millisecond));
+            g.player.HP = 10;
 
-            var pack = new Pack(1, DateTime.Now.Millisecond);
-            n.packs.Add(pack);
-            Player p = new Player(DateTime.Now.Millisecond);
+            g.update(new Command("U 0"));
+            g.update(new Command("U 0"));
 
-            Crystal crystal = new Crystal(DateTime.Now.Millisecond);
-            HealingPotion hp = new HealingPotion(DateTime.Now.Millisecond);
-            p.bag.Add(crystal);
-            p.bag.Add(crystal);
-            p.bag.Add(crystal);
-            p.bag.Add(hp);
-
-            List<Command> commands = new List<Command>();
-
-            Command c = new Command("I 0");
-            commands.Add(c);
-            c = new Command("I 0");
-            commands.Add(c);
-            c = new Command("I 0");
-            commands.Add(c);
-            c = new Command("F");
-            c.previousNode = previous;
-            commands.Add(c);
-            
-
-            //n.fight(p, commands);
-
-            Assert.IsFalse(p.bag.Contains(crystal) && p.bag.Contains(hp));
-            Assert.IsTrue(p.accelerated);
+            Assert.IsTrue(g.player.bag.Count == 0);
+            Assert.IsTrue(g.player.HP > 10);
+            Assert.IsTrue(g.player.accelerated);
         }
 
         [TestMethod]
         public void MSTest_nodes_playerFightWeakPack()
         {
-            var pack = new Mock<Pack>(1, DateTime.Now.Millisecond);
-            var monster = new Mock<Monster>(DateTime.Now.Millisecond);
+            Game g = new Game(3, 10, 10);
+            Node firstNeighbor = g.player.location.neighbors.First();
 
-            var monsters = new List<Monster>();
-            var player = new Player(DateTime.Now.Millisecond);
+            if (firstNeighbor.packs.Count() != 0)
+            {
+                firstNeighbor.packs.Clear();
+            }
 
-            monsters.Add(monster.Object);
+            Pack p = new Pack(1, DateTime.Now.Millisecond);
+            p.members[0].HP = 1;
+            firstNeighbor.packs.Add(p);
 
-            pack.SetupAllProperties();
-            pack.Object.members = monsters;
+            g.player.AttackRating = 10;
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+            firstNeighbor.fight(g.player, new Command("A"));
 
-            monster.SetupAllProperties();
-            monster.Object.HP = 4;
-            monster.Object.pack = pack.Object;
-
-            Node n = new Node(3);
-            n.packs.Add(pack.Object);
-            n.contested = true;
-
-            List<Command> commands = new List<Command>();
-            var c = new Command("A");
-            commands.Add(c);
-
-            //n.fight(player,commands);
-
-            Assert.IsFalse(n.contested);
-            Assert.IsFalse(n.packs.Contains(pack.Object));
-            
+            Assert.IsFalse(firstNeighbor.contested);
+            Assert.IsFalse(firstNeighbor.packs.Contains(p));
         }
 
         [TestMethod]
         public void MSTest_nodes_fleePackEmptyNode()
         {
-            //NEED DUNGEON
-            var node = new Node(3);
-            var exitNode = new Node(3);
-            var emptyNode = new Node(3);
-            var dungeon = new Dungeon(1, 5, 1, DateTime.Now.Millisecond);
+            Game g = new Game(3, 10, 10);
+            Node firstNeighbor = g.player.location.neighbors.First();
+
+            Pack p = new Pack(1, DateTime.Now.Millisecond);
+            p.dungeon = g.dungeon;
+            p.location = firstNeighbor;
+            if (firstNeighbor.packs.Count() != 0)
+            {
+                firstNeighbor.packs.Clear();
+            }
+            firstNeighbor.packs.Add(p);
+
             var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
+            utils.Setup(m => m.fleeProb(p)).Returns(1);
+            firstNeighbor.utils = utils.Object;
+            g.player.AttackRating = 0;
 
-            var pack = new Pack(1, DateTime.Now.Millisecond);
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+            firstNeighbor.fight(g.player, new Command("A"));
 
-            var commands = new List<Command>();
-            var c = new Command("A");
-            commands.Add(c);
-
-            var player = new Player(DateTime.Now.Millisecond);
-            player.AttackRating = 0;
-            dungeon.exitNode = exitNode;
-            pack.dungeon = dungeon;
-            pack.location = node;
-            node.packs.Add(pack);
-            node.contested = true;
-            node.utils = utils.Object;
-            node.neighbors.Add(emptyNode);
-            utils.Setup(m => m.fleeProb(pack)).Returns(1);
-
-            //node.fight(player, commands);
-
-            Assert.IsFalse(node.packs.Contains(pack));
+            Assert.IsFalse(firstNeighbor.packs.Contains(p));
         }
 
         [TestMethod]
@@ -273,24 +232,17 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_nodes_gameOver()
         {
-            var node = new Node(3);
-            var pack = new Pack(5, DateTime.Now.Millisecond);
-            var player = new Player(DateTime.Now.Millisecond);
+            Game g = new Game(3, 10, 10);
+            Node firstNeighbor = g.player.location.neighbors.First();
+            firstNeighbor.packs.Add(new Pack(10, DateTime.Now.Millisecond));
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
 
-            player.HP = 4;
-            player.AttackRating = 0;
-            node.contested = true;
-            node.packs.Add(pack);
+            g.player.HP = 1;
+            g.player.AttackRating = 0;
+            firstNeighbor.fight(g.player, new Command("A"));
 
-            var commands = new List<Command>();
-            var c = new Command("A");
-            commands.Add(c);
-
-            //node.fight(player, commands);
-
-            Assert.AreEqual(0, player.HP);
-            Assert.IsFalse(node.contested);
+            Assert.AreEqual(0, g.player.HP);
+            Assert.IsFalse(firstNeighbor.contested);
         }
-
     }
 }
