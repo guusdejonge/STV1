@@ -89,6 +89,8 @@ namespace UnitTests_STVRogue
             Pack p = new Pack(1, DateTime.Now.Millisecond);
             p.members[0].HP = 1;
             firstNeighbor.packs.Add(p);
+            p.location = firstNeighbor;
+            p.dungeon = g.dungeon;
 
             g.player.AttackRating = 10;
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));

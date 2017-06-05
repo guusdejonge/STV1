@@ -49,15 +49,15 @@ namespace STVRogue.Utils
                     currentNode = b;
                 }
 
-                    if (currentZone.nodes.Contains(v))
-                        path.AddRange(shortestPathInZone(currentNode, v, currentZone));
-                    else
-                    {
-                        var partialPath = shortestPathToBridge(currentNode, currentZone);
-                        currentNode = partialPath.Last();
-                        path.AddRange(partialPath);
-                    }
-                
+                if (currentZone.nodes.Contains(v))
+                    path.AddRange(shortestPathInZone(currentNode, v, currentZone));
+                else
+                {
+                    var partialPath = shortestPathToBridge(currentNode, currentZone);
+                    currentNode = partialPath.Last();
+                    path.AddRange(partialPath);
+                }
+
 
 
             }
@@ -69,17 +69,17 @@ namespace STVRogue.Utils
         {
             var path = new List<Node>();
             var distances = new Dictionary<Node, Tuple<int, Node>>();
-            var unvisitedNodes = zone.nodes.Where(z=>z.M>-1).ToList();
+            var unvisitedNodes = zone.nodes.Where(z => z.M > -1).ToList();
             var currentNode = u;
 
-            if(u is Bridge)
+            if (u is Bridge)
             {
                 //distances.Add(u, new Tuple<int, Node>(0, u));
                 //unvisitedNodes.Add(u);
-                zone.nodes.Add(u);
+                unvisitedNodes.Add(u);
             }
 
-            foreach (Node node in zone.nodes)
+            foreach (Node node in unvisitedNodes)
             {
                 if (node == u)
                     distances.Add(node, new Tuple<int, Node>(0, u));
@@ -90,24 +90,24 @@ namespace STVRogue.Utils
 
             var b = unvisitedNodes.FirstOrDefault(q => q is Bridge) as Bridge;
 
-            if (b != null && b!=u)
+            if (b != null && b != u)
             {
                 foreach (var node in b.toNodes)
                     unvisitedNodes.Remove(node);
             }
-            
 
-            
+
+
 
             var unvis = unvisitedNodes.Contains(v);
             while (unvis)
             {
-                currentNode = distances.OrderBy(x => x.Value.Item1).First(q=>unvisitedNodes.Contains(q.Key)).Key;
-              
-                
+                currentNode = distances.OrderBy(x => x.Value.Item1).First(q => unvisitedNodes.Contains(q.Key)).Key;
+
+
                 foreach (Node node in currentNode.neighbors)
                 {
-                    if(currentNode is Bridge)
+                    if (currentNode is Bridge)
                     {
                         var n = currentNode as Bridge;
                         if (n == u)
@@ -120,11 +120,19 @@ namespace STVRogue.Utils
                         {
                             if (n.toNodes.Contains(node))
                                 continue;
+                            if (n.toNodes.Contains(node as Bridge))
+                                continue;
                         }
-                        
+
                     }
+
+                    if (node.zone != currentNode.zone)
+                        if (currentNode != u)
+                                continue;
+                    if (!distances.ContainsKey(node))
+                        continue;
                     var currentDistance = distances[node].Item1;
-                    var potentialDistance = (distances[currentNode].Item1)+1;
+                    var potentialDistance = (distances[currentNode].Item1) + 1;
 
                     if (potentialDistance < currentDistance)
                         distances[node] = new Tuple<int, Node>(potentialDistance, currentNode);
@@ -167,7 +175,7 @@ namespace STVRogue.Utils
             Console.WriteLine();
         }
     }
-    
+
     /*
     public class RandomGenerator
     {

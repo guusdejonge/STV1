@@ -23,11 +23,11 @@ namespace UnitTests_STVRogue
 
             var zones = new List<Zone>();
 
-            Node start = new Node(1);
-            Node node1 = new Node(2);
-            Node node2 = new Node(3);
-            Node node3 = new Node(4);
-            Node node4 = new Node(5);
+            Node start = new Node(1, zone1.Object, 0);
+            Node node1 = new Node(2, zone1.Object, 1);
+            Node node2 = new Node(3, zone1.Object, 2);
+            Node node3 = new Node(4, zone1.Object, 3);
+            Node node4 = new Node(5, zone1.Object, 4);
 
             start.connect(node1);
             start.connect(node2);
@@ -64,11 +64,11 @@ namespace UnitTests_STVRogue
 
             var zones = new List<Zone>();
 
-            Node start = new Node(1);
-            Node node1 = new Node(2);
-            Node node2 = new Node(3);
-            Node node3 = new Node(4);
-            Node node4 = new Node(5);
+            Node start = new Node(1, zone1.Object, 0);
+            Node node1 = new Node(2, zone1.Object, 1);
+            Node node2 = new Node(3, zone1.Object, 2);
+            Node node3 = new Node(4, zone1.Object, 3);
+            Node node4 = new Node(5, zone1.Object, 4);
 
             start.connect(node1);
             start.connect(node2);
@@ -82,13 +82,13 @@ namespace UnitTests_STVRogue
             zone1.Object.nodes.Add(node3);
             zone1.Object.nodes.Add(node4);
 
-            Bridge brug = new Bridge(6);
+            Bridge brug = new Bridge(6, zone1.Object, 0);
             zone1.Object.nodes.Add(brug);
             brug.connectToNodeOfSameZone(node1);
             brug.connectToNodeOfSameZone(node2);
 
-            Node node5 = new Node(7);
-            Node node6 = new Node(8);
+            Node node5 = new Node(7, zone2.Object, 5);
+            Node node6 = new Node(8, zone2.Object, 6);
 
             brug.connectToNodeOfNextZone(node5);
             brug.connectToNodeOfNextZone(node6);

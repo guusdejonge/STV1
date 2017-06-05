@@ -147,32 +147,32 @@ namespace STVRogue.GameLogic
                     bridges.Add(bridge);
             }
 
-            //foreach(Bridge b in bridges)
-            //{
-            //    if(b.M/2 > b.packs.Count())
-            //    {
-            //        var nodes = b.zone.nodes.Where(n=>n!=b);
-            //        var packSum = nodes.Sum(n => n.packs.Count());
+            foreach(Bridge b in bridges)
+            {
+                if (b.M / 2 > b.packs.Count())
+                {
+                    var nodes = b.zone.nodes.Where(n => n != b);
+                    var packSum = nodes.Sum(n => n.packs.Count());
 
-            //        if (packSum > 0)
-            //        {
-            //            List<Tuple<Pack, int>> packDistance = new List<Tuple<Pack, int>>();
-            //            foreach(Node node in nodes)
-            //            {
-            //                var pack = node.packs.FirstOrDefault();
-            //                if (pack != null)
-            //                {
-            //                    var dist = node.utils.shortestPath(node, b, dungeon.zones).Count();
-            //                    packDistance.Add(new Tuple<Pack, int>(pack, dist));
-            //                }
-            //            }
+                    if (packSum > 0)
+                    {
+                        List<Tuple<Pack, int>> packDistance = new List<Tuple<Pack, int>>();
+                        foreach (Node node in nodes)
+                        {
+                            var pack = node.packs.FirstOrDefault();
+                            if (pack != null)
+                            {
+                                var dist = node.utils.shortestPath(node, b, dungeon.zones).Count();
+                                packDistance.Add(new Tuple<Pack, int>(pack, dist));
+                            }
+                        }
 
-            //            var closestPack = packDistance.OrderBy(t => t.Item2).First().Item1;
-            //            closestPack.moveTowards(b);
-            //        }
+                        var closestPack = packDistance.OrderBy(t => t.Item2).First().Item1;
+                        closestPack.moveTowards(b);
+                    }
 
-            //    }
-            //}
+                }
+            }
 
             List<Tuple<Pack, Node>> movePacks = new List<Tuple<Pack, Node>>();
 
