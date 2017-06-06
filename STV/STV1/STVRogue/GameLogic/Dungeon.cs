@@ -45,6 +45,7 @@ namespace STVRogue.GameLogic
             }
 
             zones.Add(new Zone(M, monstersLeft, null, rnd.Next()));                   //de laatste zone
+            CreateBridge(zones[L - 1], zones[L]);
 
             startNode = zones[0].nodes[0];
             exitNode = zones.Last().nodes.Last();
@@ -212,7 +213,7 @@ namespace STVRogue.GameLogic
                 for (int connection = 0; connection < amountOfConnections; connection++)
                 {
                     int randomPreviousNode = rnd.Next(0, nodes.Count - 1);                 //kies random een van de vorige nodes
-                    while (nodes[node].neighbors.Contains(nodes[randomPreviousNode]))  //controleer of hij deze al als neighbor heeft
+                    while (nodes[node].neighbors.Contains(nodes[randomPreviousNode]) && !(nodes[node] is Bridge))  //controleer of hij deze al als neighbor heeft
                     {
                         randomPreviousNode = rnd.Next(0, nodes.Count - 1);
                     }
