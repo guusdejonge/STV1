@@ -96,9 +96,6 @@ namespace STVRogue.Utils
                     unvisitedNodes.Remove(node);
             }
 
-
-
-
             var unvis = unvisitedNodes.Contains(v);
             while (unvis)
             {
