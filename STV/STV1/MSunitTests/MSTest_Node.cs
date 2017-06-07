@@ -109,18 +109,22 @@ namespace UnitTests_STVRogue
             Pack p = new Pack(1, DateTime.Now.Millisecond);
             p.dungeon = g.dungeon;
             p.location = firstNeighbor;
+
+            
             if (firstNeighbor.packs.Count() != 0)
             {
                 firstNeighbor.packs.Clear();
             }
+
             firstNeighbor.packs.Add(p);
+
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
 
             var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
             utils.Setup(m => m.fleeProb(p)).Returns(1);
             firstNeighbor.utils = utils.Object;
             g.player.AttackRating = 0;
 
-            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
             firstNeighbor.fight(g.player, new Command("A"));
 
             Assert.IsFalse(firstNeighbor.packs.Contains(p));

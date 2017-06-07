@@ -93,9 +93,18 @@ namespace STVRogue.GameLogic
             zoneFrom.nodes.Remove(exitNode);
             zoneFrom.nodes.Add(newBridge);
 
+            Node prev = null;
+
             foreach (Node n in NeighborsStartNode)
             {
                 n.disconnect(startNode);
+
+                if (prev != null && !(n.neighbors.Contains(prev)))
+                {
+                    n.connect(prev);
+                }
+
+                prev = n;
             }
 
             zoneTo.nodes.RemoveAt(0);                           //verwijder de eerste node van de nieuwe zone
