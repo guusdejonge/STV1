@@ -46,12 +46,23 @@ namespace UnitTests_STVRogue
             Game g = new Game(3, 10, 10); 
             Node firstNeighbor = g.player.location.neighbors.First();
 
+
+            var pack = new Pack(1, DateTime.Now.Millisecond);
+            pack.location = firstNeighbor;
+            pack.dungeon = g.dungeon;
+
             if (firstNeighbor.packs.Count() == 0)
             {
-                firstNeighbor.packs.Add(new Pack(1, DateTime.Now.Millisecond));
+                firstNeighbor.packs.Add(pack);
             }
+            
 
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+            if (firstNeighbor.packs.Count() <= 0)
+            {
+                firstNeighbor.packs.Add(pack);
+                pack.location = firstNeighbor;
+            }
             Command flee = new Command("F");
             flee.previousNode = g.prevNode;
             firstNeighbor.fight(g.player, flee);
@@ -88,14 +99,19 @@ namespace UnitTests_STVRogue
 
             Pack p = new Pack(1, DateTime.Now.Millisecond);
             p.members[0].HP = 1;
-            firstNeighbor.packs.Add(p);
-            p.location = firstNeighbor;
+
             p.dungeon = g.dungeon;
 
             g.player.AttackRating = 10;
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+            firstNeighbor.packs.Clear();
+            if (firstNeighbor.packs.Count() <= 0)
+            {
+                firstNeighbor.packs.Add(p);
+                p.location = firstNeighbor;
+            }
             firstNeighbor.fight(g.player, new Command("A"));
-
+            
             Assert.IsFalse(firstNeighbor.contested);
             Assert.IsFalse(firstNeighbor.packs.Contains(p));
         }
@@ -107,6 +123,7 @@ namespace UnitTests_STVRogue
             Node firstNeighbor = g.player.location.neighbors.First();
 
             Pack p = new Pack(1, DateTime.Now.Millisecond);
+            p.members[0].HP = 100;
             p.dungeon = g.dungeon;
             p.location = firstNeighbor;
 
@@ -119,7 +136,11 @@ namespace UnitTests_STVRogue
             firstNeighbor.packs.Add(p);
 
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
-
+            if (firstNeighbor.packs.Count() <= 0)
+            {
+                firstNeighbor.packs.Add(p);
+                p.location = firstNeighbor;
+            }
             var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
             utils.Setup(m => m.fleeProb(p)).Returns(1);
             firstNeighbor.utils = utils.Object;
@@ -240,9 +261,19 @@ namespace UnitTests_STVRogue
         {
             Game g = new Game(3, 10, 10);
             Node firstNeighbor = g.player.location.neighbors.First();
-            firstNeighbor.packs.Add(new Pack(10, DateTime.Now.Millisecond));
+
+            var pack = new Pack(10, DateTime.Now.Millisecond);
+            pack.dungeon = g.dungeon;
+            pack.location = firstNeighbor;
+            firstNeighbor.packs.Add(pack);
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
 
+
+            if (firstNeighbor.packs.Count() <= 0)
+            {
+                firstNeighbor.packs.Add(pack);
+                pack.location = firstNeighbor;
+            }
             g.player.HP = 1;
             g.player.AttackRating = 0;
             firstNeighbor.fight(g.player, new Command("A"));
