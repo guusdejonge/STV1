@@ -51,18 +51,18 @@ namespace UnitTests_STVRogue
             pack.location = firstNeighbor;
             pack.dungeon = g.dungeon;
 
-            if (firstNeighbor.packs.Count() == 0)
-            {
-                firstNeighbor.packs.Add(pack);
-            }
+  
             
 
+
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+
             if (firstNeighbor.packs.Count() <= 0)
             {
                 firstNeighbor.packs.Add(pack);
                 pack.location = firstNeighbor;
             }
+            firstNeighbor.contested = true;
             Command flee = new Command("F");
             flee.previousNode = g.prevNode;
             firstNeighbor.fight(g.player, flee);
@@ -127,22 +127,18 @@ namespace UnitTests_STVRogue
             p.dungeon = g.dungeon;
             p.location = firstNeighbor;
 
-            
-            if (firstNeighbor.packs.Count() != 0)
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+
+            if (firstNeighbor.packs.Count() > 0)
             {
                 firstNeighbor.packs.Clear();
             }
 
             firstNeighbor.packs.Add(p);
-
-            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
-            if (firstNeighbor.packs.Count() <= 0)
-            {
-                firstNeighbor.packs.Add(p);
-                p.location = firstNeighbor;
-            }
+            p.location = firstNeighbor;
+            firstNeighbor.contested = true;
             var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
-            utils.Setup(m => m.fleeProb(p)).Returns(1);
+            utils.Setup(m => m.fleeProb(p)).Returns(2);
             firstNeighbor.utils = utils.Object;
             g.player.AttackRating = 0;
 
@@ -180,7 +176,7 @@ namespace UnitTests_STVRogue
             node.contested = true;
             node.utils = utils.Object;
             node.neighbors.Add(fullNode);
-            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+            utils.Setup(m => m.fleeProb(pack)).Returns(2);
 
             //node.fight(player, commands);
 
@@ -210,7 +206,7 @@ namespace UnitTests_STVRogue
             node.packs.Add(pack);
             node.contested = true;
             node.utils = utils.Object;
-            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+            utils.Setup(m => m.fleeProb(pack)).Returns(2);
             
             //node.fight(player, commands);
 
@@ -248,7 +244,7 @@ namespace UnitTests_STVRogue
             node.contested = true;
             node.utils = utils.Object;
             node.neighbors.Add(emptyNode);
-            utils.Setup(m => m.fleeProb(pack)).Returns(1);
+            utils.Setup(m => m.fleeProb(pack)).Returns(2);
 
             //node.fight(player, commands);
 

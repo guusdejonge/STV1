@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="UnitTests_STVRogue.MSTest_Node.MSTest_nodes_fleeSecondPack" /><Add Test="UnitTests_STVRogue.MSTest_Node.MSTest_nodes_fleePackFullNode" /><Add Test="UnitTests_STVRogue.MSTest_Node.MSTest_nodes_fleePackEmptyNode" /><Add Test="UnitTests_STVRogue.MSTest_Node.MSTest_nodes_playerFleeFight" /></Playlist>
