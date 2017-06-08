@@ -65,23 +65,42 @@ namespace STVRogue.GameLogic
         List<bool> historyQ = new List<bool>();
         public override void test(Game G)
         {
+            int mon = G.dungeon.calculateMonstersInDungeon();
+
+
             if (historyP.Count() >= 1)
             {
-                // check get last p where p was true:
-                int previousPIndex = historyP.IndexOf(historyP.Where(p=>p ==true).Last());
-                // calculate whether the previous and current state
-                // satisfies the unless property:
-                int previousQIndex = historyQ.IndexOf(historyQ.Where(q => q == true).Last());
+                int previousPIndex = -1;
+                // get last p where p was true:
+                if (historyP.Contains(true))
+                {
+                    for(int i = 0; i < historyP.Count(); i++)
+                    {
+                        if (historyP[i] == true)
+                            previousPIndex = i;
+                    }
+                }
+
+                int previousQIndex = -1;
+                // get last p where p was true:
+                if (historyQ.Contains(true))
+                {
+                    for (int i = 0; i < historyQ.Count(); i++)
+                    {
+                        if (historyQ[i] == true)
+                            previousQIndex = i;
+                    }
+                }
 
                 if (previousPIndex == -1)
-                    verdict = true;
+                    verdict =true;
                 else
                 {
                     if (previousQIndex > previousPIndex)
                         verdict = true;
                     else
                     {
-                        verdict = false;
+                        verdict =false;
                     }
                 }
 
@@ -105,7 +124,7 @@ namespace STVRogue.GameLogic
         public override void test(Game G)
         {
             int falseCount = 0;
-            foreach(var ant in antecedents)
+            foreach (var ant in antecedents)
             {
                 ant.test(G);
                 bool test = ant.getVerdict();

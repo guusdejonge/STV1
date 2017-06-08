@@ -13,7 +13,7 @@ namespace UnitTests_STVRogue
     public class MSTest_Specifications
     {
         [TestMethod]
-        public void MSTest_playerHP_never_negative()
+        public void MSTest_Specifications_never_negative()
         {
             string[] files = {"savedata1.txt", "savedata2.txt"};
             List<GamePlay> plays = loadSavedGamePlays(files);
@@ -28,7 +28,7 @@ namespace UnitTests_STVRogue
         }
 
         [TestMethod]
-        public void MSTest_playerHP_never_negativePredicate()
+        public void MSTest_Specifications_Always()
         {
             string[] files = { "savedata1.txt", "savedata2.txt" };
 
@@ -44,7 +44,7 @@ namespace UnitTests_STVRogue
         }
         
         [TestMethod]
-        public void MSTest_count_monstersPredicate()
+        public void MSTest_Specifications_Unless()
         {
             string[] files = { "savedata1.txt", "savedata2.txt" };
             List<GamePlay> plays = loadSavedGamePlays(files);
@@ -59,6 +59,24 @@ namespace UnitTests_STVRogue
                 }
             }
         }
+
+        [TestMethod]
+        public void MSTest_Specifications_LeadsTo()
+        {
+            string[] files = { "savedata1.txt", "savedata2.txt" };
+            List<GamePlay> plays = loadSavedGamePlays(files);
+
+            for (int M = 20; M < 21; M = M + 5)
+            {
+                foreach (GamePlay gp in plays)
+                {
+                    Specification LeadsTo = new LeadsTo(new Predicate<Game>((g => g.dungeon.calculateMonstersInDungeon() == M)), new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() < M));
+                    gp.Replay(LeadsTo);
+                    Assert.IsTrue(LeadsTo.getVerdict());
+                }
+            }
+        }
+
         public List<GamePlay> loadSavedGamePlays(string[] files)
         {
             List<GamePlay> plays = new List<GamePlay>();
