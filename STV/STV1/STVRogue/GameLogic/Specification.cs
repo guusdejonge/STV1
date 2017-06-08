@@ -26,7 +26,9 @@ namespace STVRogue.GameLogic
         private Predicate<Game> p;
         public Always(Predicate<Game> p) { this.p = p; }
         public override void test(Game G) { verdict = verdict && p(G); }
-    }    public class Unless : Specification
+    }
+
+    public class Unless : Specification
     {
         private Predicate<Game> p;
         private Predicate<Game> q;
@@ -87,5 +89,44 @@ namespace STVRogue.GameLogic
             historyP.Add(p(G));
             historyQ.Add(q(G));
         }
-    }
+    }
+
+    public class Conditional : Specification
+    {
+        private List<Specification> antecedents;
+        private Specification consequent;
+        Conditional(List<Specification> ant, Specification con)
+        {
+            antecedents = ant;
+            consequent = con;
+        }
+
+        public override void test(Game G)
+        {
+            int falseCount = 0;
+            foreach(var ant in antecedents)
+            {
+                ant.test(G);
+                bool test = ant.getVerdict();
+                if (!test)
+                    falseCount++;
+            }
+            if (falseCount == 1)
+                verdict = verdict && true;
+            else if (falseCount == 0)
+            {
+                consequent.test(G);
+                bool con = consequent.getVerdict();
+                verdict = verdict && con;
+            }
+            else
+            {
+                verdict = false;
+            }
+        }
+    }
+
+
+
+
 }
