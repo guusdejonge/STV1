@@ -84,7 +84,9 @@ namespace UnitTests_STVRogue
             List<GamePlay> plays = loadSavedGamePlays(files);
 
             List<Specification> antList = new List<Specification>();
-            antList.Add(new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.location == g.dungeon.exitNode)));
+
+            var ant1 = new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.location == g.dungeon.exitNode));
+            antList.Add(ant1);
 
             Specification con = new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.location is Bridge));
 

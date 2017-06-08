@@ -81,7 +81,7 @@ namespace STVRogue.GameLogic
                     }
                 }
 
-                int previousQIndex = -1;
+                int previousQIndex = -2;
                 // get last p where p was true:
                 if (historyQ.Contains(true))
                 {
@@ -96,7 +96,7 @@ namespace STVRogue.GameLogic
                     verdict =true;
                 else
                 {
-                    if (previousQIndex > previousPIndex)
+                    if (previousQIndex >= previousPIndex)
                         verdict = true;
                     else
                     {
@@ -135,7 +135,7 @@ namespace STVRogue.GameLogic
             {
                 consequent.test(G);
                 bool con = consequent.getVerdict();
-                verdict = verdict && con;
+                verdict = con;
             }
             else
             {
