@@ -262,15 +262,14 @@ namespace UnitTests_STVRogue
             var pack = new Pack(10, DateTime.Now.Millisecond);
             pack.dungeon = g.dungeon;
             pack.location = firstNeighbor;
-            firstNeighbor.packs.Add(pack);
+
             g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
 
-
-            if (firstNeighbor.packs.Count() <= 0)
-            {
-                firstNeighbor.packs.Add(pack);
-                pack.location = firstNeighbor;
-            }
+            firstNeighbor.packs.Clear();
+            firstNeighbor.packs.Add(pack);
+            pack.location = firstNeighbor;
+            firstNeighbor.contested = true;
+            
             g.player.HP = 1;
             g.player.AttackRating = 0;
             firstNeighbor.fight(g.player, new Command("A"));
