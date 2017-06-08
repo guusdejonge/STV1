@@ -50,6 +50,7 @@ namespace STVRogue.GameLogic
             // update accumulated verdict:
             verdict = verdict && newVerdict;
             // push p && !q to the history:
+            int mon = G.dungeon.calculateMonstersInDungeon();
             history.Add(p(G) && !q(G));
         }
     }

@@ -67,7 +67,14 @@ namespace STVRogue.Utils
 
         private List<Node> shortestPathInZone(Node u, Node v, Zone zone)
         {
+            
             var path = new List<Node>();
+            if (u == v)
+            {
+                path.Add(v);
+                path.Add(v);
+                return path;
+            }
             var distances = new Dictionary<Node, Tuple<int, Node>>();
             var unvisitedNodes = zone.nodes.Where(z => z.M > -1).ToList();
             var currentNode = u;

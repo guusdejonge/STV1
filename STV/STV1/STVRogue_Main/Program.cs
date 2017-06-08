@@ -186,6 +186,7 @@ namespace STVRogue
 
                 game.commands.Add(cmd);
                 game.turn++;
+                game.test();
             }
         }
     }

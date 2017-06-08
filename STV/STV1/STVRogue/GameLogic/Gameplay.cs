@@ -71,11 +71,73 @@ namespace STVRogue.GameLogic
 
         public void Replay(Specification s)
         {
+            int level = 1;
             Game g = new Game(L, M, N);
           
             Save("savedata.txt");
-            g.loadGamePlay();
             g.specification = s;
+            g.loadGamePlay();
+
+            bool go = true;
+
+            while (go)
+            {
+  
+                if (g.player.location is Bridge)
+                {
+                    int lvl = g.dungeon.level(g.player.location as Bridge);
+                    level = lvl + 1;
+                }
+                if (g.player.location.zone.nodes.Contains(g.dungeon.exitNode))
+                {
+                    foreach (var n in g.player.location.zone.nodes)
+                        n.alert = true;
+                }
+
+                if (g.player.location.contested)
+                {
+                    fight(g.player.location, g);
+                }
+                else
+                {
+                    var command = "";
+                    if (g.commandsLoaded.Count() > 0)
+                    {
+                        command = g.commandsLoaded.First();
+                        g.commandsLoaded.RemoveAt(0);
+                    }
+                    else
+                    {
+                        go = false;
+                        break;
+                    }
+                    g.update(new Command(command.ToUpper()));
+                }
+                g.test();
+            }
+        }
+
+        static void fight(Node node, Game g)
+        {
+            while (node.contested)
+            {
+                var cmd = new Command("");
+                if (g.commandsLoaded.Count() > 0)
+                {
+                    cmd = new Command(g.commandsLoaded.First());
+                    g.commandsLoaded.RemoveAt(0);
+                }
+                else
+                {
+                    cmd = new Command(Console.ReadLine());
+                }
+                cmd.previousNode = g.prevNode;
+                node.fight(g.player, cmd);
+                g.commands.Add(cmd);
+                g.turn++;
+                g.test();
+            }
+            int mon = g.dungeon.calculateMonstersInDungeon();
         }
     }
 }

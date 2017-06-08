@@ -84,7 +84,7 @@ namespace STVRogue.GameLogic
                 commandsLoaded.Add(c.text);
             }
 
-            specification = null;
+            //specification = null;
         }
 
         private string GetCurrentDirectory()
@@ -231,6 +231,8 @@ namespace STVRogue.GameLogic
             {
                 tuple.Item1.move(tuple.Item2);
             }
+
+            test();
         }
     }
 

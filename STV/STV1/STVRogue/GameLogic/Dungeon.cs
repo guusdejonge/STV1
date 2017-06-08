@@ -169,6 +169,18 @@ namespace STVRogue.GameLogic
             else
                 return 0;
         }
+
+        public int calculateMonstersInDungeon()
+        {
+            int currentMonstersInDungeon = 0;
+
+            foreach (Zone z in zones)          //tel huidig aantal monsters in die node
+            {
+                currentMonstersInDungeon += z.calculateMonstersInZone();
+            }
+
+            return currentMonstersInDungeon;
+        }
     }
 
     public class Zone
@@ -325,6 +337,18 @@ namespace STVRogue.GameLogic
             }
 
             return currentMonstersInThisNode;
+        }
+
+        public int calculateMonstersInZone()
+        {
+            int currentMonstersInZone = 0;
+
+            foreach (Node n in nodes)          //tel huidig aantal monsters in die node
+            {
+                currentMonstersInZone += calculateMonstersInNode(n);
+            }
+
+            return currentMonstersInZone;
         }
     }
 

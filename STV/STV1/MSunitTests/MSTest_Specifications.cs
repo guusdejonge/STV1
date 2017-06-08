@@ -42,7 +42,23 @@ namespace UnitTests_STVRogue
 
             Assert.IsTrue(Always.getVerdict());
         }
-
+        
+        [TestMethod]
+        public void MSTest_count_monstersPredicate()
+        {
+            string[] files = { "savedata1.txt", "savedata2.txt" };
+            List<GamePlay> plays = loadSavedGamePlays(files);
+            
+            for(int M = 5; M < 30; M = M + 5)
+            {
+                foreach (GamePlay gp in plays)
+                {
+                    Specification Unless = new Unless(new Predicate<Game>((g => g.dungeon.calculateMonstersInDungeon() == M)), new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() < M));
+                    gp.Replay(Unless);
+                    Assert.IsTrue(Unless.getVerdict());
+                }
+            }
+        }
         public List<GamePlay> loadSavedGamePlays(string[] files)
         {
             List<GamePlay> plays = new List<GamePlay>();
