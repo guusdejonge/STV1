@@ -122,20 +122,14 @@ namespace UnitTests_STVRogue
             Game g = new Game(3, 10, 10);
             Node firstNeighbor = g.player.location.neighbors.First();
 
+            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+
             Pack p = new Pack(1, DateTime.Now.Millisecond);
-            p.members[0].HP = 100;
+            firstNeighbor.packs.Clear();
+            firstNeighbor.packs.Add(p);
             p.dungeon = g.dungeon;
             p.location = firstNeighbor;
 
-            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
-
-            if (firstNeighbor.packs.Count() > 0)
-            {
-                firstNeighbor.packs.Clear();
-            }
-
-            firstNeighbor.packs.Add(p);
-            p.location = firstNeighbor;
             firstNeighbor.contested = true;
             var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
             utils.Setup(m => m.fleeProb(p)).Returns(2);

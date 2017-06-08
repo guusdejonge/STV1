@@ -70,10 +70,48 @@ namespace UnitTests_STVRogue
             {
                 foreach (GamePlay gp in plays)
                 {
-                    Specification LeadsTo = new LeadsTo(new Predicate<Game>((g => g.dungeon.calculateMonstersInDungeon() == M)), new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() < M));
+                    Specification LeadsTo = new LeadsTo(new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() == M), new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() < M));
                     gp.Replay(LeadsTo);
                     Assert.IsTrue(LeadsTo.getVerdict());
                 }
+            }
+        }
+
+        [TestMethod]
+        public void MSTest_Specifications_Conditional_4()
+        {
+            string[] files = { "savedata1.txt", "savedata2.txt" };
+            List<GamePlay> plays = loadSavedGamePlays(files);
+
+            List<Specification> antList = new List<Specification>();
+            antList.Add(new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.location == g.dungeon.exitNode)));
+
+            Specification con = new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.location is Bridge));
+
+            foreach (GamePlay gp in plays)
+            {
+                Conditional c = new Conditional(antList, con);
+                gp.Replay(c);
+                Assert.IsTrue(c.getVerdict());
+            }
+        }
+
+        [TestMethod]
+        public void MSTest_Specifications_Conditional_5()
+        {
+            string[] files = { "savedata1.txt", "savedata2.txt" };
+            List<GamePlay> plays = loadSavedGamePlays(files);
+
+            List<Specification> antList = new List<Specification>();
+            antList.Add(new LeadsTo(new Predicate<Game>(g => true), new Predicate<Game>(g => g.player.KillPoint > 0)));
+
+            Specification con = new LeadsTo(new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() == 20), new Predicate<Game>(g => g.dungeon.calculateMonstersInDungeon() < 20));
+
+            foreach (GamePlay gp in plays)
+            {
+                Conditional c = new Conditional(antList, con);
+                gp.Replay(c);
+                Assert.IsTrue(c.getVerdict());
             }
         }
 

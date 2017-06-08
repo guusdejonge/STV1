@@ -115,7 +115,7 @@ namespace STVRogue.GameLogic
     {
         private List<Specification> antecedents;
         private Specification consequent;
-        Conditional(List<Specification> ant, Specification con)
+        public Conditional(List<Specification> ant, Specification con)
         {
             antecedents = ant;
             consequent = con;
@@ -123,17 +123,15 @@ namespace STVRogue.GameLogic
 
         public override void test(Game G)
         {
-            int falseCount = 0;
+            bool allAntecedentsTrue = true;
             foreach (var ant in antecedents)
             {
                 ant.test(G);
                 bool test = ant.getVerdict();
-                if (!test)
-                    falseCount++;
+                allAntecedentsTrue = allAntecedentsTrue && test;
             }
-            if (falseCount == 1)
-                verdict = verdict && true;
-            else if (falseCount == 0)
+
+            if (allAntecedentsTrue)
             {
                 consequent.test(G);
                 bool con = consequent.getVerdict();
@@ -141,7 +139,7 @@ namespace STVRogue.GameLogic
             }
             else
             {
-                verdict = false;
+                verdict = verdict && true;
             }
         }
     }
