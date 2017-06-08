@@ -117,6 +117,7 @@ namespace STVRogue.Utils
                         if (n == u)
                         {
                             if (n.fromNodes.Contains(node))
+                                if(node!=v)
                                 continue;
                         }
 
