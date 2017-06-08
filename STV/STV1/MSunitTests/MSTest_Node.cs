@@ -141,7 +141,8 @@ namespace UnitTests_STVRogue
             utils.Setup(m => m.fleeProb(p)).Returns(2);
             firstNeighbor.utils = utils.Object;
             g.player.AttackRating = 0;
-
+            foreach (var n in firstNeighbor.neighbors)
+                n.packs.Clear();
             firstNeighbor.fight(g.player, new Command("A"));
 
             Assert.IsFalse(firstNeighbor.packs.Contains(p));
