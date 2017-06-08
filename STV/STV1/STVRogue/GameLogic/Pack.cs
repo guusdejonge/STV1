@@ -53,7 +53,7 @@ namespace STVRogue.GameLogic
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
             int capacity = (int)(u.M * (dungeon.level(u) + 1));
             // count monsters already in the node:
-            foreach (Pack Q in location.packs)
+            foreach (Pack Q in u.packs)
             {
                 capacity = capacity - Q.members.Count;
             }

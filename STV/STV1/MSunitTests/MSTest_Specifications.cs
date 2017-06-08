@@ -27,6 +27,22 @@ namespace UnitTests_STVRogue
             Assert.IsTrue(S.getVerdict());
         }
 
+        [TestMethod]
+        public void MSTest_playerHP_never_negativePredicate()
+        {
+            string[] files = { "savedata1.txt", "savedata2.txt" };
+
+            List<GamePlay> plays = loadSavedGamePlays(files);
+            Specification Always = new Always(new Predicate<Game>(g => g.player.HP >= 0));
+
+            foreach (GamePlay gp in plays)
+            {
+                gp.Replay(Always);
+            }
+
+            Assert.IsTrue(Always.getVerdict());
+        }
+
         public List<GamePlay> loadSavedGamePlays(string[] files)
         {
             List<GamePlay> plays = new List<GamePlay>();
