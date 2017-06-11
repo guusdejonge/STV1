@@ -36,17 +36,44 @@ namespace STVRogue.Utils
             var path = new List<Node>();
             var currentNode = u;
 
+            if (u == v)
+            {
+                path.Add(u);
+                path.Add(v);
+                return path;
+            }
+
+            if(u is Bridge)
+            {
+                Bridge b = u as Bridge;
+                if (b.fromNodes.Contains(v))
+                {
+                    path.Add(v); path.Add(v); return path;
+                }
+                if (b.toNodes.Contains(v))
+                {
+                    path.Add(v); path.Add(v);  return path;
+                }
+            }
 
             while (path.LastOrDefault() != v)
             {
+                if (path.Count() > 100)
+                {
+                    int i = 0;
+                }
+
                 var currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
 
                 if (currentNode is Bridge)
                 {
-                    var b = currentNode as Bridge;
-                    currentNode = b.toNodes.First();
-                    currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
-                    currentNode = b;
+                    if (currentNode.zone != v.zone)
+                    {
+                        var b = currentNode as Bridge;
+                        currentNode = b.toNodes.First();
+                        currentZone = zones.Where(x => x.nodes.Contains(currentNode)).FirstOrDefault();
+                        currentNode = b;
+                    }
                 }
 
                 if (currentZone.nodes.Contains(v))
@@ -76,7 +103,7 @@ namespace STVRogue.Utils
                 return path;
             }
             var distances = new Dictionary<Node, Tuple<int, Node>>();
-            var unvisitedNodes = zone.nodes.Where(z => z.M > -1).ToList();
+            var unvisitedNodes = zone.nodes.Where(z => z.M > -1).Distinct().ToList();
             var currentNode = u;
 
             if (u is Bridge)
@@ -88,9 +115,9 @@ namespace STVRogue.Utils
 
             foreach (Node node in unvisitedNodes)
             {
-                if (node == u)
+                if (node == u&&!distances.ContainsKey(u))
                     distances.Add(node, new Tuple<int, Node>(0, u));
-                else
+                else if(!distances.ContainsKey(node))
                     distances.Add(node, new Tuple<int, Node>(999, null));
 
             }

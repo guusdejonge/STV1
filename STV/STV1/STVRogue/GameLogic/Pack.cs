@@ -15,6 +15,9 @@ namespace STVRogue.GameLogic
         public Node location;
         public Dungeon dungeon;
         public List<Node> path;
+        public Zone lastZone;
+        public int distToPlayer;
+        public int lastDistToPlayer;
 
         /*public Pack(String id, int n)
         {
@@ -37,6 +40,8 @@ namespace STVRogue.GameLogic
                 startingHP += m.HP;
             }
             path = new List<Node>();
+            distToPlayer = 0;
+            lastDistToPlayer = 0;
         }
 
         public void Attack(Player p)
@@ -50,6 +55,8 @@ namespace STVRogue.GameLogic
         /* Move the pack to an adjacent node. */
         public void move(Node u)
         {
+            if (location == u)
+                return;
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
             int capacity = (int)(u.M * (dungeon.level(u) + 1));
             // count monsters already in the node:
@@ -63,8 +70,17 @@ namespace STVRogue.GameLogic
                // Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
                 return;
             }
+            if (location.zone != u.zone)
+            {
+                return;
+            }
+
             location.packs.Remove(this);
+
+            lastZone = location.zone;
             location = u;
+
+
             u.packs.Add(this);
             //Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
         }

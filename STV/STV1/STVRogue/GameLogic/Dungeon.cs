@@ -206,7 +206,7 @@ namespace STVRogue.GameLogic
                 utils = new UtilsClass(Seed);
             }
 
-            Node n = new Node(M, rnd.Next(), this, nodes.Count());
+            Node n = new Node(M2, rnd.Next(), this, nodes.Count());
             nodes.Add(n);                      //de startnode
             int totalConnections = 0;                               //het totaal aantal connecties in de zone
             this.M = M2;
@@ -304,6 +304,7 @@ namespace STVRogue.GameLogic
                 int k = nodes.FindIndex(q => q == AvailableNodes[randomNode]);
 
                 newPack.location = nodes[k];             //zet deze node als de pack zn location
+                newPack.lastZone = nodes[k].zone;
                 nodes[k].packs.Add(newPack);             //voeg pack toe aan de node
             }
         }
@@ -383,6 +384,16 @@ namespace STVRogue.GameLogic
             neighbors.Remove(nd); nd.neighbors.Remove(this);
         }
 
+        public int getNumberOfMonsters()
+        {
+            int sum = 0;
+            foreach(Pack p in packs)
+            {
+                sum += p.members.Count();
+            }
+            return sum;
+        }
+
 
         /* Execute a fight between the player and the packs in this node.
          * Such a fight can take multiple rounds as describe in the Project Document.
@@ -426,7 +437,7 @@ namespace STVRogue.GameLogic
                     }
 
                     break;
-                case "use":
+                case "u":
                     var item = player.bag[int.Parse(cmd[1])];
                     player.use(item);
                     break;
@@ -462,7 +473,7 @@ namespace STVRogue.GameLogic
                 }
             }
 
-
+            
             return true;
         }
 

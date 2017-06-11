@@ -25,7 +25,8 @@ namespace STVRogue.GameLogic
     {
         private Predicate<Game> p;
         public Always(Predicate<Game> p) { this.p = p; }
-        public override void test(Game G) { verdict = verdict && p(G); }
+        public override void test(Game G)
+        { verdict = verdict && p(G); }
     }
 
     public class Unless : Specification

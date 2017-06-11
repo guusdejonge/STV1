@@ -119,27 +119,39 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_nodes_fleePackEmptyNode()
         {
-            Game g = new Game(3, 10, 10);
-            Node firstNeighbor = g.player.location.neighbors.First();
+            for (int t = 0; t < 1000; t++)
+            {
+                Game g = new Game(3, 10, 10);
+                Node firstNeighbor = g.player.location.neighbors.First();
 
-            g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+                //g.update(new Command("M " + g.dungeon.zones[0].nodes.IndexOf(firstNeighbor) + " " + g.dungeon.zones.IndexOf(firstNeighbor.zone)));
+                g.player.moveTo(firstNeighbor);
+                Pack p = new Pack(1, DateTime.Now.Millisecond);
+                firstNeighbor.packs.Clear();
+                firstNeighbor.packs.Add(p);
+                p.dungeon = g.dungeon;
+                p.location = firstNeighbor;
 
-            Pack p = new Pack(1, DateTime.Now.Millisecond);
-            firstNeighbor.packs.Clear();
-            firstNeighbor.packs.Add(p);
-            p.dungeon = g.dungeon;
-            p.location = firstNeighbor;
+                firstNeighbor.contested = true;
+                var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
+                utils.Setup(m => m.fleeProb(p)).Returns(2);
+                firstNeighbor.utils = utils.Object;
+                firstNeighbor.M = 10;
+                g.player.AttackRating = 0;
+                foreach (var n in firstNeighbor.neighbors)
+                {
+                    n.packs.Clear();
+                }
+                firstNeighbor.fight(g.player, new Command("A"));
 
-            firstNeighbor.contested = true;
-            var utils = new Mock<UtilsClass>(DateTime.Now.Millisecond);
-            utils.Setup(m => m.fleeProb(p)).Returns(2);
-            firstNeighbor.utils = utils.Object;
-            g.player.AttackRating = 0;
-            foreach (var n in firstNeighbor.neighbors)
-                n.packs.Clear();
-            firstNeighbor.fight(g.player, new Command("A"));
 
-            Assert.IsFalse(firstNeighbor.packs.Contains(p));
+                if (firstNeighbor.packs.Contains(p))
+                {
+                    int i = 0;
+                }
+
+                Assert.IsFalse(firstNeighbor.packs.Contains(p));
+            }
         }
 
         [TestMethod]

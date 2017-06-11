@@ -100,6 +100,8 @@ namespace UnitTests_STVRogue
             Assert.IsTrue(p.location == end);
         }
 
+        
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void MSTest_pack_moveToNoNeighbor()

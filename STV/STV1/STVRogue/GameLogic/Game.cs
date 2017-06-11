@@ -43,6 +43,7 @@ namespace STVRogue.GameLogic
             commands = new List<Command>();
             dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier, numberOfMonsters, S);
             player.location = dungeon.startNode;
+            player.dungeon = dungeon;
 
             specification = null;
         }
@@ -76,7 +77,7 @@ namespace STVRogue.GameLogic
             prevNode = null;
             dungeon = new Dungeon(G.L, G.M, G.N, G.S);
             player.location = dungeon.startNode;
-
+            player.dungeon = dungeon;
             commands.Clear();
             commandsLoaded.Clear();
             foreach(Command c in G.Commands)
@@ -130,11 +131,12 @@ namespace STVRogue.GameLogic
             }
             
             movePacks();
+            updateDists();
             
             return true;
         }
 
-        private void movePacks()
+        public void movePacks()
         {
             var currentZone = dungeon.zones.Where(z => z.nodes.Contains(player.location)).First();
 
@@ -234,7 +236,24 @@ namespace STVRogue.GameLogic
 
             test();
         }
+
+        public void updateDists()
+        {
+            foreach(var z in dungeon.zones)
+            {
+                foreach(var n in z.nodes)
+                {
+                    foreach(var p in n.packs)
+                    {
+                        p.lastDistToPlayer = p.distToPlayer;
+                        p.distToPlayer = dungeon.shortestPath(n, p.location).Count();
+                    }
+                }
+            }
+        }
     }
+
+    
 
     public class GameCreationException : Exception
     {

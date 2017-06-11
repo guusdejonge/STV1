@@ -27,19 +27,7 @@ namespace STVRogue.GameLogic
         }
         virtual public void moveTo(Node node)
         {
-            if (this is Monster && location is Bridge)
-            {
-                Bridge b = (Bridge)location;
-                if(b.fromNodes.Contains(location) && !b.toNodes.Contains(node))
-                {
-                    this.location = node;
-                }
-                else if(b.toNodes.Contains(location) && !b.fromNodes.Contains(node))
-                {
-                    this.location = node;
-                }
-            }
-            else if(this is Player && node is Bridge)
+            if(this is Player && node is Bridge)
             {
                 foreach (var n in node.zone.nodes)
                 {
